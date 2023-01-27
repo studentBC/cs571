@@ -67,17 +67,22 @@ async function callAPI(url) {
     createAPIresultTable();
 }
 
-function submitlol(event) {
+async function submitlol(event) {
     console.log(event);
     //form submit will refresh my page and clear log
     event.preventDefault();
+    console.log('---- go here -----');
     var kw = "",
         loc = "Taipei",
         selfLocate = false,
         fc = "Default",
         dist = 10;
     kw = document.forms["partOne"]["kw"].value;
-    loc = document.forms["partOne"]["location"].value;
+    loc = '';
+    if (document.getElementById('inputLoc').style.display != 'none') {
+        loc = document.forms["partOne"]["location"].value;
+    }
+    console.log('-------   ' + loc + '   --------');
     selfLocate = document.forms["partOne"]["autoDetect"].checked;
     fc = document.forms["partOne"]["fc"].value;
     dist = document.forms["partOne"]["dm"].value;
@@ -87,20 +92,19 @@ function submitlol(event) {
         alert("you has not enter all required info!");
         return false;
     }
-    if (selfLocate) {
-        if (navigator.geolocation) {
-            alert('selfLocate checked!');
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-        tmploc = loc.replace(/\s+/g, '+');
-        var gkey = '';
-        var gr = httpGet('https://maps.googleapis.com/maps/api/geocode/json?address=' + tmploc + '&key=' + gkey);
-        //call python get method to get the address
-        var res = JSON.parse(gr);
-        lat = res.results[0].geometry.location.lat;
-        long = res.results[0].geometry.location.lng;
+    if (loc === "" && selfLocate) {
+        await fetch('https://ipinfo.io', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer c74fd8c3b95806'
+            }
+        })
+        .then(response => response.json())
+        .then(response => {
+            console.log(response);
+            loc = response.region + ' '+ response.city;
+            console.log(loc);
+        });
     }
     let mixedKeyWord = kw + ' ' + loc;
     mixedKeyWord = mixedKeyWord.replace(/\s+/g, '%20');
@@ -110,6 +114,14 @@ function submitlol(event) {
     if (fc == 'default') url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&size=200' + dd;
     else url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd;
     callAPI(url);
+}
+function hideLocInput() {
+    let cb = document.getElementById('cbox');
+    if (cb.checked == true) {
+        document.getElementById('inputLoc').style.display = 'none';
+    } else {
+        document.getElementById('inputLoc').style.display = 'block';
+    }
 }
 async function showVenue() {
     console.log('=== enter showVenue ===')
@@ -151,10 +163,16 @@ async function showVenue() {
     if (jobj.url) document.getElementById('vdme').href = jobj.url;
     //for google map URL
     document.getElementById('vdgm').href = 'www.google.com';
+
+
+
+    const ele = document.getElementsByClassName("outerMergin");
+    for (let i = 0; i < ele.length; i++) ele[i].style.display = "block";
     const elem = document.getElementById("venueDetails");
     elem.style.display = 'block';
     console.log(elem.style.display);
-    for (let i = 0; i < elem.length; i++) elem[i].style.display = 'flex';
+    for (let i = 0; i < elem.length; i++) elem[i].style.display = 'block';
+    
 }
 function sortColumn(array, col) {
     if (prevCol == col) ascending = !ascending;
@@ -368,6 +386,12 @@ function cc() {
     // for (let i = 0; i < elems.length; i++) elems[i].remove();
     elems = document.getElementsByClassName("searchResult");
     for (let i = 0; i < elems.length; i++) elems[i].style.display = "none";
+    const ele = document.getElementsByClassName("outerMergin");
+    for (let i = 0; i < ele.length; i++) ele[i].style.display = "none";
+    const el = document.getElementById("venueDetails");
+    for (let i = 0; i < el.length; i++) el[i].style.display = "none";
+    const elem = document.getElementsByClassName("venueBut");
+    for (let i = 0; i < elem.length; i++) elem[i].style.display = 'none';
 }
 //when user click the title and ask for more info
 function moreInfo(name, day) {
@@ -389,4 +413,8 @@ function moreInfo(name, day) {
     for (let i = 0; i < elem.length; i++) elem[i].style.display = "flex";
     selectedName = name;
     console.log('showing our button man!!!')
+    const ele = document.getElementsByClassName("outerMergin");
+    for (let i = 0; i < ele.length; i++) ele[i].style.display = "none";
+    const el = document.getElementById("venueDetails");
+    for (let i = 0; i < el.length; i++) el[i].style.display = "none";
 }

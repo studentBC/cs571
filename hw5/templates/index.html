@@ -22,7 +22,7 @@
           <div>
             <label>Distance(miles)</label>
             <br>
-            <input type="number" name="dm">
+            <input type="number" name="dm" value=10 style="color: gray;">
           </div>
           <div class="fc">
             <label style="text-align: right;">Category</label><label style="color:red;">*</label>
@@ -39,10 +39,10 @@
         </div>
         <br><br>
         <label>Location</label><label style="color:red;">*</label>
-        <input type="checkbox" name="autoDetect">
-        <label style="color: gray;""><strong>Auto-Detect Location</strong></label>
+        <input type="checkbox" name="autoDetect" id="cbox" onclick="hideLocInput()">
+        <label style="color: gray;"><strong>Auto-Detect Location</strong></label>
         <br>
-        <input type=" text" name="location" minlength="4">
+        <input type=" text" name="location" minlength="4" id="inputLoc">
           <br><br>
           <!-- we cannot call function submit  -->
           <input type="submit" value="SUBMIT" class="subBut">

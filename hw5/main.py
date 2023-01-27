@@ -20,5 +20,17 @@ def getYelpSearch():
     #print(response.json())
     return response.json()
 
+# @app.route('/getIPinfo', methods=['POST', 'GET'])
+# def getIPinfo():
+#     api_key = 'c74fd8c3b95806'
+#     headers = {
+#         'Authorization': 'Bearer %s' % api_key,
+#     }
+#     response = requests.request('GET', 'ipinfo.io', headers=headers)
+#     print('we get ip info: ')
+#     print(response)
+#     return response.json()
+
 if __name__ == '__main__':
    app.run(debug = True)
+
