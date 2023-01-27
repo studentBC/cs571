@@ -142,7 +142,13 @@ function showVenue() {
             return response;
         })
     //we will start from here
-    document.getElementById()
+    if (jobj.url) document.getElementById('vdIMG').src = jobj.url 
+    
+    document.getElementById('vdaddr').innerHTML = 'Address:'
+                                                +address[0]+
+                                                '\n'+jobj.state.stateCode+
+                                                '\n'+jobj.postalCode
+    if (jobj.url) document.getElementById('vdme').href = jobj.url;
 }
 function sortColumn(array, col) {
     if (prevCol == col) ascending = !ascending;
