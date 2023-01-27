@@ -44,7 +44,18 @@ h2 {
     padding: 1em 2em;
     box-shadow: inset 0 -8px 0 0 rgba(0, 0, 0, .2);
 }
-
+#venueDetails {
+    display: none;
+    /* flex-direction: column;
+    justify-content: center; */
+    width: 650px;
+    background-color: gray;
+    border-radius:10px;
+    padding: 30px;
+    border: 2px solid;
+    margin-left: auto;
+    margin-right: auto;
+}
 input[name="kw"] {
     width: 100%;
 }
@@ -169,18 +180,34 @@ input[name="kw"] {
     border-bottom-width: 4px;
     border-right-width: 4px;
   }
-  
-  #venueDetails {
-    border-width: 2px solid #dedede;
-    margin: 3px;
+  .outerMergin {
+    padding: 20px;
+    background-color: white;
+    width: 700px;
+    margin: 30px auto;
   }
   #vdHeader {
     border-bottom: 1px solid #dedede;
     display: inline-block;
   }
   #vdLeft {
-    justify-content: center;
+    display:inline-block;
+    border-right: 2px;
+    border-right: solid;
+    border-right-color: #f1f1f1;
+    width: 49%;
   }
   #vdRight {
-    justify-content: center;
+    display:inline-block;
+    vertical-align: top;
+    text-align: center;
+    width: 49%;
+  }
+  #vdIMG {
+    display:block; 
+    align-content: center; 
+    width:50px;
+    height:50px;
+    margin-left: auto;
+    margin-right: auto;
   }

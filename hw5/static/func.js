@@ -6,7 +6,7 @@ let lat = 0,
 let jsonObjArray = [];
 let selectedName=''
 //key: name
-//value: id, artist team, venue, genre, ticket status, buy website, photo
+//value: id, artist team, venue, genre, ticket status, buy website, photo, logo photo
 const idMapping = new Map();
 
 function httpGet(theUrl) {
@@ -111,12 +111,10 @@ function submitlol(event) {
     else url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd;
     callAPI(url);
 }
-function showVenue() {
+async function showVenue() {
     console.log('=== enter showVenue ===')
     const elems = document.getElementsByClassName("venueBut");
     for (let i = 0; i < elems.length; i++) elems[i].style.display = 'none';
-    const elem = document.getElementById("venueDetails");
-    for (let i = 0; i < elem.length; i++) elem[i].style.display = 'flex';
     document.getElementById("vdHeader").innerHTML = selectedName;
     let eid = idMapping.get(selectedName)[0];
     //Z7r9jZ1AdbxAM
@@ -142,13 +140,21 @@ function showVenue() {
             return response;
         })
     //we will start from here
-    if (jobj.url) document.getElementById('vdIMG').src = jobj.url 
-    
-    document.getElementById('vdaddr').innerHTML = 'Address:'
-                                                +address[0]+
-                                                '\n'+jobj.state.stateCode+
+    document.getElementById('vdIMG').src = idMapping.get(selectedName)[7];
+    let add = 'Address: ';
+    // console.log('=============');
+    // console.log(jobj);
+    // console.log('=============');
+    if (jobj.address) add+=jobj.address.line1 +'\n';
+    document.getElementById('vdaddr').innerHTML = add +jobj.state.stateCode+
                                                 '\n'+jobj.postalCode
     if (jobj.url) document.getElementById('vdme').href = jobj.url;
+    //for google map URL
+    document.getElementById('vdgm').href = 'www.google.com';
+    const elem = document.getElementById("venueDetails");
+    elem.style.display = 'block';
+    console.log(elem.style.display);
+    for (let i = 0; i < elem.length; i++) elem[i].style.display = 'flex';
 }
 function sortColumn(array, col) {
     if (prevCol == col) ascending = !ascending;
@@ -217,7 +223,9 @@ function createAPIresultTable() {
                 }
                 data.push(tmp);
                 //value: id, artist team, venue, genre, ticket range, ticket status, buy website, photo
-                temp.push(jsonObj._embedded.events[i].venues[0]?.id);//venues.id = venue's id eg: ZFr9jZAFkF
+                //console.log(jsonObj._embedded.events[i].venues[0]?.id);
+                if (jsonObj._embedded.events[i]._embedded.venues[0].id) temp.push(jsonObj._embedded.events[i]._embedded.venues[0]?.id);//venues.id = venue's id eg: ZFr9jZAFkF
+                else temp.push('ZFr9jZAFkF');
 
                 //not quiet too sure for artist team
                 if (jsonObj._embedded.events[i] ?._embedded.attractions) temp.push(jsonObj._embedded.events[i] ?._embedded.attractions[0].name);
@@ -237,7 +245,7 @@ function createAPIresultTable() {
                 //console.log(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
                 if (jsonObj._embedded.events[i] ?.seatmap?.staticUrl) temp.push(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
                 else temp.push(jsonObj._embedded.events[i] ?.url);
-
+                temp.push(jsonObj._embedded.events[i] ?.images[2].url);
                 idMapping.set(jsonObj._embedded.events[i] ?.name, temp);
             }
         }
