@@ -4,6 +4,7 @@ let lat = 0,
     res, jsobj, ascending = true,
     prevCol = -1;
 let jsonObjArray = [];
+let selectedName=''
 //key: name
 //value: id, artist team, venue, genre, ticket status, buy website, photo
 const idMapping = new Map();
@@ -110,7 +111,39 @@ function submitlol(event) {
     else url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd;
     callAPI(url);
 }
-
+function showVenue() {
+    console.log('=== enter showVenue ===')
+    const elems = document.getElementsByClassName("venueBut");
+    for (let i = 0; i < elems.length; i++) elems[i].style.display = 'none';
+    const elem = document.getElementById("venueDetails");
+    for (let i = 0; i < elem.length; i++) elem[i].style.display = 'flex';
+    document.getElementById("vdHeader").innerHTML = selectedName;
+    let eid = idMapping.get(selectedName)[0];
+    //Z7r9jZ1AdbxAM
+    console.log('the eid we got is '+ eid);
+    //document.getElementById("vdIMG").src = ;
+    //we need to get address through the api link:
+    let jobj;
+    let url = 'https://app.ticketmaster.com/discovery/v2/venues/'+eid+'.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&id=KovZpZA7AAEA';
+    await fetch('http://127.0.0.1:5000/getTicketMasterSearch', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "url": url
+            })
+        })
+        .then(response => response.json())
+        .then(response => {
+            jobj = response;
+            console.log(JSON.stringify(response));
+            return response;
+        })
+    //we will start from here
+    document.getElementById()
+}
 function sortColumn(array, col) {
     if (prevCol == col) ascending = !ascending;
     if (ascending) {
@@ -178,7 +211,8 @@ function createAPIresultTable() {
                 }
                 data.push(tmp);
                 //value: id, artist team, venue, genre, ticket range, ticket status, buy website, photo
-                temp.push(jsonObj._embedded.events[i] ?.id);
+                temp.push(jsonObj._embedded.events[i].venues[0]?.id);//venues.id = venue's id eg: ZFr9jZAFkF
+
                 //not quiet too sure for artist team
                 if (jsonObj._embedded.events[i] ?._embedded.attractions) temp.push(jsonObj._embedded.events[i] ?._embedded.attractions[0].name);
                 else temp.push('lol');
@@ -336,46 +370,9 @@ function moreInfo(name, day) {
     document.getElementById("moreInfoBuy").href = idMapping.get(name)[6]
     console.log(idMapping.get(name)[7]);
     document.getElementById("moreInfoIMG").src = idMapping.get(name)[7]
-    // for (let a = 0; a < jsonObjArray.length; a++) {
-    //     let jsobj = jsonObjArray[a];
-    //     for (let i = 0; i < jsobj.businesses.length; i++) {
-    //         if (name === jsobj.businesses[i].name) {
-    //             var addr = "",
-    //                 trs = "",
-    //                 cate = "";
-    //             for (let j = 0; j < Object.keys(jsobj.businesses[0].location.display_address).length; j++) {
-    //                 addr += jsobj.businesses[j].location.display_address[j];
-    //                 addr += " ";
-    //             }
-    //             console.log(addr);
-    //             //document.getElementById("address").textContent = addr;
-    //             if (jsobj.businesses[i].phone) document.getElementById("pn").innerHTML = jsobj.businesses[i].phone;
-    //             else document.getElementById("pn").innerHTML = "None";
-    //             //document.getElementById("pn").textContent = jsobj.businesses[i].phone;
-    //             document.getElementById("address").innerHTML = addr;
-
-    //             for (let j = 0; j < jsobj.businesses[i].transactions.length; j++) {
-    //                 trs += jsobj.businesses[i].transactions[j];
-    //                 trs += " ";
-    //             }
-    //             console.log(trs);
-    //             if (trs.length) document.getElementById("transactionsSupported").innerHTML = trs;
-    //             else document.getElementById("transactionsSupported").innerHTML = "None";
-    //             for (let j = 0; j < jsobj.businesses[i].categories.length; j++) {
-    //                 cate += jsobj.businesses[i].categories[j].alias;
-    //                 cate += " ";
-    //             }
-
-    //             console.log(cate);
-    //             document.getElementById("categories").textContent = cate;
-    //             //for more info
-    //             //var anchor = document.createElement('a');
-    //             let anchor = document.getElementById("minfo");
-    //             //var anchorText = document.createTextNode('Yelp');
-    //             anchor.href = jsobj.businesses[i].url;
-    //             //anchor.setAttribute('href', jsobj.businesses[i].url);
-    //             break;
-    //         }
-    //     }
-    // }
+    //here display venue button
+    const elem = document.getElementsByClassName("venueBut");
+    for (let i = 0; i < elem.length; i++) elem[i].style.display = "flex";
+    selectedName = name;
+    console.log('showing our button man!!!')
 }
