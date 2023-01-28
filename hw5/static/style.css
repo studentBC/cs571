@@ -11,6 +11,7 @@ h2 {
 #APIresultTable {
     margin-left: auto;
     margin-right: auto;
+    padding: 20px;
 }
 
 .flex-container {
@@ -121,10 +122,12 @@ input[name="kw"] {
     margin-right: auto;
     margin-top: 30px;
     margin-bottom: 30px;
-    padding: 0, 20px, 0, 20px;
+    padding: 20px;
     border-radius: 10px;
+
     /* filter blur  */
     backdrop-filter: blur(10px);
+    background-color: #DDDDDD;
 }
 
 #moreInfoIMG {
@@ -154,10 +157,10 @@ input[name="kw"] {
     /* justify-content: space-around; */
     list-style: none;
 }
-
+/* API search table related style */
 .arow {
-    display: flex;
-    flex-flow: row wrap;
+    /* display: flex;
+    flex-flow: row wrap; */
     /* Then we define how is distributed the remaining space */
     justify-content: space-around;
     align-items: stretch;
@@ -168,18 +171,20 @@ input[name="kw"] {
 }
 
 .arow .no {
-    flex: 1 1 10px;
+    /* flex: 1 1 10px; */
     text-align: center;
 }
 
 .img {
-    flex: 1 1 30px;
+    /* flex: 1 1 30px; */
     text-align: center;
 }
 
 .icon {
-    margin-top: 1em;
+    /* margin-top: 1em; */
     text-align: center;
+    object-fit:scale-down;
+    max-width: 150px;
 }
 
 .arow .bn {
@@ -310,6 +315,12 @@ input[name="kw"] {
 table,
 th,
 td {
-    border: 1px solid black;
+    
+    border-style: solid;
+    border: 1px solid black !important;
     border-collapse: collapse;
+    border-width: 1px;
+    text-align: center;
+    margin: auto;
+    background-color: #DDDDDD;
 }

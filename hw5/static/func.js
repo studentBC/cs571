@@ -75,7 +75,19 @@ async function callAPI(url) {
 }
 
 async function submitlol(event) {
+    console.log('---- not show elems ---');
     console.log(event);
+    // document.getElementById("APIresult").style.display = "none";
+    document.getElementById("outerMargin").style.display = "none";
+    document.getElementById("searchResult").style.display = "none";
+    // for (let i = 0; i < a.length; i++) a[i].style.display = "none";
+    // for (let i = 0; i < b.length; i++) b[i].style.display = "none";
+    // for (let i = 0; i < b.length; i++) c[i].style.display = "none";
+    // const ele = document.getElementsByClassName("outerMargin");
+    // for (let i = 0; i < ele.length; i++) ele[i].style.display = "none";
+    // const el = document.getElementById("venueDetails");
+    // for (let i = 0; i < el.length; i++) el[i].style.display = "none";
+    console.log('---- not show elems ---');
     //form submit will refresh my page and clear log
     event.preventDefault();
     console.log('---- go here -----');
@@ -204,7 +216,11 @@ function sortColumn(array, col) {
         //table.rows[i].cells[1].innerText = array[i][1];
         table.rows[i].cells[1].innerText = "";
         let img = document.createElement('img');
-        img.style.width = "150px";
+        img.style.width = "50%";
+        img.style.objectFit = 'scale-down';
+        img.style.maxWidth = '150px';
+        img.style.marginBottom =  '10px';
+        img.style.marginTop =  '10px';
         img.src = array[i][2];
         table.rows[i].cells[1].appendChild(img);
         //the business name still need to show its link
@@ -303,7 +319,7 @@ function createAPIresultTable() {
     var text3 = document.createTextNode('Event');
     var text4 = document.createTextNode('Genre');
     var text5 = document.createTextNode('Venue');
-    tr.classList.add("arow");
+    // tr.classList.add("arow");
     td1.appendChild(text1);
     td1.classList.add("no");
     //td1.addEventListener("click", ()=>sortColumn(0));
@@ -332,7 +348,7 @@ function createAPIresultTable() {
     console.log('data length is ' + data.length);
     for (let i = 0; i < data.length; i++) {
         tr = document.createElement('tr');
-        tr.classList.add("arow");
+        // tr.classList.add("arow");
         td1 = document.createElement('td');
         td1.classList.add("no");
         td2 = document.createElement('td');
@@ -360,7 +376,11 @@ function createAPIresultTable() {
         text2 = document.createElement('img');
         //text2.src = jsonObj.businesses[i].image_url;
         text2.src = data[i][2];
-        text2.style.width = "150px";
+        text2.style.width = "50%";
+        text2.style.objectFit = 'scale-down';
+        text2.style.maxWidth = '150px';
+        text2.style.marginBottom =  '10px';
+        text2.style.marginTop =  '10px';
         // text3 = document.createTextNode(jsonObj.businesses[i].name);
         // text4 = document.createTextNode(jsonObj.businesses[i].rating);
         // text5 = document.createTextNode(jsonObj.businesses[i].distance);
@@ -389,6 +409,7 @@ function createAPIresultTable() {
     document.getElementsByClassName("APIresult")[0].appendChild(table);
     table.style.marginTop = '40px';
     table.style.marginBottom = '40px';
+    //table.classList.add('table-bordered');
     console.log('after creating table ...');
 }
 
