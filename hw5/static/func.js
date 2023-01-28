@@ -6,7 +6,7 @@ let lat = 0,
 let jsonObjArray = [];
 let selectedName=''
 //key: name
-//value: id, artist team, venue, genre, ticket status, buy website, photo, logo photo
+//value: id, artist team, venue, genre, ticket status, buy website, photo, logo photo, attraction URL
 const idMapping = new Map();
 
 function httpGet(theUrl) {
@@ -63,8 +63,15 @@ async function callAPI(url) {
                 left -= jsobj.businesses.length;
             });
     }
+    console.log('######################');
     console.log(jsonObjArray.length);
-    createAPIresultTable();
+    console.log('######################');
+    if (jsonObjArray[0].page.totalElements === 0) {
+        document.getElementById('notfound').style.display = 'block';
+        console.log(jsonObjArray[0]);
+        console.log('######################');
+        return;
+    } else createAPIresultTable();
 }
 
 async function submitlol(event) {
@@ -113,6 +120,7 @@ async function submitlol(event) {
     let url = '';
     if (fc == 'default') url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&size=200' + dd;
     else url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd;
+    jsonObjArray = [];
     callAPI(url);
 }
 function hideLocInput() {
@@ -166,7 +174,7 @@ async function showVenue() {
 
 
 
-    const ele = document.getElementsByClassName("outerMergin");
+    const ele = document.getElementsByClassName("outerMargin");
     for (let i = 0; i < ele.length; i++) ele[i].style.display = "block";
     const elem = document.getElementById("venueDetails");
     elem.style.display = 'block';
@@ -213,10 +221,19 @@ function createAPIresultTable() {
     var len = jsonObjArray.length;
     console.log(len);
     let data = [];
+    data = [];
     if (len > 0) {
         console.log('enter to creat !!!');
         const elems = document.getElementsByClassName("APIresult");
-        for (let i = 0; i < elems.length; i++) elems[i].style.display = 'flex';
+        console.log('=== go remove table ===');
+        document.getElementById("APIresult").innerHTML = "";
+        // const elem = document.getElementById("APIresult").innerHTML = "";
+        // while(elem.firstChild){
+        //     elem.removeChild(elem.firstChild);
+        // }
+        console.log('=== empty the table ===');
+        for (let i = 0; i < elems.length; i++) elems[i].style.display = 'block';
+        // elems.innerHTML = "";
         for (let j = 0; j < len; j++) {
             let jsonObj = jsonObjArray[j];
             console.log('jsonObj length is ' + jsonObj.page.totalElements);
@@ -264,6 +281,9 @@ function createAPIresultTable() {
                 if (jsonObj._embedded.events[i] ?.seatmap?.staticUrl) temp.push(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
                 else temp.push(jsonObj._embedded.events[i] ?.url);
                 temp.push(jsonObj._embedded.events[i] ?.images[2].url);
+                //artist url though we are not sure the source
+                if (jsonObj._embedded.events[i] ?.attractions) temp.push(jsonObj._embedded.events[i] ?.attractions[0].url);
+                else tmp.push('https://studentbc.github.io/');
                 idMapping.set(jsonObj._embedded.events[i] ?.name, temp);
             }
         }
@@ -382,11 +402,12 @@ function showPosition(position) {
 function cc() {
     document.forms["partOne"].reset();
     document.getElementById("APIresult").innerHTML = '';
+    document.getElementById('notfound').style.display = 'none';
     // let elems = document.getElementsByClassName("APIresult");
     // for (let i = 0; i < elems.length; i++) elems[i].remove();
     elems = document.getElementsByClassName("searchResult");
     for (let i = 0; i < elems.length; i++) elems[i].style.display = "none";
-    const ele = document.getElementsByClassName("outerMergin");
+    const ele = document.getElementsByClassName("outerMargin");
     for (let i = 0; i < ele.length; i++) ele[i].style.display = "none";
     const el = document.getElementById("venueDetails");
     for (let i = 0; i < el.length; i++) el[i].style.display = "none";
@@ -397,23 +418,36 @@ function cc() {
 function moreInfo(name, day) {
     console.log('enter moreInfo');
     const elems = document.getElementsByClassName("searchResult");
-    for (let i = 0; i < elems.length; i++) elems[i].style.display = 'flex';
+    for (let i = 0; i < elems.length; i++) elems[i].style.display = 'block';
     ////value: id, artist team, venue, genre, ticket range, ticket status, buy website, photo
-    document.getElementById("moreInfoDate").textContent = day 
+    document.getElementById("moreInfoDate").textContent = day;
     document.getElementById("moreInfoAT").textContent = idMapping.get(name)[1]
     document.getElementById("moreInfoVenue").textContent = idMapping.get(name)[2]
     document.getElementById("moreInfoGen").textContent = idMapping.get(name)[3]
     document.getElementById("moreInfoRange").textContent = idMapping.get(name)[4]
-    document.getElementById("moreInfoSta").textContent = idMapping.get(name)[5]
+    let ticketStatius = idMapping.get(name)[5];
+    document.getElementById("moreInfoSta").classList.remove();
+    if (ticketStatius === 'onsale') {
+        document.getElementById("moreInfoSta").classList.add('onSale');
+        document.getElementById("moreInfoSta").innerHTML = 'On Sale';
+    } else if (ticketStatius === 'offsale') {
+        document.getElementById("moreInfoSta").classList.add('offSale');
+        document.getElementById("moreInfoSta").innerHTML = 'Off Sale';
+    } else {
+        document.getElementById("moreInfoSta").classList.add('rescheduled');
+        document.getElementById("moreInfoSta").innerHTML = 'Rescheduled';
+    }
+    
     document.getElementById("moreInfoBuy").href = idMapping.get(name)[6]
     console.log(idMapping.get(name)[7]);
     document.getElementById("moreInfoIMG").src = idMapping.get(name)[7]
+    document.getElementById("moreInfoAT").href = idMapping.get(name)[8];
     //here display venue button
     const elem = document.getElementsByClassName("venueBut");
-    for (let i = 0; i < elem.length; i++) elem[i].style.display = "flex";
+    for (let i = 0; i < elem.length; i++) elem[i].style.display = "block";
     selectedName = name;
     console.log('showing our button man!!!')
-    const ele = document.getElementsByClassName("outerMergin");
+    const ele = document.getElementsByClassName("outerMargin");
     for (let i = 0; i < ele.length; i++) ele[i].style.display = "none";
     const el = document.getElementById("venueDetails");
     for (let i = 0; i < el.length; i++) el[i].style.display = "none";

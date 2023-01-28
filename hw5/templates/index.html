@@ -10,94 +10,99 @@
 </head>
 
 <body>
-  <div class="flex-container">
-    <div class="mainPage">
-      <h1 style="text-align: center;">Event Search</h1>
-      <hr>
-      <form name="partOne" action="" style="color:blue;" onsubmit="submitlol(event)">
-        <label>Keyword</label><label style="color:red;">*</label><br>
-        <input type="text" name="kw" required>
-        <br><br>
-        <div class="twoBox">
-          <div>
-            <label>Distance(miles)</label>
-            <br>
-            <input type="number" name="dm" value=10 style="color: gray;">
-          </div>
-          <div class="fc">
-            <label style="text-align: right;">Category</label><label style="color:red;">*</label>
-            <br>
-            <select name="fc" id="foodCategory" required>
-              <option value="default">Default</option>
-              <option value="KZFzniwnSyZfZ7v7nJ">Music</option>
-              <option value="KZFzniwnSyZfZ7v7nE">Sports</option>
-              <option value="KZFzniwnSyZfZ7v7na">Arts & Theatre</option>
-              <option value="KZFzniwnSyZfZ7v7nn">Film</option>
-              <option value="KZFzniwnSyZfZ7v7n1">Miscellaneous</option>
-            </select>
-          </div>
-        </div>
-        <br><br>
-        <label>Location</label><label style="color:red;">*</label>
-        <input type="checkbox" name="autoDetect" id="cbox" onclick="hideLocInput()">
-        <label style="color: gray;"><strong>Auto-Detect Location</strong></label>
-        <br>
-        <input type=" text" name="location" minlength="4" id="inputLoc">
-          <br><br>
-          <!-- we cannot call function submit  -->
-          <input type="submit" value="SUBMIT" class="subBut">
-          <input type="button" value="CLEAR" class="clearBut" onclick="cc();">
-      </form>
-    </div>
-    <div id="APIresult" class="APIresult">
-
-    </div>
-
-    <div id="searchResult" class="searchResult">
-      <h2 id="moreInfoHeader"></h2>
-      <div class="srleft">
-        <h3 style="color: #9DF1DF;">Date</h3>
-        <p id="moreInfoDate" style="color: white;"></p>
-        <h3 style="color: #9DF1DF;">Artist/Team</h3>
-        <p id="moreInfoAT" style="color: white;"></p>
-        <h3 style="color: #9DF1DF;">Venue</h3>
-        <p id="moreInfoVenue" style="color: white;"></p>
-        <h3 style="color: #9DF1DF;">Genres</h3>
-        <p id="moreInfoGen" style="color: white;"></p>
-        <h3 style="color: #9DF1DF;">Price Ranges</h3>
-        <p id="moreInfoRange" style="color: white;"></p>
-        <h3 style="color: #9DF1DF;">Ticket Status</h3>
-        <p id="moreInfoSta" style="color: white;"></p>
-        <h3 style="color: #9DF1DF;">Buy Ticket At:</h3>
-        <a href="" id="moreInfoBuy">Ticketmaster</a>
-      </div>
-      <div class="srright">
-        <img id="moreInfoIMG" src="" alt="">
-      </div>
-    </div>
-
-    <div class="venueBut" style="display: none; align-self: center;">
-      <h3 style="text-align: center; color: white;">Show Venue Details</h3>
-      <div class="arrow" onclick="showVenue()" style="margin-left: auto; margin-right: auto; margin-bottom: 50px;">
-      </div>
-    </div>
-
-    <div class="outerMergin">
-      <div id="venueDetails">
-        <h1 id="vdHeader" style="text-align: center;"></h1>
-        <img src="" alt="venue_logo" id="vdIMG">
+  <!-- <div class="flex-container"> -->
+  <div class="mainPage">
+    <h1 style="text-align: center; color: white;">Event Search</h1>
+    <hr>
+    <form name="partOne" action="" style="color:blue;" onsubmit="submitlol(event)">
+      <label>Keyword</label><label style="color:red;">*</label><br>
+      <input type="text" name="kw" required>
+      <br><br>
+      <div class="twoBox">
         <div>
-          <div id="vdLeft" style="width: 48%;">
-            <p id="vdaddr" style="font-style: bold;">Address:</p>
-            <a href="" id="vdgm">Open in Google Maps</a>
-          </div>
-          <div id="vdRight">
-            <a href="" id="vdme">More Events at this venue</a>
-          </div>
+          <label>Distance(miles)</label>
+          <br>
+          <input type="number" name="dm" value=10 style="color: gray;">
+        </div>
+        <div class="fc">
+          <label style="text-align: right;">Category</label><label style="color:red;">*</label>
+          <br>
+          <select name="fc" id="foodCategory" required>
+            <option value="default">Default</option>
+            <option value="KZFzniwnSyZfZ7v7nJ">Music</option>
+            <option value="KZFzniwnSyZfZ7v7nE">Sports</option>
+            <option value="KZFzniwnSyZfZ7v7na">Arts & Theatre</option>
+            <option value="KZFzniwnSyZfZ7v7nn">Film</option>
+            <option value="KZFzniwnSyZfZ7v7n1">Miscellaneous</option>
+          </select>
+        </div>
+      </div>
+      <br><br>
+      <label>Location</label><label style="color:red;">*</label>
+      <input type="checkbox" name="autoDetect" id="cbox" onclick="hideLocInput()">
+      <label style="color: gray;"><strong>Auto-Detect Location</strong></label>
+      <br>
+      <input type=" text" name="location" minlength="4" id="inputLoc">
+      <br><br>
+      <!-- we cannot call function submit  -->
+      <input type="submit" value="SUBMIT" class="subBut">
+      <input type="button" value="CLEAR" class="clearBut" onclick="cc();">
+    </form>
+  </div>
+  <div id="notfound">
+    <h3 style="color: red; text-align: center;">No Records found</h3>
+  </div>
+  <div id="APIresult" class="APIresult">
+
+  </div>
+
+  <div id="searchResult" class="searchResult">
+    <h2 id="moreInfoHeader"></h2>
+    <div class="srleft">
+      <h3 style="color: #9DF1DF;">Date</h3>
+      <p id="moreInfoDate" style="color: white;"></p>
+      <h3 style="color: #9DF1DF;">Artist/Team</h3>
+      <a id="moreInfoAT" target="_blank" href="" style="color: white;"></a>
+      <h3 style="color: #9DF1DF;">Venue</h3>
+      <p id="moreInfoVenue" style="color: white;"></p>
+      <h3 style="color: #9DF1DF;">Genres</h3>
+      <p id="moreInfoGen" style="color: white;"></p>
+      <h3 style="color: #9DF1DF;">Price Ranges</h3>
+      <p id="moreInfoRange" style="color: white;"></p>
+      <h3 style="color: #9DF1DF;">Ticket Status</h3>
+      <div id="moreInfoSta"></div>
+      <h3 style="color: #9DF1DF;">Buy Ticket At:</h3>
+      <a href="" id="moreInfoBuy" target="_blank">Ticketmaster</a>
+    </div>
+    <div class="srright">
+      <img id="moreInfoIMG" src="" alt="">
+    </div>
+  </div>
+
+  <div class="venueBut">
+    <h3 style="text-align: center; color: white;">Show Venue Details</h3>
+    <div class="arrow" onclick="showVenue()" style="margin-left: auto; margin-right: auto; margin-bottom: 50px;">
+    </div>
+  </div>
+
+  <div class="outerMargin">
+    <div id="venueDetails">
+      <div class="outVH">
+        <h1 id="vdHeader" style="text-align: center;"></h1>
+      </div>
+      <img src="" alt="venue_logo" id="vdIMG">
+      <div>
+        <div id="vdLeft" style="width: 48%;">
+          <p id="vdaddr" style="font-style: bold;">Address:</p>
+          <a href="" id="vdgm" target="_blank">Open in Google Maps</a>
+        </div>
+        <div id="vdRight">
+          <a href="" id="vdme" target="_blank">More Events at this venue</a>
         </div>
       </div>
     </div>
   </div>
+  <!-- </div> -->
   <script src="../static/func.js" charset="utf-8"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
