@@ -137,7 +137,7 @@ input[name="kw"] {
 
     /* filter blur  */
     backdrop-filter: blur(10px);
-    background-color: #DDDDDD;
+    background-color: rgba(67,66,66,0.6);
 }
 
 #moreInfoIMG {
@@ -157,7 +157,8 @@ input[name="kw"] {
     list-style: none;
     width: 800px;
     padding: 20px;
-    background-color: #DDDDDD;
+    backdrop-filter: blur(10px);
+    background-color: rgba(67,66,66,0.6);
 }
 
 .APIresult {
