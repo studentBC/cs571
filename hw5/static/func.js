@@ -57,11 +57,11 @@ async function callAPI(url) {
                 })
             })
             .then(response => response.json())
-            .then(response => initial(response))
-            .then(response => {
-                start += jsobj.businesses.length;
-                left -= jsobj.businesses.length;
-            });
+            .then(response => initial(response));
+            // .then(response => {
+            //     start += jsobj.businesses.length;
+            //     left -= jsobj.businesses.length;
+            // });
     }
     console.log('######################');
     console.log(jsonObjArray.length);
@@ -130,8 +130,11 @@ async function submitlol(event) {
     let tmKey = 'uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
     //https://app.ticketmaster.com/discovery/v2/venues?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&keyword=Los%20Angeles%20Memorial%20Coliseum
     let url = '';
-    if (fc == 'default') url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&size=200' + dd;
-    else url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd;
+    if (fc == 'default') {
+        fc = 'KZFzniwnSyZfZ7v7nJ,%20KZFzniwnSyZfZ7v7nE,%20KZFzniwnSyZfZ7v7na,%20KZFzniwnSyZfZ7v7nn,%20KZFzniwnSyZfZ7v7n1'
+    }
+    console.log(fc);
+    url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd;
     jsonObjArray = [];
     callAPI(url);
 }
@@ -174,16 +177,19 @@ async function showVenue() {
     //we will start from here
     document.getElementById('vdIMG').src = idMapping.get(selectedName)[7];
     let add = 'Address: ';
-    // console.log('=============');
-    // console.log(jobj);
-    // console.log('=============');
     if (jobj.address) add+=jobj.address.line1 +'\n';
     document.getElementById('vdaddr').innerHTML = add +jobj.state.stateCode+
                                                 '\n'+jobj.postalCode
     if (jobj.url) document.getElementById('vdme').href = jobj.url;
     //for google map URL
-    document.getElementById('vdgm').href = 'www.google.com';
-
+    //it will encouner repeat state or city name especially new york ...
+    //let kw = jobj.state.name +'+'+ jobj.city.name + '+' + jobj.name;
+    let kw = jobj.name + '+' + jobj.postalCode;
+    kw = kw.replace(/\s/g, '+')
+    document.getElementById('vdgm').href = 'https://www.google.com/maps/search/'+kw;
+    console.log('=============');
+    console.log(document.getElementById('vdgm').href);
+    console.log('=============');
 
 
     const ele = document.getElementsByClassName("outerMargin");
@@ -441,6 +447,7 @@ function moreInfo(name, day) {
     const elems = document.getElementsByClassName("searchResult");
     for (let i = 0; i < elems.length; i++) elems[i].style.display = 'block';
     ////value: id, artist team, venue, genre, ticket range, ticket status, buy website, photo
+    document.getElementById("moreInfoHeader").textContent = name;
     document.getElementById("moreInfoDate").textContent = day;
     document.getElementById("moreInfoAT").textContent = idMapping.get(name)[1]
     document.getElementById("moreInfoVenue").textContent = idMapping.get(name)[2]

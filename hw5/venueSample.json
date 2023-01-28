@@ -1,0 +1,81 @@
+{
+    "_embedded": {
+        "venues": [
+            {
+                "name": "Los Angeles Memorial Coliseum",
+                "type": "venue",
+                "id": "KovZpZAIF7aA",
+                "test": false,
+                "url": "https://www.ticketmaster.com/los-angeles-memorial-coliseum-tickets-los-angeles/venue/82780",
+                "locale": "en-us",
+                "aliases": [
+                    "la coliseum",
+                    "la colliseum",
+                    "los angeles coliseum",
+                    "los angeles colliseum"
+                ],
+                "postalCode": "90037",
+                "timezone": "America/Los_Angeles",
+                "city": {
+                    "name": "Los Angeles"
+                },
+                "state": {
+                    "name": "California",
+                    "stateCode": "CA"
+                },
+                "country": {
+                    "name": "United States Of America",
+                    "countryCode": "US"
+                },
+                "address": {
+                    "line1": "3911 S. Figueroa St"
+                },
+                "location": {
+                    "longitude": "-118.287865",
+                    "latitude": "34.014053"
+                },
+                "markets": [
+                    {
+                        "name": "Los Angeles",
+                        "id": "27"
+                    }
+                ],
+                "dmas": [
+                    {
+                        "id": 223
+                    },
+                    {
+                        "id": 324
+                    },
+                    {
+                        "id": 354
+                    },
+                    {
+                        "id": 383
+                    }
+                ],
+                "upcomingEvents": {
+                    "_total": 10,
+                    "ticketmaster": 10,
+                    "_filtered": 0
+                },
+                "_links": {
+                    "self": {
+                        "href": "/discovery/v2/venues/KovZpZAIF7aA?locale=en-us"
+                    }
+                }
+            }
+        ]
+    },
+    "_links": {
+        "self": {
+            "href": "/discovery/v2/venues?id=KovZpZAIF7aA"
+        }
+    },
+    "page": {
+        "size": 20,
+        "totalElements": 1,
+        "totalPages": 1,
+        "number": 0
+    }
+}
