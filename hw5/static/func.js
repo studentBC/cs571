@@ -6,7 +6,7 @@ let lat = 0,
 let jsonObjArray = [];
 let selectedName=''
 //key: name
-//value: id, artist team, venue, genre, ticket status, buy website, photo, logo photo, attraction URL
+//value: venue id, artist team, venue, genre, ticket status, buy website, photo, event id
 const idMapping = new Map();
 
 function httpGet(theUrl) {
@@ -175,7 +175,8 @@ async function showVenue() {
             return response;
         })
     //we will start from here
-    document.getElementById('vdIMG').src = idMapping.get(selectedName)[7];
+    if (jobj.venues && jobj.venues[0].images) document.getElementById('vdIMG').src = idMapping.get(selectedName)[9]; //jobj.venues[0].images[0].url;
+    else document.getElementById('vdIMG').style.display = 'none';
     let add = 'Address: ';
     if (jobj.address) add+=jobj.address.line1 +'\n';
     document.getElementById('vdaddr').innerHTML = add +jobj.state.stateCode+
@@ -287,7 +288,9 @@ function createAPIresultTable() {
                 //not quiet too sure for artist team
                 if (jsonObj._embedded.events[i] ?._embedded.attractions) temp.push(jsonObj._embedded.events[i] ?._embedded.attractions[0].name);
                 else temp.push('lol');
+                //
                 temp.push(venue);
+                //
                 temp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
                 let prange = '???';
                 console.log(jsonObj._embedded.events[i] ?.priceRanges);
@@ -296,16 +299,19 @@ function createAPIresultTable() {
                     if (jsonObj._embedded.events[i] ?.priceRanges.currency) prange+=jsonObj._embedded.events[i] ?.priceRanges.currency;
                     else prange+= ' USD'
                 }
+                //
                 temp.push(prange);
+                //
                 temp.push(jsonObj._embedded.events[i] ?.dates.status.code);
+                //
                 temp.push(jsonObj._embedded.events[i] ?.url);
                 //console.log(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
                 if (jsonObj._embedded.events[i] ?.seatmap?.staticUrl) temp.push(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
                 else temp.push(jsonObj._embedded.events[i] ?.url);
-                temp.push(jsonObj._embedded.events[i] ?.images[2].url);
-                //artist url though we are not sure the source
-                if (jsonObj._embedded.events[i] ?.attractions) temp.push(jsonObj._embedded.events[i] ?.attractions[0].url);
-                else tmp.push('https://studentbc.github.io/');
+                //artist url need event id to find it
+                temp.push(jsonObj._embedded.events[i] ?.id);
+                //for venue logo img
+                if (jsonObj._embedded.events[i] ?._embedded?.venues && jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images) temp.push(jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images[0]?.url);
                 idMapping.set(jsonObj._embedded.events[i] ?.name, temp);
             }
         }
@@ -442,7 +448,7 @@ function cc() {
     for (let i = 0; i < elem.length; i++) elem[i].style.display = 'none';
 }
 //when user click the title and ask for more info
-function moreInfo(name, day) {
+async function moreInfo(name, day) {
     console.log('enter moreInfo');
     const elems = document.getElementsByClassName("searchResult");
     for (let i = 0; i < elems.length; i++) elems[i].style.display = 'block';
@@ -466,10 +472,31 @@ function moreInfo(name, day) {
         document.getElementById("moreInfoSta").innerHTML = 'Rescheduled';
     }
     
-    document.getElementById("moreInfoBuy").href = idMapping.get(name)[6]
+    document.getElementById("moreInfoBuy").href = idMapping.get(name)[6];
     console.log(idMapping.get(name)[7]);
-    document.getElementById("moreInfoIMG").src = idMapping.get(name)[7]
-    document.getElementById("moreInfoAT").href = idMapping.get(name)[8];
+    document.getElementById("moreInfoIMG").src = idMapping.get(name)[7];
+
+    //under discovery/v2/events/{id}
+    console.log('### ' + idMapping.get(name)[8] + ' ###');
+    let url = 'https://app.ticketmaster.com/discovery/v2/events/'+ idMapping.get(name)[8]+ '.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
+    let jobj;
+    await fetch('http://127.0.0.1:5000/getTicketMasterSearch', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "url": url
+            })
+        })
+        .then(response => response.json())
+        .then(response => {
+            jobj = response;
+            console.log(JSON.stringify(response));
+            return response;
+        })
+    document.getElementById("moreInfoAT").href = jobj._embedded.attractions[0].url;
     //here display venue button
     const elem = document.getElementsByClassName("venueBut");
     for (let i = 0; i < elem.length; i++) elem[i].style.display = "block";
