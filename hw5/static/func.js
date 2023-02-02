@@ -70,11 +70,13 @@ async function callAPI(url) {
         document.getElementById('notfound').style.display = 'block';
         console.log(jsonObjArray[0]);
         console.log('######################');
+        document.getElementById("APIresult").innerHTML = '';
         return;
     } else createAPIresultTable();
 }
 
 async function submitlol(event) {
+    document.getElementById('notfound').style.display = 'none';
     console.log('---- not show elems ---');
     console.log(event);
     // document.getElementById("APIresult").style.display = "none";
@@ -339,14 +341,14 @@ function createAPIresultTable() {
     td2.classList.add("img");
     //td2.addEventListener("click", ()=>sortColumn(1));
     td3.appendChild(text3);
-    td3.classList.add("bn");
+    td3.classList.add("fevent");
 
     td3.addEventListener("click", () => sortColumn(data, 3));
     td4.appendChild(text4);
-    td4.classList.add("rating");
+    td4.classList.add("fgenre");
     td4.addEventListener("click", () => sortColumn(data, 4));
     td5.appendChild(text5);
-    td5.classList.add("dist");
+    td5.classList.add("fvenue");
     td5.addEventListener("click", () => sortColumn(data, 5));
 
     tr.appendChild(td1);
@@ -458,7 +460,14 @@ async function moreInfo(name, day) {
     document.getElementById("moreInfoAT").textContent = idMapping.get(name)[1]
     document.getElementById("moreInfoVenue").textContent = idMapping.get(name)[2]
     document.getElementById("moreInfoGen").textContent = idMapping.get(name)[3]
-    document.getElementById("moreInfoRange").textContent = idMapping.get(name)[4]
+    console.log("######" + idMapping.get(name)[4] + "######")
+    for (let j = 0; j < idMapping.get(name).length; j++) {
+        console.log(idMapping.get(name)[j])
+    }
+    if (idMapping.get(name)[4] != "???") {
+        document.getElementById("prangeTitle").innerHTML = "Price Ranges"
+        document.getElementById("moreInfoRange").textContent = idMapping.get(name)[4]
+    }
     let ticketStatius = idMapping.get(name)[5];
     document.getElementById("moreInfoSta").classList.remove();
     if (ticketStatius === 'onsale') {
@@ -499,6 +508,7 @@ async function moreInfo(name, day) {
     document.getElementById("moreInfoAT").href = jobj._embedded.attractions[0].url;
     //here display venue button
     const elem = document.getElementsByClassName("venueBut");
+    elem.display = "block";
     for (let i = 0; i < elem.length; i++) elem[i].style.display = "block";
     selectedName = name;
     console.log('showing our button man!!!')

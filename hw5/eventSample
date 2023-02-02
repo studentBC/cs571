@@ -1,3 +1,6 @@
+curl -X GET  --url 'https://app.ticketmaster.com/discovery/v2/events.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&keyword=museum&segmentId=*&radius=10&unit=miles&geoPoint=9q5cs' --header 'accept: application/json' | python -m json.tool
+
+
 {
     "_embedded": {
         "events": [
