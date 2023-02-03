@@ -16,7 +16,7 @@ h2 {
 #APIresultTable {
     margin-left: auto;
     margin-right: auto;
-    padding: 20px;
+    width: 85%;
 }
 
 .flex-container {
@@ -133,7 +133,7 @@ input[name="kw"] {
     flex-direction: column;
     /* Then we define how is distributed the remaining space */
     justify-content: space-around;
-    width: 600px;
+    width: 50%;
     list-style: none;
     margin-left: auto;
     margin-right: auto;
@@ -162,7 +162,7 @@ input[name="kw"] {
     /* Then we define how is distributed the remaining space */
     justify-content: center;
     list-style: none;
-    width: 800px;
+    width: 65%;
     padding: 20px;
     backdrop-filter: blur(10px);
     background-color: rgba(67,66,66,0.6);
@@ -193,7 +193,8 @@ input[name="kw"] {
 
 .no {
     white-space: pre-wrap;
-    word-wrap: break-word
+    word-wrap: break-word;
+    width: 15%;
 }
 
 .arow .no {
@@ -205,12 +206,15 @@ input[name="kw"] {
     /* flex: 1 1 30px; */
     text-align: center;
 }
-
+.datetn {
+    margin: 1px;
+}
 .icon {
     /* margin-top: 1em; */
     text-align: center;
     object-fit: scale-down;
-    max-width: 150px;
+    width: 15%;
+    /* max-width: 150px; */
 }
 .fevent:hover {
     cursor: pointer !important;
@@ -265,7 +269,7 @@ input[name="kw"] {
     background-color: white;
     border-radius: 10px;
     backdrop-filter: blur(10px);
-    width: 800px;
+    width: 65%;
     margin: 30px auto;
     display: none;
 }

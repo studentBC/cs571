@@ -110,7 +110,7 @@ async function submitlol(event) {
     let dd = '';
     if (dist) dd = '&radius=' + dist + '&unit=miles'
     if (!selfLocate && loc === "") {
-        alert("you has not enter all required info!");
+        //alert("you has not enter all required info!");
         return false;
     }
     if (loc === "" && selfLocate) {
@@ -143,6 +143,7 @@ async function submitlol(event) {
 function hideLocInput() {
     let cb = document.getElementById('cbox');
     if (cb.checked == true) {
+        document.getElementById("inputLoc").removeAttribute("required");
         document.getElementById('inputLoc').style.display = 'none';
     } else {
         document.getElementById('inputLoc').style.display = 'block';
@@ -273,7 +274,9 @@ function createAPIresultTable() {
                 //Event
                 tmp.push(jsonObj._embedded.events[i] ?.name);
                 //Genre
-                tmp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
+                if (jsonObj._embedded.events[i] ?.classifications) {
+                    tmp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
+                } else tmp.push("lol")
                 //Venue
                 let venue = '';
                 for (let k = 0; k < jsonObj._embedded.events[i] ?._embedded.venues.length; k++) {
@@ -282,15 +285,16 @@ function createAPIresultTable() {
                     venue += '|';
                 }
                 data.push(tmp);
-                //value: id, artist team, venue, genre, ticket range, ticket status, buy website, photo
+                //value: venue id, artist team, venue, genre, ticket range, ticket status, buy website, photo
                 //console.log(jsonObj._embedded.events[i].venues[0]?.id);
                 if (jsonObj._embedded.events[i]._embedded.venues[0].id) temp.push(jsonObj._embedded.events[i]._embedded.venues[0]?.id);//venues.id = venue's id eg: ZFr9jZAFkF
                 else temp.push('ZFr9jZAFkF');
 
-                //not quiet too sure for artist team
+                // artist team should be changed again for search for event/id 
                 if (jsonObj._embedded.events[i] ?._embedded.attractions) temp.push(jsonObj._embedded.events[i] ?._embedded.attractions[0].name);
                 else temp.push('lol');
                 //
+                venue = venue.substring(0, venue.length - 1);
                 temp.push(venue);
                 //
                 temp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
@@ -312,8 +316,8 @@ function createAPIresultTable() {
                 else temp.push(jsonObj._embedded.events[i] ?.url);
                 //artist url need event id to find it
                 temp.push(jsonObj._embedded.events[i] ?.id);
-                //for venue logo img
-                if (jsonObj._embedded.events[i] ?._embedded?.venues && jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images) temp.push(jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images[0]?.url);
+                //for venue logo img should be in event/id that search result
+                //if (jsonObj._embedded.events[i] ?._embedded?.venues && jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images) temp.push(jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images[0]?.url);
                 idMapping.set(jsonObj._embedded.events[i] ?.name, temp);
             }
         }
@@ -385,8 +389,10 @@ function createAPIresultTable() {
         td5.classList.add("dist");
 
 
-
-        text1 = document.createTextNode(data[i][0] + '\n' + data[i][1]);
+        text1 = document.createElement('p')
+        text1.classList.add("datetn");
+        text1.innerHTML = data[i][0]+ "<br>"+data[i][1];
+        //text1 = document.createTextNode(data[i][0] + '\n' + data[i][1]);
         text2 = document.createElement('img');
         //text2.src = jsonObj.businesses[i].image_url;
         text2.src = data[i][2];
@@ -398,11 +404,20 @@ function createAPIresultTable() {
         // text3 = document.createTextNode(jsonObj.businesses[i].name);
         // text4 = document.createTextNode(jsonObj.businesses[i].rating);
         // text5 = document.createTextNode(jsonObj.businesses[i].distance);
-        text3 = document.createTextNode(data[i][3]);
-        text4 = document.createTextNode(data[i][4]);
+        text3 = document.createElement('p')
+        text3.classList.add("datetn");
+        text3.innerHTML = data[i][3];
+        //text3 = document.createTextNode(data[i][3]);
+        text4 = document.createElement('p')
+        text4.classList.add("datetn");
+        text4.innerHTML = data[i][4];
+        //text4 = document.createTextNode(data[i][4]);
         let place = '';
-        for (let a = 5; a < data[i].length; a++) place += (data[i][a] + ' ');
-        text5 = document.createTextNode(place);
+        for (let a = 5; a < data[i].length; a++) place += (data[i][a] + '<br>');
+        text5 = document.createElement('p')
+        text5.classList.add("datetn");
+        text5.innerHTML = place;
+        //text5 = document.createTextNode(place);
         // console.log(jsonObj.businesses[i].name);
         // console.log(jsonObj.businesses[i].rating);
         // console.log(jsonObj.businesses[i].distance);
@@ -438,6 +453,7 @@ function cc() {
     document.forms["partOne"].reset();
     document.getElementById("APIresult").innerHTML = '';
     document.getElementById('notfound').style.display = 'none';
+    document.getElementById("inputLoc").style.display = 'block';
     // let elems = document.getElementsByClassName("APIresult");
     // for (let i = 0; i < elems.length; i++) elems[i].remove();
     elems = document.getElementsByClassName("searchResult");
@@ -459,7 +475,7 @@ async function moreInfo(name, day) {
     document.getElementById("moreInfoDate").textContent = day;
     document.getElementById("moreInfoAT").textContent = idMapping.get(name)[1]
     document.getElementById("moreInfoVenue").textContent = idMapping.get(name)[2]
-    document.getElementById("moreInfoGen").textContent = idMapping.get(name)[3]
+    document.getElementById("moreInfoGen").textContent = idMapping.get(name)[3] 
     console.log("######" + idMapping.get(name)[4] + "######")
     for (let j = 0; j < idMapping.get(name).length; j++) {
         console.log(idMapping.get(name)[j])
@@ -486,7 +502,7 @@ async function moreInfo(name, day) {
     document.getElementById("moreInfoIMG").src = idMapping.get(name)[7];
 
     //under discovery/v2/events/{id}
-    console.log('### ' + idMapping.get(name)[8] + ' ###');
+    console.log('### going to check event ID:' + idMapping.get(name)[8] + ' ###');
     let url = 'https://app.ticketmaster.com/discovery/v2/events/'+ idMapping.get(name)[8]+ '.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
     let jobj;
     await fetch('http://127.0.0.1:5000/getTicketMasterSearch', {
@@ -505,7 +521,25 @@ async function moreInfo(name, day) {
             console.log(JSON.stringify(response));
             return response;
         })
-    document.getElementById("moreInfoAT").href = jobj._embedded.attractions[0].url;
+    //this property might not have data in it ... do this!
+    if (jobj._embedded.attractions) {
+        document.getElementById("moreInfoAT").href = jobj._embedded.attractions[0]?.url;
+        document.getElementById("moreInfoATT").innerHTML = "Artist/Team"
+        //Genre
+        let name = ""
+        for (let a = 0; a < jobj._embedded.attractions.length; a++) {
+            name+=jobj._embedded.attractions[a].name
+            name+="|"
+        }
+        name = name.substring(0, name.length - 1);
+        document.getElementById("moreInfoAT").textContent = name
+    }
+    document.getElementById("moreInfoGen").textContent = jobj.classifications[0].segment.name + " | " +
+                                                        jobj.classifications[0].genre.name + " | " + jobj.classifications[0].subGenre.name
+    //venue logo
+    if (jobj._embedded.venues[0].images ) idMapping.get(name).push(jobj._embedded.venues[0].images[0].url)
+
+    console.log("-----  we are going to show button   -----");
     //here display venue button
     const elem = document.getElementsByClassName("venueBut");
     elem.display = "block";
