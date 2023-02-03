@@ -332,27 +332,48 @@ function createAPIresultTable() {
     var td4 = document.createElement('td');
     var td5 = document.createElement('td');
 
-    var text1 = document.createTextNode('Date');
-    var text2 = document.createTextNode('Icon');
-    var text3 = document.createTextNode('Event');
-    var text4 = document.createTextNode('Genre');
-    var text5 = document.createTextNode('Venue');
+    var text1 = document.createElement('p');
+    text1.classList.add("headerCell");
+    text1.innerHTML = 'Date';
+
+    var text2 = document.createElement('p') ;
+    text2.classList.add("headerCell");
+    text2.innerHTML = 'Icon';
+
+    var text3 = document.createElement('p') ;
+    text3.classList.add("headerCell");
+    text3.innerHTML = 'Event';
+
+    var text4 = document.createElement('p') ;
+    text4.classList.add("headerCell");
+    text4.innerHTML = 'Genre';
+    
+    var text5 = document.createElement('p') ;
+    text5.classList.add("headerCell");
+    text5.innerHTML = 'Venue';
+
+
     // tr.classList.add("arow");
     td1.appendChild(text1);
     td1.classList.add("no");
+    
     //td1.addEventListener("click", ()=>sortColumn(0));
     td2.appendChild(text2);
     td2.classList.add("img");
+
     //td2.addEventListener("click", ()=>sortColumn(1));
     td3.appendChild(text3);
     td3.classList.add("fevent");
 
+
     td3.addEventListener("click", () => sortColumn(data, 3));
     td4.appendChild(text4);
     td4.classList.add("fgenre");
+
     td4.addEventListener("click", () => sortColumn(data, 4));
     td5.appendChild(text5);
     td5.classList.add("fvenue");
+
     td5.addEventListener("click", () => sortColumn(data, 5));
 
     tr.appendChild(td1);
@@ -472,7 +493,7 @@ async function moreInfo(name, day) {
     for (let i = 0; i < elems.length; i++) elems[i].style.display = 'block';
     ////value: id, artist team, venue, genre, ticket range, ticket status, buy website, photo
     document.getElementById("moreInfoHeader").textContent = name;
-    document.getElementById("moreInfoDate").textContent = day;
+    document.getElementById("moreInfoDate").textContent = day.replace('undefined','');
     document.getElementById("moreInfoAT").textContent = idMapping.get(name)[1]
     document.getElementById("moreInfoVenue").textContent = idMapping.get(name)[2]
     document.getElementById("moreInfoGen").textContent = idMapping.get(name)[3] 
@@ -529,9 +550,9 @@ async function moreInfo(name, day) {
         let name = ""
         for (let a = 0; a < jobj._embedded.attractions.length; a++) {
             name+=jobj._embedded.attractions[a].name
-            name+="|"
+            name+=" | "
         }
-        name = name.substring(0, name.length - 1);
+        name = name.substring(0, name.length - 2);
         document.getElementById("moreInfoAT").textContent = name
     }
     document.getElementById("moreInfoGen").textContent = jobj.classifications[0].segment.name + " | " +
