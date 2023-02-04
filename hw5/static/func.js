@@ -5,9 +5,14 @@ let lat = 0,
     prevCol = -1;
 let jsonObjArray = [];
 let selectedName=''
+let tmKey = 'uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
+
 //key: name
 //value: venue id, artist team, venue, genre, ticket status, buy website, photo, event id
 const idMapping = new Map();
+//key: venue id
+//value: images url
+// const venueMapping = new Map();
 
 function httpGet(theUrl) {
     let xmlHttpReq = new XMLHttpRequest();
@@ -20,7 +25,37 @@ function initial(jojo) {
     jsobj = jojo;
     jsonObjArray.push(jojo);
 }
-async function callAPI(url) {
+async function searchVenue(url) {
+    console.log('enter searchVenue')
+    var ans = 'lol'
+    await fetch('http://127.0.0.1:5000/getTicketMasterSearch', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "url": url
+        })
+    })
+    .then(response => response.json())
+    .then(response => {
+        console.log('we got venue length ' + response._embedded.venues.length);
+        console.log(response);
+        for (let i = 0; i < response._embedded.venues.length; i++) {
+            if (response._embedded.venues[i].images) {
+                console.log(response._embedded.venues[i].id);
+                console.log(response._embedded.venues[i].images[0].url);
+                ans =  response._embedded.venues[i].images[0].url;
+                console.log('answer is ' + ans)
+                return ans
+            }
+        }  
+    })
+    console.log('exit searchVenue ans is ' + ans)
+    return ans
+}
+async function callAPI(url, mixedKeyWord) {
     console.log('enter callAPI');
     await fetch('http://127.0.0.1:5000/getTicketMasterSearch', {
             method: 'POST',
@@ -40,8 +75,8 @@ async function callAPI(url) {
         .then(response => initial(response))
     // .then(response => createAPIresultTable(response))
     // .then(response => {
-    console.log(jsobj.total);
-    console.log(jsonObjArray[0].total);
+    // console.log(jsobj.total);
+    // console.log(jsonObjArray[0].total);
     let totalPage = jsobj.page.totalPages;
     console.log('we got ' + totalPage + ' pages');
     for (let i = 1; i < totalPage; i++) {
@@ -73,6 +108,9 @@ async function callAPI(url) {
         document.getElementById("APIresult").innerHTML = '';
         return;
     } else createAPIresultTable();
+
+    // let Url = 'https://app.ticketmaster.com/discovery/v2/venues?apikey='+ tmKey + '&keyword=' + mixedKeyWord;
+    // searchVenue(Url);
 }
 
 async function submitlol(event) {
@@ -129,7 +167,6 @@ async function submitlol(event) {
     }
     let mixedKeyWord = kw + ' ' + loc;
     mixedKeyWord = mixedKeyWord.replace(/\s+/g, '%20');
-    let tmKey = 'uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
     //https://app.ticketmaster.com/discovery/v2/venues?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&keyword=Los%20Angeles%20Memorial%20Coliseum
     let url = '';
     if (fc == 'default') {
@@ -138,7 +175,7 @@ async function submitlol(event) {
     console.log(fc);
     url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd;
     jsonObjArray = [];
-    callAPI(url);
+    callAPI(url, mixedKeyWord);
 }
 function hideLocInput() {
     let cb = document.getElementById('cbox');
@@ -178,12 +215,16 @@ async function showVenue() {
             return response;
         })
     //we will start from here
-    if (jobj.venues && jobj.venues[0].images) document.getElementById('vdIMG').src = idMapping.get(selectedName)[9]; //jobj.venues[0].images[0].url;
+    if (idMapping.get(selectedName)[9]!='lol') document.getElementById('vdIMG').src = idMapping.get(selectedName)[9]; //jobj.venues[0].images[0].url;
     else document.getElementById('vdIMG').style.display = 'none';
-    let add = 'Address: ';
-    if (jobj.address) add+=jobj.address.line1 +'\n';
-    document.getElementById('vdaddr').innerHTML = add +jobj.state.stateCode+
-                                                '\n'+jobj.postalCode
+    // let add = 'Address: ';
+    if (jobj.address.line1) {
+        // add+=jobj.address.line1 +"<br>";
+        document.getElementById('vdaddr').innerHTML = jobj.address.line1 +"<br>"+
+                                                    + jobj.state.stateCode+"<br>"+ jobj.postalCode
+    } else {
+        document.getElementById('vdaddr').innerHTML = jobj.state.stateCode+"<br>"+jobj.postalCode
+    }
     if (jobj.url) document.getElementById('vdme').href = jobj.url;
     //for google map URL
     //it will encouner repeat state or city name especially new york ...
@@ -521,6 +562,10 @@ async function moreInfo(name, day) {
     document.getElementById("moreInfoBuy").href = idMapping.get(name)[6];
     console.log(idMapping.get(name)[7]);
     document.getElementById("moreInfoIMG").src = idMapping.get(name)[7];
+    //go search for venue
+    let Url = 'https://app.ticketmaster.com/discovery/v2/venues?apikey='+ tmKey + '&keyword=' + idMapping.get(name)[2];
+    let logoIMG = await searchVenue(Url);
+    console.log('we got logo img: ' + logoIMG)
 
     //under discovery/v2/events/{id}
     console.log('### going to check event ID:' + idMapping.get(name)[8] + ' ###');
@@ -557,8 +602,9 @@ async function moreInfo(name, day) {
     }
     document.getElementById("moreInfoGen").textContent = jobj.classifications[0].segment.name + " | " +
                                                         jobj.classifications[0].genre.name + " | " + jobj.classifications[0].subGenre.name
-    //venue logo
-    if (jobj._embedded.venues[0].images ) idMapping.get(name).push(jobj._embedded.venues[0].images[0].url)
+    //venue logo the venue id may be not match to 
+    console.log('trying to get venue id: ' + jobj._embedded.venues[0].id + ' : ' + logoIMG)
+    idMapping.get(name).push(logoIMG)
 
     console.log("-----  we are going to show button   -----");
     //here display venue button

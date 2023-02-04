@@ -26,7 +26,7 @@ h2 {
 .subBut {
     color: white;
     background-color: #FC7300;
-    
+
     border-radius: 10px;
     border: 2px solid;
     border: none;
@@ -44,9 +44,11 @@ h2 {
 .subBut:hover {
     background-color: #ffb87e;
 }
+
 .clearBut:hover {
     background-color: #bbc8e0;
 }
+
 select {
     width: 100% !important;
     height: 100% !important;
@@ -126,10 +128,12 @@ input[name="kw"] {
     width: 100%;
     height: 100%;
 }
+
 .headerCell {
     margin-top: 1em;
     margin-bottom: 1em;
 }
+
 .mainPage {
     display: flex;
     flex-flow: nowrap;
@@ -147,7 +151,7 @@ input[name="kw"] {
 
     /* filter blur  */
     backdrop-filter: blur(10px);
-    background-color: rgba(67,66,66,0.6);
+    background-color: rgba(67, 66, 66, 0.6);
 }
 
 #moreInfoIMG {
@@ -168,7 +172,7 @@ input[name="kw"] {
     width: 65%;
     padding: 20px;
     backdrop-filter: blur(10px);
-    background-color: rgba(67,66,66,0.6);
+    background-color: rgba(67, 66, 66, 0.6);
 }
 
 .APIresult {
@@ -209,9 +213,11 @@ input[name="kw"] {
     /* flex: 1 1 30px; */
     text-align: center;
 }
+
 .datetn {
     margin: 1px;
 }
+
 .icon {
     /* margin-top: 1em; */
     text-align: center;
@@ -219,15 +225,19 @@ input[name="kw"] {
     width: 15%;
     /* max-width: 150px; */
 }
+
 .fevent:hover {
     cursor: pointer !important;
 }
-.fgenre:hover{
+
+.fgenre:hover {
     cursor: pointer !important;
 }
-.fvenue:hover{
+
+.fvenue:hover {
     cursor: pointer !important;
 }
+
 .arow .bn {
     flex: 1 1 20px;
     text-align: center;
@@ -283,20 +293,25 @@ input[name="kw"] {
     width: fit-content;
     block-size: fit-content;
 }
+
 #vdgm {
     color: #30E3DF;
     text-decoration: none;
 }
+
 #vdme {
     color: #30E3DF;
     text-decoration: none;
 }
+
 #vdgm:hover {
     color: #A084DC;
 }
+
 #vdme:hover {
     color: #A084DC;
 }
+
 #vdHeader {
     border-bottom: 3px solid #7B8FA1;
     display: inline-block;
@@ -307,7 +322,7 @@ input[name="kw"] {
     display: inline-block;
     border-right: 2px;
     border-right: solid;
-    border-right-color: #f1f1f1;
+    border-right-color: #BDCDD6;
     width: 49%;
 }
 
@@ -345,10 +360,12 @@ input[name="kw"] {
     border-radius: 10px;
     font-size: 13px;
 }
+
 .bn:hover {
     color: #A084DC;
     cursor: pointer;
 }
+
 .rescheduled {
     background-color: orange;
     padding: 5px;
