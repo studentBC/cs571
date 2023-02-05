@@ -1,0 +1,19 @@
+gcloud app create --project=lungchin-hw6
+
+gcloud components update
+
+gcloud deployment-manager deployments list
+
+gcloud config set project $MY_PROJECT_ID
+
+gcloud projects list
+
+gcloud app deploy app.yaml
+
+https://cloud.google.com/deployment-manager/docs/deployments
+
+https://cloud.google.com/sdk/gcloud/reference/app/update
+
+https://cloud.google.com/deployment-manager/docs/deployments/deleting-deployments
+
+https://cloud.google.com/sdk/gcloud/reference/deployment-manager/deployments/update
