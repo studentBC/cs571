@@ -5,6 +5,7 @@ let lat = 0,
     prevCol = -1;
 let jsonObjArray = [];
 let selectedName=''
+var logoIMG = 'lol'
 let tmKey = 'uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
 
 //key: name
@@ -28,7 +29,7 @@ function initial(jojo) {
 async function searchVenue(url) {
     console.log('enter searchVenue')
     var ans = 'lol'
-    await fetch('http://127.0.0.1:5000/getTicketMasterSearch', {
+    await fetch('/getTicketMasterSearch', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -41,7 +42,7 @@ async function searchVenue(url) {
     .then(response => response.json())
     .then(response => {
         console.log('we got venue length ' + response._embedded.venues.length);
-        console.log(response);
+        //console.log(response);
         for (let i = 0; i < response._embedded.venues.length; i++) {
             if (response._embedded.venues[i].images) {
                 console.log(response._embedded.venues[i].id);
@@ -57,7 +58,7 @@ async function searchVenue(url) {
 }
 async function callAPI(url, mixedKeyWord) {
     console.log('enter callAPI');
-    await fetch('http://127.0.0.1:5000/getTicketMasterSearch', {
+    await fetch('/getTicketMasterSearch', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -69,7 +70,7 @@ async function callAPI(url, mixedKeyWord) {
         })
         .then(response => response.json())
         .then(response => {
-            console.log(JSON.stringify(response));
+            //console.log(JSON.stringify(response));
             return response;
         })
         .then(response => initial(response))
@@ -81,7 +82,7 @@ async function callAPI(url, mixedKeyWord) {
     console.log('we got ' + totalPage + ' pages');
     for (let i = 1; i < totalPage; i++) {
         let p = (i + 1).toString()
-        await fetch('http://127.0.0.1:5000/getTicketMasterSearch', {
+        await fetch('/getTicketMasterSearch', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -114,6 +115,8 @@ async function callAPI(url, mixedKeyWord) {
 }
 
 async function submitlol(event) {
+    idMapping.clear();
+    jsonObjArray = [];
     document.getElementById('notfound').style.display = 'none';
     console.log('---- not show elems ---');
     console.log(event);
@@ -160,7 +163,7 @@ async function submitlol(event) {
         })
         .then(response => response.json())
         .then(response => {
-            console.log(response);
+            //console.log(response);
             loc = response.region + ' '+ response.city;
             console.log(loc);
         });
@@ -190,7 +193,7 @@ async function showVenue() {
     console.log('=== enter showVenue ===')
     const elems = document.getElementsByClassName("venueBut");
     for (let i = 0; i < elems.length; i++) elems[i].style.display = 'none';
-    document.getElementById("vdHeader").innerHTML = selectedName;
+    
     let eid = idMapping.get(selectedName)[0];
     //Z7r9jZ1AdbxAM
     console.log('the eid we got is '+ eid);
@@ -198,7 +201,7 @@ async function showVenue() {
     //we need to get address through the api link:
     let jobj;
     let url = 'https://app.ticketmaster.com/discovery/v2/venues/'+eid+'.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&id=KovZpZA7AAEA';
-    await fetch('http://127.0.0.1:5000/getTicketMasterSearch', {
+    await fetch('/getTicketMasterSearch', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -215,15 +218,23 @@ async function showVenue() {
             return response;
         })
     //we will start from here
-    if (idMapping.get(selectedName)[9]!='lol') document.getElementById('vdIMG').src = idMapping.get(selectedName)[9]; //jobj.venues[0].images[0].url;
-    else document.getElementById('vdIMG').style.display = 'none';
+    if (logoIMG!='lol') {
+        document.getElementById('vdIMG').style.display = 'block';
+        document.getElementById('vdIMG').src = logoIMG;//idMapping.get(selectedName)[9]; //jobj.venues[0].images[0].url;
+    } else {
+        // console.log("lets go man!!!")
+        // for (let a = 0; a < idMapping.get(selectedName).length; a++) {
+        //     console.log(idMapping.get(selectedName)[a]);
+        // }
+        document.getElementById('vdIMG').style.display = 'none';
+    }
     // let add = 'Address: ';
     if (jobj.address.line1) {
         // add+=jobj.address.line1 +"<br>";
         document.getElementById('vdaddr').innerHTML = jobj.address.line1 +"<br>"+
-                                                    + jobj.state.stateCode+"<br>"+ jobj.postalCode
+                                                    jobj.state.name +", "+ jobj.state.stateCode+"<br>"+ jobj.postalCode
     } else {
-        document.getElementById('vdaddr').innerHTML = jobj.state.stateCode+"<br>"+jobj.postalCode
+        document.getElementById('vdaddr').innerHTML = jobj.state.name+", " +jobj.state.stateCode+"<br>"+jobj.postalCode
     }
     if (jobj.url) document.getElementById('vdme').href = jobj.url;
     //for google map URL
@@ -235,7 +246,7 @@ async function showVenue() {
     console.log('=============');
     console.log(document.getElementById('vdgm').href);
     console.log('=============');
-
+    document.getElementById("vdHeader").innerHTML = jobj.name;
 
     const ele = document.getElementsByClassName("outerMargin");
     for (let i = 0; i < ele.length; i++) ele[i].style.display = "block";
@@ -340,7 +351,7 @@ function createAPIresultTable() {
                 //
                 temp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
                 let prange = '???';
-                console.log(jsonObj._embedded.events[i] ?.priceRanges);
+                //console.log(jsonObj._embedded.events[i] ?.priceRanges);
                 if (jsonObj._embedded.events[i].priceRanges && jsonObj._embedded.events[i] ?.priceRanges?.length > 0) {
                     prange = jsonObj._embedded.events[i] ?.priceRanges[0].min + '-' + jsonObj._embedded.events[i] ?.priceRanges[0].max 
                     if (jsonObj._embedded.events[i] ?.priceRanges.currency) prange+=jsonObj._embedded.events[i] ?.priceRanges.currency;
@@ -443,8 +454,8 @@ function createAPIresultTable() {
         // td3.classList.add("nav");
         //creating a function which will not be executed immediately => moreinfo.bind(null, jsonObj.businesses[i].name)
         //td3.addEventListener("click", moreInfo.bind(null, jsonObj.businesses[i].name));
-        let day = data[i][0]+'\n'+data[i][1];
-        td3.addEventListener("click", () => moreInfo(data[i][3], day));
+        let day = data[i][0]+' '+data[i][1];
+        td3.addEventListener("click", () => moreInfo(i+1, day));
         td4 = document.createElement('td');
         td4.classList.add("rating");
         td5 = document.createElement('td');
@@ -516,6 +527,8 @@ function cc() {
     document.getElementById("APIresult").innerHTML = '';
     document.getElementById('notfound').style.display = 'none';
     document.getElementById("inputLoc").style.display = 'block';
+    idMapping.clear();
+    jsonObjArray = [];
     // let elems = document.getElementsByClassName("APIresult");
     // for (let i = 0; i < elems.length; i++) elems[i].remove();
     elems = document.getElementsByClassName("searchResult");
@@ -528,14 +541,18 @@ function cc() {
     for (let i = 0; i < elem.length; i++) elem[i].style.display = 'none';
 }
 //when user click the title and ask for more info
-async function moreInfo(name, day) {
+async function moreInfo(row, day) {
+    let table = document.getElementById("APIresultTable");
+    let name = table.rows[row].cells[2].innerText
     console.log('enter moreInfo');
     const elems = document.getElementsByClassName("searchResult");
     for (let i = 0; i < elems.length; i++) elems[i].style.display = 'block';
     ////value: id, artist team, venue, genre, ticket range, ticket status, buy website, photo
     document.getElementById("moreInfoHeader").textContent = name;
     document.getElementById("moreInfoDate").textContent = day.replace('undefined','');
-    document.getElementById("moreInfoAT").textContent = idMapping.get(name)[1]
+    // if (idMapping.get(name)[1] != 'lol') {
+    //     document.getElementById("moreInfoAT").textContent = idMapping.get(name)[1];
+    // }
     document.getElementById("moreInfoVenue").textContent = idMapping.get(name)[2]
     document.getElementById("moreInfoGen").textContent = idMapping.get(name)[3] 
     console.log("######" + idMapping.get(name)[4] + "######")
@@ -547,7 +564,8 @@ async function moreInfo(name, day) {
         document.getElementById("moreInfoRange").textContent = idMapping.get(name)[4]
     }
     let ticketStatius = idMapping.get(name)[5];
-    document.getElementById("moreInfoSta").classList.remove();
+    document.getElementById("moreInfoSta").removeAttribute('class');;
+    document.getElementById("moreInfoSta").innerHTML = "";
     if (ticketStatius === 'onsale') {
         document.getElementById("moreInfoSta").classList.add('onSale');
         document.getElementById("moreInfoSta").innerHTML = 'On Sale';
@@ -561,17 +579,44 @@ async function moreInfo(name, day) {
     
     document.getElementById("moreInfoBuy").href = idMapping.get(name)[6];
     console.log(idMapping.get(name)[7]);
+    //error occur
     document.getElementById("moreInfoIMG").src = idMapping.get(name)[7];
     //go search for venue
     let Url = 'https://app.ticketmaster.com/discovery/v2/venues?apikey='+ tmKey + '&keyword=' + idMapping.get(name)[2];
-    let logoIMG = await searchVenue(Url);
+    //let logoIMG = await searchVenue(Url);
+    console.log('enter searchVenue')
+    logoIMG = "lol";
+    await fetch('/getTicketMasterSearch', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "url": Url
+        })
+    })
+    .then(response => response.json())
+    .then(response => {
+        console.log('we got venue length ' + response._embedded.venues.length);
+        //console.log(response);
+        for (let i = 0; i < response._embedded.venues.length; i++) {
+            if (response._embedded.venues[i].images) {
+                console.log(response._embedded.venues[i].id);
+                console.log(response._embedded.venues[i].images[0].url);
+                logoIMG =  response._embedded.venues[i].images[0].url;
+                console.log('answer is ' + logoIMG)
+            }
+        }  
+    })
+
     console.log('we got logo img: ' + logoIMG)
 
     //under discovery/v2/events/{id}
     console.log('### going to check event ID:' + idMapping.get(name)[8] + ' ###');
     let url = 'https://app.ticketmaster.com/discovery/v2/events/'+ idMapping.get(name)[8]+ '.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
     let jobj;
-    await fetch('http://127.0.0.1:5000/getTicketMasterSearch', {
+    await fetch('/getTicketMasterSearch', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -600,8 +645,11 @@ async function moreInfo(name, day) {
         name = name.substring(0, name.length - 2);
         document.getElementById("moreInfoAT").textContent = name
     }
-    document.getElementById("moreInfoGen").textContent = jobj.classifications[0].segment.name + " | " +
-                                                        jobj.classifications[0].genre.name + " | " + jobj.classifications[0].subGenre.name
+    let tc = jobj.classifications[0]?.segment?.name + " | " + jobj.classifications[0]?.genre?.name 
+            + " | " + jobj.classifications[0].subGenre?.name
+    tc = tc.replace('undefined','');
+    document.getElementById("moreInfoGen").textContent = tc
+
     //venue logo the venue id may be not match to 
     console.log('trying to get venue id: ' + jobj._embedded.venues[0].id + ' : ' + logoIMG)
     idMapping.get(name).push(logoIMG)
