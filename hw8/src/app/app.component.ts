@@ -7,7 +7,10 @@ import { NONE_TYPE } from "@angular/compiler";
 declare global {
   var lat: number;
   var long: number;
+  var selectedName: string;
+  var logoIMG: string;
   var res: 0;
+  var tmKey: string;
   var jsobj: object;
   var reserveNo: number;
   var jsonText: string;
@@ -16,8 +19,8 @@ declare global {
   var jsonObjArray: object[];
   var jsonStrArray: string[];
   var modalDisplay: string;
-  //for reserve info
-  var db: Map<string, string[]>;
+  //for reserve info = idmaping
+  var idMapping: Map<string, string[]>;
   var no: string[];
   var email: string[];
   var time: string[];
@@ -56,7 +59,8 @@ export class AppComponent implements OnInit {
       globalThis.modalDisplay = "none";
       globalThis.clickedBN = "lol";
       globalThis.reserveNo = 1;
-      globalThis.db = new Map<string, string[]>();
+      globalThis.tmKey = "uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ";
+      globalThis.idMapping = new Map<string, string[]>();
       globalThis.bDetail = new Map<string, string[]>();
       globalThis.nameToUID = new Map<string, string>();
       globalThis.debug = true;
@@ -179,17 +183,19 @@ export class AppComponent implements OnInit {
   async callAPI(url: string) {
       console.log('enter callAPI');
       console.log(url);
-      //nodeJS server IP
-      await fetch('http://127.0.0.1:3000/getYelpSearch', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-              "url": url
+
+
+      await fetch('http://localhost:3000/getTicketMasterSearch', {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  "url": url
+              })
           })
-      })
+          //nodeJS server IP
           .then(response => response.json())
           .then(response => {
               globalThis.jsonText = JSON.stringify(response);
@@ -200,36 +206,40 @@ export class AppComponent implements OnInit {
               return response;
           })
           .then(response => this.initial(response));
+
       console.log('---- come out ----');
       let jojo = JSON.parse(globalThis.jsonText);
       console.log(typeof (jojo));
       console.log(jojo.total);
       // console.log(jsonObjArray[0].total);
-      let left = jojo.total - jojo.businesses.length, start = 50;
-      if (left > 0 && !globalThis.debug) {
-          while (left) {
-              console.log(left);
-              await fetch('http://127.0.0.1:3000/getYelpSearch', {
-                  method: 'POST',
-                  headers: {
-                      'Accept': 'application/json',
-                      'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                      "url": url + '&offset=' + start
-                  })
-              })
-                  .then(response => response.json())
-                  .then(response => this.initial(response))
-                  .then(response => {
-                      start += jojo.businesses.length;
-                      let job = JSON.parse(globalThis.jsonStrArray[jsonStrArray.length - 1]);
-                      left -= job.businesses.length;
-                  });
-          }
-      }
-      console.log(jsonObjArray.length);
-      this.createAPIresultTable();
+      let totalPage = jojo.page.totalPages;
+
+
+      for (let i = 1; i < totalPage; i++) {
+          let p = (i + 1).toString()
+          await fetch('http://localhost:3000/getTicketMasterSearch', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "url": url + '&page=' + p
+            })
+          })
+          .then(response => response.json())
+          .then(response => this.initial(response))
+        }
+        console.log('######################');
+        console.log(jsonObjArray.length);
+        console.log('######################');
+        if (jojo.page.totalElements === 0) {
+            document.getElementById('notfound')!.style.display = 'block';
+            console.log(jsonObjArray[0]);
+            console.log('######################');
+            document.getElementById("APIresult")!.innerHTML = '';
+            return;
+        } else this.createAPIresultTable();
       return;
   }
   // showPosition(position: JSON) {
@@ -238,72 +248,58 @@ export class AppComponent implements OnInit {
   //     console.log(lat);
   //     console.log(long);
   // }
-  submitlol(form: NgForm) {
-      // console.log(event);
-      //form submit will refresh my page and clear log
-      // event.preventDefault();
+  async submitlol(form: NgForm) {
+      globalThis.idMapping.clear();
+      jsonStrArray = [];
+      document.getElementById('notfound')!.style.display = 'none';
+      document.getElementById("outerMargin")!.style.display = "none";
+      document.getElementById("searchResult")!.style.display = "none";
+      //process input parameter
       let kw = "",
           loc = "Taipei",
           selfLocate = false,
           fc = "Default",
           dist = 10;
       console.log(form.value);
-      kw = form.value.kw || 'deli';
-      loc = form.value.location || "Taipei";
+      kw = form.value.kw || 'usc';
+      loc = form.value.location || "los angeles";
       selfLocate = form.value.autoDetect || false;
-      fc = form.value.fc || "Default";
+      fc = form.value.fc || "default";
       dist = form.value.dm || 10;
+      let dd = '';
+      if (dist) dd = '&radius=' + dist + '&unit=miles'
       console.log(loc);
       console.log(kw);
       console.log(selfLocate);
       console.log(fc);
       console.log(dist);
 
-      if (!dist) dist = 10000;
-      if (!fc) fc = "all";
-      if (!selfLocate && loc === "") {
-          alert("you has not enter all required info!");
-          return;
-      }
       let url = "";
-      if (selfLocate) {
-          if (navigator.geolocation) {
-              alert('selfLocate checked!');
-              console.log('===   we have bug here for async problem   ===');
-              navigator.geolocation.getCurrentPosition(this.showPosition);
-              console.log('===   come outside   ===');
-              // globalThis.lat = res.results[0].geometry.location.lat;
-              // globalThis.long = res.results[0].geometry.location.lng;
-              globalThis.gMLoc = '&center=' + globalThis.long + ',' + globalThis.lat;
-              url = 'https://api.yelp.com/v3/businesses/search?term=' + kw + '&latitude=' + globalThis.lat + '&longitude=' + globalThis.long +
-                  '&categories=' + fc + '&radius=' + dist + '&limit=50';
-          } else {
-              alert("Geolocation is not supported by this browser.");
-          }
-      } else {
-          //if (!globalThis.debug) {
-          globalThis.gMLoc = loc.replace(/\s+/g, '+');
-          var gkey = 'AIzaSyA0s1a7phLN0iaD6-UE7m4qP-z21pH0eSc';
-          var gr = this.httpGet('https://maps.googleapis.com/maps/api/geocode/json?address=' + loc + '&key=' + gkey);
-          //call python get method to get the address
-          var res = JSON.parse(gr);
-          url = 'https://api.yelp.com/v3/businesses/search?limit=50' + '&term=' + kw + '&location=' + loc;
-          //}
-      }
-      //call YELP https://docs.developer.yelp.com/reference/v3_business_search
-      //let url = 'https://api.yelp.com/v3/businesses/search?term=delis&latitude=37.786882&longitude=-122.399972&offset=20&limit=50';
+      if (loc === "" && selfLocate) {
+        await fetch('https://ipinfo.io', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer c74fd8c3b95806'
+            }
+        })
+        .then(response => response.json())
+        .then(response => {
+            //console.log(response);
+            loc = response.region + ' '+ response.city;
+            console.log(loc);
+        });
+    }
 
-      // if (globalThis.debug) {
-      //     url = 'https://api.yelp.com/v3/businesses/search?term=delis&location=Austin&limit=50'
-      // } else {
-      // url = 'https://api.yelp.com/v3/businesses/search?term=' + kw + '&latitude=' + lat + '&longitude=' + long +
-      //     '&categories=' + fc + '&radius=' + dist + '&limit=50';
-      //}
-      console.log('-------- the url is --------');
-      console.log(url);
-      console.log(globalThis.lat);
-      console.log(globalThis.long);
-      console.log('-----------------------------');
+      let mixedKeyWord = kw + ' ' + loc;
+      mixedKeyWord = mixedKeyWord.replace(/\s+/g, '%20');
+      //https://app.ticketmaster.com/discovery/v2/venues?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&keyword=Los%20Angeles%20Memorial%20Coliseum
+      if (fc == 'default') {
+          fc = 'KZFzniwnSyZfZ7v7nJ,%20KZFzniwnSyZfZ7v7nE,%20KZFzniwnSyZfZ7v7na,%20KZFzniwnSyZfZ7v7nn,%20KZFzniwnSyZfZ7v7n1'
+      }
+      console.log(fc);
+      url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + globalThis.tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd;
+      console.log("we send url " + url)
+      jsonObjArray = [];
       this.callAPI(url);
   }
   ///////////// dynamically deal with webUI ///////////////
@@ -315,37 +311,79 @@ export class AppComponent implements OnInit {
       var len = jsonObjArray.length;
       console.log(len);
       let data: any[] = [];
-      if (len > 0 && resultTable.length === 1) {
-          console.log('enter to creat !!!');
-          const elems = document.getElementsByClassName("APIresult");
-          for (let i = 0; i < elems.length; i++) {
-              const ee = elems[i] as HTMLElement;
-              ee.style.display = 'flex';
-          }
-          let index = 1;
-          console.log('------  here ------');
-          for (let j = 0; j < len; j++) {
-              console.log(jsonStrArray[j]);
-              let jsonObj = JSON.parse(jsonStrArray[j]);
-              console.log('jsonObj length is ' + jsonObj.businesses.length);
-              for (let i = 0; i < jsonObj.businesses.length; i++) {
-                  let tmp = [];
-                  tmp.push(index);
-                  if (jsonObj.businesses[i]?.image_url) tmp.push(jsonObj.businesses[i].image_url);
-                  else tmp.push('http://clipart-library.com/images/dc45Exp9i.png');
-                  if (jsonObj.businesses[i]?.name) tmp.push(jsonObj.businesses[i].name);
-                  else tmp.push('fuck');
-                  if (jsonObj.businesses[i]?.rating) tmp.push(jsonObj.businesses[i].rating);
-                  else tmp.push(-1);
-                  if (jsonObj.businesses[i]?.distance) tmp.push(jsonObj.businesses[i].distance);
-                  else tmp.push(-1);
-                  globalThis.nameToUID.set(jsonObj.businesses[i]?.name, jsonObj.businesses[i]?.id);
-                  data.push(tmp);
-                  index++;
-              }
-          }
-          console.log('data length is ' + data.length);
+      console.log('enter to creat !!!');
+      const elems = document.getElementsByClassName("APIresult");
+      document.getElementById("APIresult")!.innerHTML = "";
+      for (let i = 0; i < elems.length; i++) {
+          const ee = elems[i] as HTMLElement;
+          ee.style.display = 'block';
       }
+      let index = 1;
+      console.log('------  here ------');
+      for (let j = 0; j < len; j++) {
+          console.log(jsonStrArray[j]);
+          let jsonObj = JSON.parse(jsonStrArray[j]);
+          console.log('jsonObj length is ' + jsonObj.page.totalElements);
+            for (let i = 0; i < jsonObj.page.totalElements; i++) {
+                let tmp = [];
+                let temp = [];
+                //date column
+                tmp.push(jsonObj._embedded.events[i] ?.dates.start.localDate);
+                tmp.push(jsonObj._embedded.events[i] ?.dates.start.localTime);
+                //Icon
+                tmp.push(jsonObj._embedded.events[i] ?.images[2].url);
+                //Event
+                tmp.push(jsonObj._embedded.events[i] ?.name);
+                //Genre
+                if (jsonObj._embedded.events[i] ?.classifications) {
+                    tmp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
+                } else tmp.push("lol")
+                //Venue
+                let venue = '';
+                for (let k = 0; k < jsonObj._embedded.events[i] ?._embedded.venues.length; k++) {
+                    tmp.push(jsonObj._embedded.events[i] ?._embedded.venues[k].name);
+                    venue += jsonObj._embedded.events[i] ?._embedded.venues[k].name;
+                    venue += '|';
+                }
+                data.push(tmp);
+                //value: venue id, artist team, venue, genre, ticket range, ticket status, buy website, photo
+                //console.log(jsonObj._embedded.events[i].venues[0]?.id);
+                if (jsonObj._embedded.events[i]._embedded.venues[0].id) temp.push(jsonObj._embedded.events[i]._embedded.venues[0]?.id);//venues.id = venue's id eg: ZFr9jZAFkF
+                else temp.push('ZFr9jZAFkF');
+
+                // artist team should be changed again for search for event/id 
+                if (jsonObj._embedded.events[i] ?._embedded.attractions) temp.push(jsonObj._embedded.events[i] ?._embedded.attractions[0].name);
+                else temp.push('lol');
+                //
+                venue = venue.substring(0, venue.length - 1);
+                temp.push(venue);
+                //
+                temp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
+                let prange = '???';
+                //console.log(jsonObj._embedded.events[i] ?.priceRanges);
+                if (jsonObj._embedded.events[i].priceRanges && jsonObj._embedded.events[i] ?.priceRanges?.length > 0) {
+                    prange = jsonObj._embedded.events[i] ?.priceRanges[0].min + '-' + jsonObj._embedded.events[i] ?.priceRanges[0].max 
+                    if (jsonObj._embedded.events[i] ?.priceRanges.currency) prange+=jsonObj._embedded.events[i] ?.priceRanges.currency;
+                    else prange+= ' USD'
+                }
+                //
+                temp.push(prange);
+                //
+                temp.push(jsonObj._embedded.events[i] ?.dates.status.code);
+                //
+                temp.push(jsonObj._embedded.events[i] ?.url);
+                //console.log(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
+                if (jsonObj._embedded.events[i] ?.seatmap?.staticUrl) temp.push(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
+                else temp.push(jsonObj._embedded.events[i] ?.url);
+                //artist url need event id to find it
+                temp.push(jsonObj._embedded.events[i] ?.id);
+                //for venue logo img should be in event/id that search result
+                //if (jsonObj._embedded.events[i] ?._embedded?.venues && jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images) temp.push(jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images[0]?.url);
+                globalThis.idMapping.set(jsonObj._embedded.events[i] ?.name, temp);
+            }
+      }
+      console.log('data length is ' + data.length);
+      
       var table = document.createElement('table');
       table.setAttribute("id", "APIresultTable");
       var tr = document.createElement('tr');
@@ -354,46 +392,68 @@ export class AppComponent implements OnInit {
       var td3 = document.createElement('td');
       var td4 = document.createElement('td');
       var td5 = document.createElement('td');
-
-      var text1 = document.createTextNode('No.');
-      var text2 = document.createTextNode('Image');
-      var text3 = document.createTextNode('Business Name');
-      var text4 = document.createTextNode('Rating');
-      var text5 = document.createTextNode('Distance(miles)');
-      tr.classList.add("arow");
+  
+      var text1 = document.createElement('p');
+      text1.classList.add("headerCell");
+      text1.innerHTML = 'Date';
+  
+      var text2 = document.createElement('p') ;
+      text2.classList.add("headerCell");
+      text2.innerHTML = 'Icon';
+  
+      var text3 = document.createElement('p') ;
+      text3.classList.add("headerCell");
+      text3.innerHTML = 'Event';
+  
+      var text4 = document.createElement('p') ;
+      text4.classList.add("headerCell");
+      text4.innerHTML = 'Genre';
+      
+      var text5 = document.createElement('p') ;
+      text5.classList.add("headerCell");
+      text5.innerHTML = 'Venue';
+  
+  
+      // tr.classList.add("arow");
       td1.appendChild(text1);
       td1.classList.add("no");
+      
       //td1.addEventListener("click", ()=>sortColumn(0));
       td2.appendChild(text2);
       td2.classList.add("img");
+  
       //td2.addEventListener("click", ()=>sortColumn(1));
       td3.appendChild(text3);
-      td3.classList.add("bn");
-
-      td3.addEventListener("click", () => this.sortColumn(data, 2));
+      td3.classList.add("fevent");
+  
+  
+      td3.addEventListener("click", () => this.sortColumn(data, 3));
       td4.appendChild(text4);
-      td4.classList.add("rating");
-      td4.addEventListener("click", () => this.sortColumn(data, 3));
+      td4.classList.add("fgenre");
+  
+      td4.addEventListener("click", () => this.sortColumn(data, 4));
       td5.appendChild(text5);
-      td5.classList.add("dist");
-      td5.addEventListener("click", () => this.sortColumn(data, 4));
-
+      td5.classList.add("fvenue");
+  
+      td5.addEventListener("click", () => this.sortColumn(data, 5));
+  
       tr.appendChild(td1);
       tr.appendChild(td2);
       tr.appendChild(td3);
       tr.appendChild(td4);
       tr.appendChild(td5);
-
+  
       table.appendChild(tr);
       console.log('before creating table ...');
       console.log('data length is ' + data.length);
-      for (let i: number = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i++) {
           tr = document.createElement('tr');
-          tr.classList.add("arow");
+          // tr.classList.add("arow");
           td1 = document.createElement('td');
           td1.classList.add("no");
           td2 = document.createElement('td');
           td2.classList.add("img");
+          td2.classList.add("icon");
           //let nav3 = document.createElement('nav');
           //we shall create <nav> </nav>
           // nav3.classList.add("nav-link");
@@ -403,39 +463,65 @@ export class AppComponent implements OnInit {
           // td3.classList.add("nav");
           //creating a function which will not be executed immediately => moreinfo.bind(null, jsonObj.businesses[i].name)
           //td3.addEventListener("click", moreInfo.bind(null, jsonObj.businesses[i].name));
-          td3.addEventListener("click", () => this.moreInfo(data[i][2]));
+          let day = data[i][0]+' '+data[i][1];
+          td3.addEventListener("click", () => this.moreInfo(i+1, day));
           td4 = document.createElement('td');
           td4.classList.add("rating");
           td5 = document.createElement('td');
           td5.classList.add("dist");
-
-
-          let num = i + 1;
-          text1 = document.createTextNode(num.toString());
-          let image = document.createElement('img');
-          image.src = data[i][1];
-          image.style.width = "150px";
-
-          text3 = document.createTextNode(data[i][2]);
-          text4 = document.createTextNode(data[i][3]);
-          text5 = document.createTextNode(data[i][4]);
-
+  
+  
+          text1 = document.createElement('p')
+          text1.classList.add("datetn");
+          text1.innerHTML = data[i][0]+ "<br>"+data[i][1];
+          //text1 = document.createTextNode(data[i][0] + '\n' + data[i][1]);
+          let text2 = document.createElement('img');
+          //text2.src = jsonObj.businesses[i].image_url;
+          text2.src = data[i][2];
+          text2.style.width = "50%";
+          text2.style.objectFit = 'scale-down';
+          text2.style.maxWidth = '150px';
+          text2.style.marginBottom =  '10px';
+          text2.style.marginTop =  '10px';
+          // text3 = document.createTextNode(jsonObj.businesses[i].name);
+          // text4 = document.createTextNode(jsonObj.businesses[i].rating);
+          // text5 = document.createTextNode(jsonObj.businesses[i].distance);
+          text3 = document.createElement('p')
+          text3.classList.add("datetn");
+          text3.innerHTML = data[i][3];
+          //text3 = document.createTextNode(data[i][3]);
+          text4 = document.createElement('p')
+          text4.classList.add("datetn");
+          text4.innerHTML = data[i][4];
+          //text4 = document.createTextNode(data[i][4]);
+          let place = '';
+          for (let a = 5; a < data[i].length; a++) place += (data[i][a] + '<br>');
+          text5 = document.createElement('p')
+          text5.classList.add("datetn");
+          text5.innerHTML = place;
+          //text5 = document.createTextNode(place);
+          // console.log(jsonObj.businesses[i].name);
+          // console.log(jsonObj.businesses[i].rating);
+          // console.log(jsonObj.businesses[i].distance);
           td1.appendChild(text1);
-          td2.appendChild(image);
+          td2.appendChild(text2);
           td3.appendChild(text3);
           td4.appendChild(text4);
           td5.appendChild(text5);
-
+  
           tr.appendChild(td1);
           tr.appendChild(td2);
           tr.appendChild(td3);
           tr.appendChild(td4);
           tr.appendChild(td5);
-
+  
           table.appendChild(tr);
       }
-      console.log('after creating table ...');
       document.getElementsByClassName("APIresult")[0].appendChild(table);
+      table.style.marginTop = '40px';
+      table.style.marginBottom = '40px';
+      //table.classList.add('table-bordered');
+      console.log('after creating table ...');
   }
 
   sortColumn(array: any, col: any) {
@@ -471,85 +557,146 @@ export class AppComponent implements OnInit {
       }
       globalThis.prevCol = col;
   }
+
+
   //when user click the title and ask for more info
-  moreInfo(name: string) {
+  async  moreInfo(row: number, day: string) {
+    let table = document.getElementById("APIresultTable") as HTMLTableElement;
+    let name = table.rows[row].cells[2].innerText
+    if (!globalThis.idMapping.has(name)) return;
       console.log('enter moreInfo');
       //let search result table gone
-      const elem = document.getElementsByClassName("APIresult");
-      for (let i = 0; i < elem.length; i++) {
-          const ee = elem[i] as HTMLElement;
-          ee.style.display = 'none';
-      }
-      globalThis.clickedBN = name;
       const elems = document.getElementsByClassName("searchResult");
       for (let i = 0; i < elems.length; i++) {
           const ee = elems[i] as HTMLElement;
-          ee.style.display = 'flex';
+          ee.style.display = 'block';
       }
-      //give searchResult a header
-      const header = document.getElementById('currentBU') as HTMLElement;
-      header.innerHTML = name;
-
-      for (let a = 0; a < jsonObjArray.length; a++) {
-          let jsobj = JSON.parse(jsonStrArray[a]);
-          for (let i = 0; i < jsobj.businesses.length; i++) {
-              if (name === jsobj.businesses[i].name) {
-                  var addr = "",
-                      trs = "",
-                      cate = "";
-                  for (let j = 0; j < Object.keys(jsobj.businesses[0].location.display_address).length; j++) {
-                      addr += jsobj.businesses[j].location.display_address[j];
-                      addr += " ";
-                  }
-                  console.log(addr);
-                  //document.getElementById("address").textContent = addr;
-                  let tmp = document.getElementById("pn") as HTMLElement;
-                  if (jsobj.businesses[i].phone) {
-                      tmp.innerHTML = jsobj.businesses[i].phone;
-                  } else {
-                      tmp.innerHTML = "None";
-                  }
-                  tmp = document.getElementById("address") as HTMLElement;
-                  tmp.innerHTML = addr;
-
-                  for (let j = 0; j < jsobj.businesses[i].transactions.length; j++) {
-                      trs += jsobj.businesses[i].transactions[j];
-                      trs += " ";
-                  }
-                  console.log(trs);
-                  tmp = document.getElementById("transactionsSupported") as HTMLElement;
-                  if (trs.length) {
-                      tmp.innerHTML = trs;
-                  } else {
-                      tmp.innerHTML = "None";
-                  }
-                  for (let j = 0; j < jsobj.businesses[i].categories.length; j++) {
-                      cate += jsobj.businesses[i].categories[j].alias;
-                      cate += " ";
-                  }
-
-                  console.log(cate);
-                  let lol = document.getElementById("categories") as HTMLElement;
-                  lol.textContent = cate;
-                  //for more info
-                  //var anchor = document.createElement('a');
-                  let anchor = document.getElementById("minfo") as HTMLAnchorElement;
-                  //var anchorText = document.createTextNode('Yelp');
-                  anchor.href = jsobj.businesses[i].url;
-                  console.log("------- here -------");
-                  console.log(jsobj);
-                  //anchor.setAttribute('href', jsobj.businesses[i].url);
+      document.getElementById("moreInfoHeader")!.textContent = name;
+      document.getElementById("moreInfoDate")!.textContent = day.replace('undefined','');
+      // if (idMapping.get(name)[1] != 'lol') {
+      //     document.getElementById("moreInfoAT").textContent = idMapping.get(name)[1];
+      // }
+      document.getElementById("moreInfoVenue")!.textContent = globalThis.idMapping.get(name)![2];
+      document.getElementById("moreInfoGen")!.textContent = globalThis.idMapping.get(name)![3] 
+      console.log("######" + globalThis.idMapping.get(name)![4] + "######")
+      for (let j = 0; j < globalThis.idMapping.get(name)!.length; j++) {
+          console.log(globalThis.idMapping.get(name)![j])
+      }
+      if (globalThis.idMapping.get(name)![4] != "???") {
+          document.getElementById("prangeTitle")!.innerHTML = "Price Ranges"
+          document.getElementById("moreInfoRange")!.textContent = globalThis.idMapping.get(name)![4]
+      }
+      let ticketStatius = idMapping.get(name)![5];
+      document.getElementById("moreInfoSta")!.removeAttribute('class');;
+      document.getElementById("moreInfoSta")!.innerHTML = "";
+      if (ticketStatius === 'onsale') {
+          document.getElementById("moreInfoSta")!.classList.add('onSale');
+          document.getElementById("moreInfoSta")!.innerHTML = 'On Sale';
+      } else if (ticketStatius === 'offsale') {
+          document.getElementById("moreInfoSta")!.classList.add('offSale');
+          document.getElementById("moreInfoSta")!.innerHTML = 'Off Sale';
+      } else {
+          document.getElementById("moreInfoSta")!.classList.add('rescheduled');
+          document.getElementById("moreInfoSta")!.innerHTML = 'Rescheduled';
+      }
+      
+      const mtag = document.getElementById("moreInfoBuy") as HTMLAnchorElement;
+      mtag.href = globalThis.idMapping.get(name)![6];
+      console.log(globalThis.idMapping.get(name)![7]);
+      //error occur
+      (document.getElementById("moreInfoIMG") as HTMLImageElement).src = globalThis.idMapping.get(name)![7];
+      //go search for venue
+      let Url = 'https://app.ticketmaster.com/discovery/v2/venues?apikey='+ tmKey + '&keyword=' + globalThis.idMapping.get(name)![2];
+      //let logoIMG = await searchVenue(Url);
+      console.log('enter searchVenue')
+      globalThis.logoIMG = "lol";
+      await fetch('http://localhost:3000/getTicketMasterSearch', {
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              "url": Url
+          })
+      })
+      .then(response => response.json())
+      .then(response => {
+          console.log('we got venue length ' + response._embedded.venues.length);
+          //console.log(response);
+          for (let i = 0; i < response._embedded.venues.length; i++) {
+              if (response._embedded.venues[i].images) {
+                  console.log(response._embedded.venues[i].id);
+                  console.log(response._embedded.venues[i].images[0].url);
+                  globalThis.logoIMG =  response._embedded.venues[i].images[0].url;
+                  console.log('answer is ' + globalThis.logoIMG)
                   break;
               }
+          }  
+      })
+  
+      console.log('we got logo img: ' + globalThis.logoIMG)
+  
+      //under discovery/v2/events/{id}
+      console.log('### going to check event ID:' + globalThis.idMapping.get(name)![8] + ' ###');
+      let url = 'https://app.ticketmaster.com/discovery/v2/events/'+ globalThis.idMapping.get(name)![8]+ '.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
+      var jobjs: string = "";
+      await fetch('http://localhost:3000/getTicketMasterSearch', {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  "url": url
+              })
+          })
+          .then(response => response.json())
+          .then(response => {
+              jobjs = JSON.stringify(response);
+              console.log(jobjs);
+              return response;
+          })
+      let jobj = JSON.parse(jobjs)
+      //this property might not have data in it ... do this!
+      if (jobj._embedded.attractions) {
+          let mtag = document.getElementById("moreInfoAT") as HTMLAnchorElement 
+          mtag.href = jobj._embedded.attractions[0]?.url;
+          document.getElementById("moreInfoATT")!.innerHTML = "Artist/Team"
+          //Genre
+          let name = ""
+          for (let a = 0; a < jobj._embedded.attractions.length; a++) {
+              name+=jobj._embedded.attractions[a].name
+              name+=" | "
           }
+          name = name.substring(0, name.length - 2);
+          document.getElementById("moreInfoAT")!.textContent = name
       }
-      //deal with google map tab
-      let gm = document.getElementById('GMap') as HTMLIFrameElement;
-      gm.src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyA0s1a7phLN0iaD6-UE7m4qP-z21pH0eSc&q=" + name + '+' + globalThis.gMLoc;
-      //deal with review tab
-      let nn = globalThis.nameToUID.get(name)?.toString()!;
-      this.callImgAPI(nn);
-      this.callReviewAPI(nn);
+      let tc = jobj.classifications[0]?.segment?.name + " | " + jobj.classifications[0]?.genre?.name 
+              + " | " + jobj.classifications[0].subGenre?.name
+      tc = tc.replace('undefined','');
+      document.getElementById("moreInfoGen")!.textContent = tc
+  
+      //venue logo the venue id may be not match to 
+      console.log('trying to get venue id: ' + jobj._embedded.venues[0].id + ' : ' + globalThis.logoIMG)
+      globalThis.idMapping.get(name)!.push(globalThis.logoIMG)
+  
+      console.log("-----  we are going to show button   -----");
+      //here display venue button
+      const elem = document.getElementsByClassName("venueBut");
+      for (let i = 0; i < elem.length; i++) {
+        const ee = elem[i] as HTMLElement;
+        ee.style.display = "block";
+      }
+      globalThis.selectedName = name;
+      console.log('showing our button man!!!')
+      const ele = document.getElementsByClassName("outerMargin");
+      for (let i = 0; i < ele.length; i++) {
+        const ee = ele[i] as HTMLElement;
+        ee.style.display = "none";
+      }
+      const el = document.getElementById("venueDetails") as HTMLElement;
+      el.style.display = "none";
   }
   // handle modal 
   //https://stackoverflow.com/questions/59590391/bootstrap-modal-is-not-shown-on-angular-8-on-click
@@ -583,8 +730,47 @@ export class AppComponent implements OnInit {
           tmpbut.click();
       }
   }
+  hideLocInput() {
+      let cb = document.getElementById('cbox') as HTMLInputElement;
+      if (cb.checked == true) {
+          let cla = document.getElementById("inputLoc") as HTMLElement;
+          cla.removeAttribute("required");
+          let inloc = document.getElementById("inputLoc") as HTMLElement;
+          inloc.style.display = 'none';
+      } else {
+        let inloc = document.getElementById('inputLoc') as HTMLElement;
+        inloc.style.display = 'block';
+      }
+  }
+  cc() {
+      // document.forms["partOne"].reset();
+      document.getElementById("APIresult")!.innerHTML = '';
+      document.getElementById('notfound')!.style.display = 'none';
+      document.getElementById("inputLoc")!.style.display = 'block';
+      idMapping.clear();
+      jsonObjArray = [];
+      // let elems = document.getElementsByClassName("APIresult");
+      // for (let i = 0; i < elems.length; i++) elems[i].remove();
+      const elems = document.getElementsByClassName("searchResult");
+      for (let i = 0; i < elems.length; i++) {
+        (elems[i] as HTMLElement).style.display = "none";
+      }
+      const ele = document.getElementsByClassName("outerMargin");
+      for (let i = 0; i < ele.length; i++) {
+        (ele[i] as HTMLElement).style.display = "none";
+      }
+      const el = document.getElementById("venueDetails");
+      (el as HTMLElement).style.display = "none";
 
+      // for (let i = 0; i < el.length; i++) {
+      //   el[i].style.display = "none";
+      // }
 
+      const elem = document.getElementsByClassName("venueBut");
+      for (let i = 0; i < elem.length; i++) {
+        (elem[i] as HTMLElement).style.display = 'none';
+      }
+  }
 
   onCloseHandled() {
       console.log('enter to onCloseHandled');
@@ -623,7 +809,7 @@ export class AppComponent implements OnInit {
       // console.log(form.value);
       globalThis.reserveNo++;
       console.log('we set db key: ' + name);
-      globalThis.db.set(name, [no, name, date, hour, min, email]);
+      globalThis.idMapping.set(name, [no, name, date, hour, min, email]);
       //turn reserve button to cancel button
       but!.style.backgroundColor = "#019ad2";
       but!.style.background = "linear-gradient(to bottom, #33bdef 5%, #019ad2 100%)";
@@ -636,7 +822,7 @@ export class AppComponent implements OnInit {
   createReserveTable() {
       console.log('enter to createReserveTable');
       //store json obj into data array
-      var len = globalThis.db.size;
+      var len = globalThis.idMapping.size;
       console.log(len);
 
       let data: any[] = [];
@@ -700,7 +886,7 @@ export class AppComponent implements OnInit {
       console.log('before creating table ...');
       console.log('data length is ' + len);
       let no = 1;
-      for (let [key, value] of db) {
+      for (let [key, value] of globalThis.idMapping) {
           console.log(key + ' : ' + value + ' #### ');
           tr = document.createElement('tr');
           tr.classList.add("arow");
@@ -757,11 +943,11 @@ export class AppComponent implements OnInit {
   delReserv(key: string) {
 
       console.log('enter to del key: ' + key);
-      globalThis.db.delete(key);
+      globalThis.idMapping.delete(key);
       globalThis.reserveNo--;
       let table = document.getElementById("reserveTable") as HTMLTableElement;
       if (!table) {
-          db.delete(key);
+          globalThis.idMapping.delete(key);
           return;
       }
       if (table.rows.length === 1) {
@@ -852,29 +1038,7 @@ export class AppComponent implements OnInit {
       // console.log(jsonObjArray[0].total);
       let left = jojo.total - jojo.reviews.length, start = 50;
       console.log('left: ' + left);
-      // API bug here !!!
-      // if (left > 0) {
-      //     while (left) {
-      //         console.log(left);
-      //         await fetch('http://127.0.0.1:3000/getYelpSearch', {
-      //             method: 'POST',
-      //             headers: {
-      //                 'Accept': 'application/json',
-      //                 'Content-Type': 'application/json'
-      //             },
-      //             body: JSON.stringify({
-      //                 "url": url + '&offset=' + start
-      //             })
-      //         })
-      //             .then(response => response.json())
-      //             .then(response => this.getReveiew(response))
-      //             .then(response => {
-      //                 start += jojo.reviews.length;
-      //                 let job = JSON.parse(globalThis.jsonReveiewStrArray[jsonReveiewStrArray.length - 1]);
-      //                 left -= job.reviews.length;
-      //             });
-      //     }
-      // }
+
       this.createReviewTable(bid);
   }
   //create review table
@@ -936,5 +1100,72 @@ export class AppComponent implements OnInit {
       let tmp = document.getElementById("Reviews") as HTMLElement;
       console.log(tmp);
       tmp.appendChild(table);
+  }
+  async showVenue() {
+      console.log('=== enter showVenue ===')
+      const elems = document.getElementsByClassName("venueBut");
+      for (let i = 0; i < elems.length; i++) {
+        (elems[i] as HTMLElement).style.display = 'none';
+      }
+      
+      let eid = globalThis.idMapping.get(selectedName)![0];
+      //Z7r9jZ1AdbxAM
+      console.log('the eid we got is '+ eid);
+      //document.getElementById("vdIMG").src = ;
+      //we need to get address through the api link:
+      let url = 'https://app.ticketmaster.com/discovery/v2/venues/'+eid+'.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&id=KovZpZA7AAEA';
+      await fetch('http://127.0.0.1:3000/getTicketMasterSearch', {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  "url": url
+              })
+          })
+          .then(response => response.json())
+          .then(response => {
+              globalThis.jsobj = response;
+              globalThis.jsonText = JSON.stringify(response);
+              return response;
+          })
+      let jobj = JSON.parse(globalThis.jsonText);
+      //we will start from here
+      if (logoIMG!='lol') {
+          document.getElementById('vdIMG')!.style.display = 'block';
+          let vdimg = document.getElementById('vdIMG') as HTMLImageElement;
+          vdimg.src = logoIMG;//idMapping.get(selectedName)[9]; //jobj.venues[0].images[0].url;
+      } else {
+          // console.log("lets go man!!!")
+          // for (let a = 0; a < idMapping.get(selectedName).length; a++) {
+          //     console.log(idMapping.get(selectedName)[a]);
+          // }
+          document.getElementById('vdIMG')!.style.display = 'none';
+      }
+      // let add = 'Address: ';
+      if (jobj.address.line1) {
+          // add+=jobj.address.line1 +"<br>";
+          document.getElementById('vdaddr')!.innerHTML = jobj.address.line1 +"<br>"+
+                                                      jobj.state.name +", "+ jobj.state.stateCode+"<br>"+ jobj.postalCode
+      } else {
+          document.getElementById('vdaddr')!.innerHTML = jobj.state.name+", " +jobj.state.stateCode+"<br>"+jobj.postalCode
+      }
+      if (jobj.url) (document.getElementById('vdme')! as HTMLAnchorElement).href = jobj.url;
+      //for google map URL
+      //it will encouner repeat state or city name especially new york ...
+      //let kw = jobj.state.name +'+'+ jobj.city.name + '+' + jobj.name;
+      let kw = jobj.name + '+' + jobj.postalCode;
+      kw = kw.replace(/\s/g, '+');
+      (document.getElementById('vdgm') as HTMLAnchorElement).href = 'https://www.google.com/maps/search/'+kw;
+
+      document.getElementById("vdHeader")!.innerHTML = jobj.name;
+
+      const ele = document.getElementsByClassName("outerMargin");
+      for (let i = 0; i < ele.length; i++) {
+        (ele[i] as HTMLElement).style.display = "block";
+      }
+      const elem = document.getElementById("venueDetails")!.style.display = 'block';
+
   }
 }

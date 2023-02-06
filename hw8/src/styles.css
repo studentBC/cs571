@@ -1,18 +1,45 @@
 /* You can add global styles to this file, and also import other style files */
+h1 {
+  width: 100%;
+  text-align: left;
+}
+
+/* a {
+      color: #8EA7E9 !important;
+      text-decoration: none !important;
+  } */
+
+h2 {
+  width: 100%;
+  text-align: left;
+}
+
 body {
-    background-image: url("./assets/background.jpg");
-    -webkit-background-size:cover;
-    -o-background-size:cover;
-    -moz-background-size:cover;
-    background-size:cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+  background-image: url("./assets/background.jpg");
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 
-    /* Full height */
-    height: 100%;
+  /* Full height */
+  height: 100%;
 
-    /* Center and scale the image nicely */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+table,
+th,
+td {
+  border-style: solid;
+  border: 1px solid black !important;
+  border-collapse: collapse;
+  border-width: 1px;
+  text-align: center;
+  margin: auto;
+  background-color: #DDDDDD;
 }
