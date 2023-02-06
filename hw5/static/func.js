@@ -149,11 +149,21 @@ async function submitlol(event) {
     fc = document.forms["partOne"]["fc"].value;
     dist = document.forms["partOne"]["dm"].value;
     let dd = '';
+    let latlng = '&latlong=';
     if (dist) dd = '&radius=' + dist + '&unit=miles'
-    if (!selfLocate && loc === "") {
-        //alert("you has not enter all required info!");
-        return false;
+    if (!selfLocate && loc != "") {
+        //use google geoapi to get lat lng
+        let location = loc.replace(/\s+/g, '+');
+        let gkey = '';
+        let gr = httpGet('https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + gkey);
+        //call python get method to get the address
+        let res = JSON.parse(gr);
+        console.log(res);
+        latlng+=res.results[0].geometry.location.lat + ','+res.results[0].geometry.location.lng;
+        // lat = res.results[0].geometry.location.lat;
+        // long = res.results[0].geometry.location.lng;
     }
+    
     if (loc === "" && selfLocate) {
         await fetch('https://ipinfo.io', {
             method: 'GET',
@@ -165,9 +175,11 @@ async function submitlol(event) {
         .then(response => {
             //console.log(response);
             loc = response.region + ' '+ response.city;
+            latlng+=response.loc
             console.log(loc);
         });
     }
+    console.log('our lat lng is ' + latlng);
     let mixedKeyWord = kw + ' ' + loc;
     mixedKeyWord = mixedKeyWord.replace(/\s+/g, '%20');
     //https://app.ticketmaster.com/discovery/v2/venues?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&keyword=Los%20Angeles%20Memorial%20Coliseum
@@ -176,7 +188,7 @@ async function submitlol(event) {
         fc = 'KZFzniwnSyZfZ7v7nJ,%20KZFzniwnSyZfZ7v7nE,%20KZFzniwnSyZfZ7v7na,%20KZFzniwnSyZfZ7v7nn,%20KZFzniwnSyZfZ7v7n1'
     }
     console.log(fc);
-    url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd;
+    url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd + latlng;
     jsonObjArray = [];
     callAPI(url, mixedKeyWord);
 }
@@ -598,16 +610,18 @@ async function moreInfo(row, day) {
     })
     .then(response => response.json())
     .then(response => {
-        console.log('we got venue length ' + response._embedded.venues.length);
-        //console.log(response);
-        for (let i = 0; i < response._embedded.venues.length; i++) {
-            if (response._embedded.venues[i].images) {
-                console.log(response._embedded.venues[i].id);
-                console.log(response._embedded.venues[i].images[0].url);
-                logoIMG =  response._embedded.venues[i].images[0].url;
-                console.log('answer is ' + logoIMG)
-            }
-        }  
+        if (response._embedded?.venues != null) {
+            console.log('we got venue length ' + response._embedded.venues.length);
+            console.log(response);
+            for (let i = 0; i < response._embedded.venues.length; i++) {
+                if (response._embedded.venues[i].images) {
+                    console.log(response._embedded.venues[i].id);
+                    console.log(response._embedded.venues[i].images[0].url);
+                    logoIMG =  response._embedded.venues[i].images[0].url;
+                    console.log('answer is ' + logoIMG)
+                }
+            }  
+        }
     })
 
     console.log('we got logo img: ' + logoIMG)
