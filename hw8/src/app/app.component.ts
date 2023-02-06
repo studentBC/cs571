@@ -526,7 +526,7 @@ export class AppComponent implements OnInit {
 
   sortColumn(array: any, col: any) {
       if (globalThis.prevCol == col) globalThis.ascending = !globalThis.ascending;
-      if (ascending) {
+      if (globalThis.ascending) {
           array.sort(function (a: any, b: any) {
               var x = a[col];
               var y = b[col];
@@ -541,21 +541,24 @@ export class AppComponent implements OnInit {
       }
       let table = document.getElementById("APIresultTable") as HTMLTableElement;
       for (let i = 1; i < array.length; i++) {
-          console.log(array[i][0]);
-          console.log(table.rows[i].cells[1].innerHTML);
-          //the image is not inner text so we need to change it!
-          //table.rows[i].cells[1].innerText = array[i][1];
-          table.rows[i].cells[1].innerText = "";
-          let img = document.createElement('img');
-          img.style.width = "150px";
-          img.src = array[i][1];
-          table.rows[i].cells[1].appendChild(img);
-          //the business name still need to show its link
-          table.rows[i].cells[2].innerText = array[i][2];
-          table.rows[i].cells[3].innerText = array[i][3];
-          table.rows[i].cells[4].innerText = array[i][4];
-      }
-      globalThis.prevCol = col;
+            table.rows[i].cells[0].innerText = array[i][0] + '\n' + array[i][1];
+            //the image is not inner text so we need to change it!
+            //table.rows[i].cells[1].innerText = array[i][1];
+            table.rows[i].cells[1].innerText = "";
+            let img = document.createElement('img');
+            img.style.width = "50%";
+            img.style.objectFit = 'scale-down';
+            img.style.maxWidth = '150px';
+            img.style.marginBottom =  '10px';
+            img.style.marginTop =  '10px';
+            img.src = array[i][2];
+            table.rows[i].cells[1].appendChild(img);
+            //the business name still need to show its link
+            table.rows[i].cells[2].innerText = array[i][3];
+            table.rows[i].cells[3].innerText = array[i][4];
+            table.rows[i].cells[4].innerText = array[i][5];
+        }
+        globalThis.prevCol = col;
   }
 
 
