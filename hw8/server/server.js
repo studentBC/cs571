@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const apikey = 'uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
 app.use(express.json());
 //https://stackoverflow.com/questions/43871637/no-access-control-allow-origin-header-is-present-on-the-requested-resource-whe
 //https://stackoverflow.com/questions/23751914/how-can-i-set-response-header-on-express-js-assets
@@ -45,6 +46,126 @@ async function callAPI(url) {
     });
   return res;
 }
+//search for events
+app.post('/getEvents', async function (request, response) {
+  console.log('getEvents was called ...');
+  let jObj = request.body;
+  console.log('node JS was called ...');
+  console.log(jObj);
+  let url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey=' + apikey + '&';
+  url += jObj.url;
+  console.log(url);
+  let jbody = await callAPI(url);
+  console.log(jbody);
+  //we only need to send necessary property of event object
+  const responseData = [];
+  for (let i = 0; i < jbody.page.totalElements; i++) {
+    let tmp = [];
+    //date column
+    tmp.push(jbody._embedded.events[i] ?.dates.start.localDate);
+    tmp.push(jbody._embedded.events[i] ?.dates.start.localTime);
+    //Icon
+    tmp.push(jbody._embedded.events[i] ?.images[2].url);
+    //Event
+    tmp.push(jbody._embedded.events[i] ?.name);
+    //Genre
+    if (jbody._embedded.events[i] ?.classifications) {
+      tmp.push(jbody._embedded.events[i] ?.classifications[0].segment.name);
+    } else tmp.push("lol")
+    //Venue
+    let venue = '';
+    for (let k = 0; k < jbody._embedded.events[i] ?._embedded.venues.length; k++) {
+      tmp.push(jbody._embedded.events[i] ?._embedded.venues[k].name);
+      venue += jbody._embedded.events[i] ?._embedded.venues[k].name;
+      venue += '|';
+    }
+    responseData.push(tmp);
+  }
+
+  const jsonContent = JSON.stringify(responseData);
+  response.send(jsonContent);
+})
+//get event detail
+app.post('/getEventsDetails', async function (request, response) {
+  console.log('getEventsDetails was called ...');
+  let jObj = request.body;
+  //let url = 'https://app.ticketmaster.com/discovery/v2/events/'+ +'?apikey='+apikey+'&';
+  let url = jObj.url;
+  console.log(url);
+  let jobj = await callAPI(url);
+  console.log(jobj);
+  //we only need to send necessary property of event object
+  const responseData = new Map();
+  //let tmp = new Map();
+  if (jobj._embedded.attractions) {
+    responseData.set("artistHref", jobj._embedded.attractions[0] ?.url);
+    //Genre
+    let name = ""
+    for (let a = 0; a < jobj._embedded.attractions.length; a++) {
+      name += jobj._embedded.attractions[a].name
+      name += " | "
+    }
+    name = name.substring(0, name.length - 2);
+    responseData.set("genreName", name);
+  }
+  let tc = jobj.classifications[0] ?.segment ?.name + " | " + jobj.classifications[0]?.genre?.name +
+    " | " + jobj.classifications[0].subGenre ?.name
+  tc = tc.replace('undefined', '');
+  responseData.set("genre", tc);
+  //responseData.push(tmp);
+  const jsonContent = Object.fromEntries(responseData);
+  response.send(jsonContent);
+})
+//get Venues for venue LOGO
+app.post('/getVenues', async function (request, response) {
+  console.log('getVenues was called ...');
+  let jObj = request.body;
+  let url = jObj.url;
+  console.log(url);
+  let jbody = await callAPI(url);
+  console.log(jbody);
+  //we only need to send necessary property of event object
+  const responseData = [];
+  for (let i = 0; i < jbody._embedded.venues.length; i++) {
+    if (jbody._embedded.venues[i].images) {
+        ans =  jbody._embedded.venues[i].images[0].url;
+        responseData.push(ans)
+    }
+}  
+  const jsonContent = JSON.stringify(responseData);
+  response.send(jsonContent);
+})
+//get venue details
+//https://stackoverflow.com/questions/46634449/json-stringify-of-object-of-map-return-empty?fbclid=IwAR1BahqjZ-DGi3_e82hSFsHDrgjPysHrGf-G_QLG3SSP1mGQ4Pqe8UiWGDc
+app.post('/getVenuesDetails', async function (request, response) {
+  console.log('getVenues was called ...');
+  let jObj = request.body;
+  let url = jObj.url;
+  console.log(url);
+  let jobj = await callAPI(url);
+  console.log(jobj);
+  //we only need to send necessary property of event object
+  // const outter = [];
+  const responseData = new Map();
+  if (jobj.address.line1) {
+    // add+=jobj.address.line1 +"<br>";
+    responseData.set("vdaddr", String(jobj.address.line1 +"<br>"+
+                                                  jobj.state.name +", "+ jobj.state.stateCode+"<br>"+ jobj.postalCode))
+  } else {
+    console.log('enter man!!!');
+    responseData.set("vdaddr", String( jobj.state.name+", " +jobj.state.stateCode+"<br>"+jobj.postalCode))
+  }
+  if (jobj.url) responseData.set('vdmehref', jobj.url);
+  if (jobj.name) responseData.set("vname", jobj.name);
+  // console.log(responseData.get('vname'));
+  // console.log(responseData);
+  // response.send(responseData);
+  const jsonContent = Object.fromEntries(responseData);
+  // console.log(jsonContent);
+  response.send(jsonContent);
+})
+
+// for dealing with 
 app.post('/getTicketMasterSearch', async function (request, response) {
   console.log('node JS was called ...');
   let jObj = request.body;
@@ -54,27 +175,9 @@ app.post('/getTicketMasterSearch', async function (request, response) {
   console.log(url);
   let jbody = await callAPI(url);
   console.log(jbody);
-  // response.set('Access-Control-Allow-Origin','*');
-  //response.headers. Access-Control-Allow-Origin
-  // response.headers['Access-Control-Allow-Origin'] = '*';
   response.send(jbody);
-  // app.get(url, function(req, res) {
-  //     console.log(req.headers);
-  //     req.headers['Authorization'] = 'Bearer %s' % api_key;
-  //     req.pipe(request(url)).pipe(res);
-  //     console.log(res.body);
-  //     response.headers['Access-Control-Allow-Origin'] = '*';
-  //     response.send(res.body);
-  //     return res.body;
-  // });
-  // let resHeader = {
-  //     'Access-Control-Allow-Origin': '*',
-  //     'Content-Type': 'application/json'
-  // }
-  //response.headers['Access-Control-Allow-Origin'] = '*';
-  //response.headers = resHeader;
-  // response.send('cannot get Yelp Data man ...');
 })
+
 app.get('/', (req, res) => {
   console.log(req.body);
   res.send('<h1> Hola !</h1>');
