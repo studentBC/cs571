@@ -56,10 +56,11 @@ app.post('/getEvents', async function (request, response) {
   url += jObj.url;
   console.log(url);
   let jbody = await callAPI(url);
-  console.log(jbody);
+  //console.log(jbody);
   //we only need to send necessary property of event object
   const responseData = [];
   for (let i = 0; i < jbody.page.totalElements; i++) {
+    if (!jbody._embedded.events[i] ?.dates.start.localDate) break;
     let tmp = [];
     //date column
     tmp.push(jbody._embedded.events[i] ?.dates.start.localDate);
@@ -74,11 +75,36 @@ app.post('/getEvents', async function (request, response) {
     } else tmp.push("lol")
     //Venue
     let venue = '';
-    for (let k = 0; k < jbody._embedded.events[i] ?._embedded.venues.length; k++) {
+    for (let k = 0; k < jbody._embedded.events[i]?._embedded?.venues?.length; k++) {
       tmp.push(jbody._embedded.events[i] ?._embedded.venues[k].name);
       venue += jbody._embedded.events[i] ?._embedded.venues[k].name;
       venue += '|';
     }
+    //venue
+    tmp.push(venue);
+    //event id
+    tmp.push(jbody._embedded.events[i]?.id ?? "lol");
+    //seat map
+    tmp.push(jbody._embedded.events[i]?.seatmap?.staticUrl ?? "lol")
+    //ticket status
+    tmp.push(jbody._embedded.events[i]?.dates?.status?.code ?? "lol")
+    //buy ticket url
+    tmp.push(jbody._embedded.events[i]?.url ?? "lol")
+    if (jbody._embedded.events[i]?.priceRanges) {
+      //price min
+      tmp.push(jbody._embedded.events[i]?.priceRanges[0]?.min)
+      //price max
+      tmp.push(jbody._embedded.events[i]?.priceRanges[0]?.max)
+      //currency
+      tmp.push(jbody._embedded.events[i]?.priceRanges[0]?.currency ??"USD")
+    } else {
+      for (let a = 0; a < 3; a++) tmp.push("lol")
+    }
+    //venue id
+    if (jbody?._embedded?.events[i]?._embedded?.venues) {
+      tmp.push(jbody._embedded.events[i]?._embedded?.venues[0]?.id)
+    } else tmp.push("lol");
+    console.log(tmp);
     responseData.push(tmp);
   }
 
