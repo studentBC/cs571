@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 const express = require('express');
 const app = express();
 const apikey = 'uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
@@ -104,11 +105,12 @@ app.post('/getEvents', async function (request, response) {
     if (jbody?._embedded?.events[i]?._embedded?.venues) {
       tmp.push(jbody._embedded.events[i]?._embedded?.venues[0]?.id)
     } else tmp.push("lol");
-    console.log(tmp);
+    //console.log(tmp);
     responseData.push(tmp);
   }
 
   const jsonContent = JSON.stringify(responseData);
+  console.log(jsonContent);
   response.send(jsonContent);
 })
 //get event detail
