@@ -78,7 +78,7 @@ app.post('/getEvents', async function (request, response) {
     //Venue
     let venue = '';
     for (let k = 0; k < jbody._embedded.events[i]?._embedded?.venues?.length; k++) {
-      tmp.push(jbody._embedded.events[i] ?._embedded.venues[k].name);
+      //tmp.push(jbody._embedded.events[i] ?._embedded.venues[k].name);
       venue += jbody._embedded.events[i] ?._embedded.venues[k].name;
       venue += '|';
     }
