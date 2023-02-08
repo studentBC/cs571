@@ -65,7 +65,8 @@ app.post('/getEvents', async function (request, response) {
     let tmp = [];
     //date column
     tmp.push(jbody._embedded.events[i] ?.dates.start.localDate);
-    tmp.push(jbody._embedded.events[i] ?.dates.start.localTime);
+    if (jbody._embedded.events[i] ?.dates.start.localTime) tmp.push(jbody._embedded.events[i] ?.dates.start.localTime);
+    else tmp.push('lol');
     //Icon
     tmp.push(jbody._embedded.events[i] ?.images[2].url);
     //Event
@@ -93,9 +94,9 @@ app.post('/getEvents', async function (request, response) {
     tmp.push(jbody._embedded.events[i]?.url ?? "lol")
     if (jbody._embedded.events[i]?.priceRanges) {
       //price min
-      tmp.push(jbody._embedded.events[i]?.priceRanges[0]?.min)
+      tmp.push((jbody._embedded.events[i]?.priceRanges[0]?.min).toString())
       //price max
-      tmp.push(jbody._embedded.events[i]?.priceRanges[0]?.max)
+      tmp.push((jbody._embedded.events[i]?.priceRanges[0]?.max).toString())
       //currency
       tmp.push(jbody._embedded.events[i]?.priceRanges[0]?.currency ??"USD")
     } else {
