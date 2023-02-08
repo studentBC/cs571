@@ -150,20 +150,22 @@ async function submitlol(event) {
     dist = document.forms["partOne"]["dm"].value;
     let dd = '';
     let latlng = '&latlong=';
+    let lat=""
+    let lng=""
     if (dist) dd = '&radius=' + dist + '&unit=miles'
     if (!selfLocate && loc != "") {
         //use google geoapi to get lat lng
         let location = loc.replace(/\s+/g, '+');
-        let gkey = '';
+        let gkey = 'AIzaSyBdSh29p_B93XTLF7qB0XtnfnjxQudHCA8';
         let gr = httpGet('https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + gkey);
         //call python get method to get the address
         let res = JSON.parse(gr);
         console.log(res);
         latlng+=res.results[0].geometry.location.lat + ','+res.results[0].geometry.location.lng;
-        // lat = res.results[0].geometry.location.lat;
-        // long = res.results[0].geometry.location.lng;
+        lat = res.results[0].geometry.location.lat;
+        lng = res.results[0].geometry.location.lng;
     }
-    
+    const geohash = Geohash.encode(lat, lng, 7);
     if (loc === "" && selfLocate) {
         await fetch('https://ipinfo.io', {
             method: 'GET',
@@ -189,6 +191,9 @@ async function submitlol(event) {
     }
     console.log(fc);
     url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd + latlng;
+    console.log("-----------------");
+    console.log(url);
+    console.log("-----------------");
     jsonObjArray = [];
     callAPI(url, mixedKeyWord);
 }
