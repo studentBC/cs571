@@ -207,6 +207,16 @@ app.post('/getTicketMasterSearch', async function (request, response) {
   response.send(jbody);
 })
 
+app.get('/getTicketMasterSearch', async function (request, response) {
+  console.log('node JS was called ...');
+  let url = request.query.url;
+  console.log('node JS was called ...');
+  console.log(url);
+  let jbody = await callAPI(url);
+  console.log(jbody);
+  response.send(jbody);
+})
+
 app.get('/', (req, res) => {
   console.log(req.body);
   res.send('<h1> Hola !</h1>');

@@ -184,17 +184,9 @@ export class AppComponent implements OnInit {
       console.log('enter callAPI');
       console.log(url);
 
-
-      await fetch('http://localhost:3000/getTicketMasterSearch', {
-              method: 'POST',
-              headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                  "url": url
-              })
-          })
+          await fetch('http://localhost:3000/getTicketMasterSearch?' + new URLSearchParams({
+                "url": url
+            }))
           //nodeJS server IP
           .then(response => response.json())
           .then(response => {
@@ -217,18 +209,12 @@ export class AppComponent implements OnInit {
 
       for (let i = 1; i < totalPage; i++) {
           let p = (i + 1).toString()
-          await fetch('http://localhost:3000/getTicketMasterSearch', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "url": url + '&page=' + p
-            })
-          })
-          .then(response => response.json())
-          .then(response => this.initial(response))
+
+            await fetch('http://localhost:3000/getTicketMasterSearch?' + new URLSearchParams({
+                "url": url+p
+            }))
+            .then(response => response.json())
+            .then(response => this.initial(response))
         }
         console.log('######################');
         console.log(jsonObjArray.length);
@@ -294,7 +280,7 @@ export class AppComponent implements OnInit {
       mixedKeyWord = mixedKeyWord.replace(/\s+/g, '%20');
       //https://app.ticketmaster.com/discovery/v2/venues?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&keyword=Los%20Angeles%20Memorial%20Coliseum
       if (fc == 'default') {
-          fc = 'KZFzniwnSyZfZ7v7nJ,%20KZFzniwnSyZfZ7v7nE,%20KZFzniwnSyZfZ7v7na,%20KZFzniwnSyZfZ7v7nn,%20KZFzniwnSyZfZ7v7n1'
+          fc = ''
       }
       console.log(fc);
       url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + globalThis.tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd;
@@ -613,16 +599,9 @@ export class AppComponent implements OnInit {
       //let logoIMG = await searchVenue(Url);
       console.log('enter searchVenue')
       globalThis.logoIMG = "lol";
-      await fetch('http://localhost:3000/getTicketMasterSearch', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-              "url": Url
-          })
-      })
+      await fetch('http://localhost:3000/getTicketMasterSearch?' + new URLSearchParams({
+            "url": Url
+        }))
       .then(response => response.json())
       .then(response => {
           console.log('we got venue length ' + response._embedded.venues.length);
@@ -644,16 +623,9 @@ export class AppComponent implements OnInit {
       console.log('### going to check event ID:' + globalThis.idMapping.get(name)![8] + ' ###');
       let url = 'https://app.ticketmaster.com/discovery/v2/events/'+ globalThis.idMapping.get(name)![8]+ '.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
       var jobjs: string = "";
-      await fetch('http://localhost:3000/getTicketMasterSearch', {
-              method: 'POST',
-              headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                  "url": url
-              })
-          })
+      await fetch('http://localhost:3000/getTicketMasterSearch?' + new URLSearchParams({
+            "url": url
+        }))
           .then(response => response.json())
           .then(response => {
               jobjs = JSON.stringify(response);
@@ -1117,16 +1089,9 @@ export class AppComponent implements OnInit {
       //document.getElementById("vdIMG").src = ;
       //we need to get address through the api link:
       let url = 'https://app.ticketmaster.com/discovery/v2/venues/'+eid+'.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&id=KovZpZA7AAEA';
-      await fetch('http://127.0.0.1:3000/getTicketMasterSearch', {
-              method: 'POST',
-              headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                  "url": url
-              })
-          })
+        await fetch('http://localhost:3000/getTicketMasterSearch?' + new URLSearchParams({
+            "url": url
+        }))
           .then(response => response.json())
           .then(response => {
               globalThis.jsobj = response;
