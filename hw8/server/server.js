@@ -42,20 +42,22 @@ async function callAPI(url) {
     .then(response => {
       res = response;
       // console.log(response);
-      console.log(JSON.stringify(response));
+      //console.log(JSON.stringify(response));
       // return response;
     });
   return res;
 }
 //search for events
-app.post('/getEvents', async function (request, response) {
+app.get('/getEvents', async function (request, response) {
   console.log('getEvents was called ...');
-  let jObj = request.body;
   console.log('node JS was called ...');
-  console.log(jObj);
   let url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey=' + apikey + '&';
-  url += jObj.url;
+  console.log("-----------------------");
+  console.log(request.query.url);
+  console.log("-----------------------");
+  url += request.query.url;
   console.log(url);
+  console.log('the url we are going to send is ' + url);
   let jbody = await callAPI(url);
   //console.log(jbody);
   //we only need to send necessary property of event object
@@ -111,15 +113,14 @@ app.post('/getEvents', async function (request, response) {
   }
 
   const jsonContent = JSON.stringify(responseData);
-  console.log(jsonContent);
+  //console.log(jsonContent);
   response.send(jsonContent);
 })
 //get event detail
-app.post('/getEventsDetails', async function (request, response) {
+app.get('/getEventsDetails', async function (request, response) {
   console.log('getEventsDetails was called ...');
-  let jObj = request.body;
   //let url = 'https://app.ticketmaster.com/discovery/v2/events/'+ +'?apikey='+apikey+'&';
-  let url = jObj.url;
+  let url = request.query.url;
   console.log(url);
   let jobj = await callAPI(url);
   console.log(jobj);
@@ -146,10 +147,9 @@ app.post('/getEventsDetails', async function (request, response) {
   response.send(jsonContent);
 })
 //get Venues for venue LOGO
-app.post('/getVenues', async function (request, response) {
+app.get('/getVenues', async function (request, response) {
   console.log('getVenues was called ...');
-  let jObj = request.body;
-  let url = jObj.url;
+  let url = request.query.url;
   console.log(url);
   let jbody = await callAPI(url);
   console.log(jbody);
@@ -166,10 +166,9 @@ app.post('/getVenues', async function (request, response) {
 })
 //get venue details
 //https://stackoverflow.com/questions/46634449/json-stringify-of-object-of-map-return-empty?fbclid=IwAR1BahqjZ-DGi3_e82hSFsHDrgjPysHrGf-G_QLG3SSP1mGQ4Pqe8UiWGDc
-app.post('/getVenuesDetails', async function (request, response) {
+app.get('/getVenuesDetails', async function (request, response) {
   console.log('getVenues was called ...');
-  let jObj = request.body;
-  let url = jObj.url;
+  let url = request.query.url;
   console.log(url);
   let jobj = await callAPI(url);
   console.log(jobj);
@@ -195,7 +194,7 @@ app.post('/getVenuesDetails', async function (request, response) {
 })
 
 // for dealing with 
-app.post('/getTicketMasterSearch', async function (request, response) {
+app.get('/getTicketMasterSearch', async function (request, response) {
   console.log('node JS was called ...');
   let jObj = request.body;
   console.log('node JS was called ...');
