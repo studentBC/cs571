@@ -7,7 +7,7 @@ let jsonObjArray = [];
 let selectedName=''
 var logoIMG = 'lol'
 let tmKey = 'uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
-
+const base32 = '0123456789bcdefghjkmnpqrstuvwxyz'; // (geohash-specific) Base32 map
 //key: name
 //value: venue id, artist team, venue, genre, ticket status, buy website, photo, event id
 const idMapping = new Map();
@@ -29,16 +29,9 @@ function initial(jojo) {
 async function searchVenue(url) {
     console.log('enter searchVenue')
     var ans = 'lol'
-    await fetch('/getTicketMasterSearch', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "url": url
-        })
-    })
+    await fetch('/getTicketMasterSearch?' + new URLSearchParams({
+        "url": url
+    }))
     .then(response => response.json())
     .then(response => {
         console.log('we got venue length ' + response._embedded.venues.length);
@@ -58,19 +51,13 @@ async function searchVenue(url) {
 }
 async function callAPI(url, mixedKeyWord) {
     console.log('enter callAPI');
-    await fetch('/getTicketMasterSearch', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "url": url
-            })
-        })
+
+        await fetch('/getTicketMasterSearch?' + new URLSearchParams({
+            "url": url
+        }))
         .then(response => response.json())
         .then(response => {
-            //console.log(JSON.stringify(response));
+            console.log(JSON.stringify(response));
             return response;
         })
         .then(response => initial(response))
@@ -82,22 +69,11 @@ async function callAPI(url, mixedKeyWord) {
     console.log('we got ' + totalPage + ' pages');
     for (let i = 1; i < totalPage; i++) {
         let p = (i + 1).toString()
-        await fetch('/getTicketMasterSearch', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "url": url + '&page=' + p
-                })
-            })
-            .then(response => response.json())
-            .then(response => initial(response));
-            // .then(response => {
-            //     start += jsobj.businesses.length;
-            //     left -= jsobj.businesses.length;
-            // });
+        await fetch('/getTicketMasterSearch?' + new URLSearchParams({
+            "url": url+ '&page=' + p
+        }))
+        .then(response => response.json())
+        .then(response => initial(response));
     }
     console.log('######################');
     console.log(jsonObjArray.length);
@@ -149,7 +125,7 @@ async function submitlol(event) {
     fc = document.forms["partOne"]["fc"].value;
     dist = document.forms["partOne"]["dm"].value;
     let dd = '';
-    let latlng = '&latlong=';
+    let latlng = '&geoPoint=';
     let lat=""
     let lng=""
     if (dist) dd = '&radius=' + dist + '&unit=miles'
@@ -161,11 +137,11 @@ async function submitlol(event) {
         //call python get method to get the address
         let res = JSON.parse(gr);
         console.log(res);
-        latlng+=res.results[0].geometry.location.lat + ','+res.results[0].geometry.location.lng;
+        //latlng+=res.results[0].geometry.location.lat + ','+res.results[0].geometry.location.lng;
         lat = res.results[0].geometry.location.lat;
         lng = res.results[0].geometry.location.lng;
     }
-    const geohash = Geohash.encode(lat, lng, 7);
+    
     if (loc === "" && selfLocate) {
         await fetch('https://ipinfo.io', {
             method: 'GET',
@@ -176,13 +152,14 @@ async function submitlol(event) {
         .then(response => response.json())
         .then(response => {
             //console.log(response);
-            loc = response.region + ' '+ response.city;
-            latlng+=response.loc
-            console.log(loc);
+            const temp = response.loc.split(",");
+            lat=temp[0]
+            lng = temp[1]
         });
     }
-    console.log('our lat lng is ' + latlng);
-    let mixedKeyWord = kw + ' ' + loc;
+    const geohash = encode(lat, lng, 7);
+    latlng+=geohash
+    let mixedKeyWord = kw;
     mixedKeyWord = mixedKeyWord.replace(/\s+/g, '%20');
     //https://app.ticketmaster.com/discovery/v2/venues?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&keyword=Los%20Angeles%20Memorial%20Coliseum
     let url = '';
@@ -218,22 +195,15 @@ async function showVenue() {
     //we need to get address through the api link:
     let jobj;
     let url = 'https://app.ticketmaster.com/discovery/v2/venues/'+eid+'.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&id=KovZpZA7AAEA';
-    await fetch('/getTicketMasterSearch', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "url": url
-            })
-        })
-        .then(response => response.json())
-        .then(response => {
-            jobj = response;
-            console.log(JSON.stringify(response));
-            return response;
-        })
+    await fetch('/getTicketMasterSearch?' + new URLSearchParams({
+        "url": url
+    }))
+    .then(response => response.json())
+    .then(response => {
+        jobj = response;
+        console.log(JSON.stringify(response));
+        return response;
+    })
     //we will start from here
     if (logoIMG!='lol') {
         document.getElementById('vdIMG').style.display = 'block';
@@ -603,16 +573,9 @@ async function moreInfo(row, day) {
     //let logoIMG = await searchVenue(Url);
     console.log('enter searchVenue')
     logoIMG = "lol";
-    await fetch('/getTicketMasterSearch', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "url": Url
-        })
-    })
+    await fetch('/getTicketMasterSearch?' + new URLSearchParams({
+        "url": Url
+    }))
     .then(response => response.json())
     .then(response => {
         if (response._embedded?.venues != null) {
@@ -635,16 +598,9 @@ async function moreInfo(row, day) {
     console.log('### going to check event ID:' + idMapping.get(name)[8] + ' ###');
     let url = 'https://app.ticketmaster.com/discovery/v2/events/'+ idMapping.get(name)[8]+ '.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
     let jobj;
-    await fetch('/getTicketMasterSearch', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "url": url
-            })
-        })
+    await fetch('/getTicketMasterSearch?' + new URLSearchParams({
+        "url": url
+    }))
         .then(response => response.json())
         .then(response => {
             jobj = response;
@@ -684,4 +640,65 @@ async function moreInfo(row, day) {
     for (let i = 0; i < ele.length; i++) ele[i].style.display = "none";
     const el = document.getElementById("venueDetails");
     for (let i = 0; i < el.length; i++) el[i].style.display = "none";
+}
+/////////GEO coding from MIT
+function encode(lat, lon, precision) {
+    // infer precision?
+    if (typeof precision == 'undefined') {
+        // refine geohash until it matches precision of supplied lat/lon
+        for (let p=1; p<=12; p++) {
+            const hash = Geohash.encode(lat, lon, p);
+            const posn = Geohash.decode(hash);
+            if (posn.lat==lat && posn.lon==lon) return hash;
+        }
+        precision = 12; // set to maximum
+    }
+
+    lat = Number(lat);
+    lon = Number(lon);
+    precision = Number(precision);
+
+    if (isNaN(lat) || isNaN(lon) || isNaN(precision)) throw new Error('Invalid geohash');
+
+    let idx = 0; // index into base32 map
+    let bit = 0; // each char holds 5 bits
+    let evenBit = true;
+    let geohash = '';
+
+    let latMin =  -90, latMax =  90;
+    let lonMin = -180, lonMax = 180;
+
+    while (geohash.length < precision) {
+        if (evenBit) {
+            // bisect E-W longitude
+            const lonMid = (lonMin + lonMax) / 2;
+            if (lon >= lonMid) {
+                idx = idx*2 + 1;
+                lonMin = lonMid;
+            } else {
+                idx = idx*2;
+                lonMax = lonMid;
+            }
+        } else {
+            // bisect N-S latitude
+            const latMid = (latMin + latMax) / 2;
+            if (lat >= latMid) {
+                idx = idx*2 + 1;
+                latMin = latMid;
+            } else {
+                idx = idx*2;
+                latMax = latMid;
+            }
+        }
+        evenBit = !evenBit;
+
+        if (++bit == 5) {
+            // 5 bits gives us a character: append it and start over
+            geohash += base32.charAt(idx);
+            bit = 0;
+            idx = 0;
+        }
+    }
+
+    return geohash;
 }
