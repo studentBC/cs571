@@ -305,59 +305,62 @@ function createAPIresultTable() {
             for (let i = 0; i < jsonObj.page.totalElements; i++) {
                 let tmp = [];
                 let temp = [];
-                //date column
-                tmp.push(jsonObj._embedded.events[i] ?.dates.start.localDate);
-                tmp.push(jsonObj._embedded.events[i] ?.dates.start.localTime);
-                //Icon
-                tmp.push(jsonObj._embedded.events[i] ?.images[2].url);
-                //Event
-                tmp.push(jsonObj._embedded.events[i] ?.name);
-                //Genre
-                if (jsonObj._embedded.events[i] ?.classifications) {
-                    tmp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
-                } else tmp.push("lol")
-                //Venue
-                let venue = '';
-                for (let k = 0; k < jsonObj._embedded.events[i] ?._embedded.venues.length; k++) {
-                    tmp.push(jsonObj._embedded.events[i] ?._embedded.venues[k].name);
-                    venue += jsonObj._embedded.events[i] ?._embedded.venues[k].name;
-                    venue += '|';
-                }
-                data.push(tmp);
-                //value: venue id, artist team, venue, genre, ticket range, ticket status, buy website, photo
-                //console.log(jsonObj._embedded.events[i].venues[0]?.id);
-                if (jsonObj._embedded.events[i]._embedded.venues[0].id) temp.push(jsonObj._embedded.events[i]._embedded.venues[0]?.id);//venues.id = venue's id eg: ZFr9jZAFkF
-                else temp.push('ZFr9jZAFkF');
+                if (jsonObj._embedded?.events[i]) {
+                    //date column
+                    tmp.push(jsonObj._embedded?.events[i] ?.dates.start.localDate);
+                    tmp.push(jsonObj._embedded?.events[i] ?.dates.start.localTime);
+                    //Icon
+                    tmp.push(jsonObj._embedded?.events[i] ?.images[2].url);
+                    //Event
+                    tmp.push(jsonObj._embedded?.events[i] ?.name);
+                    //Genre
+                    if (jsonObj._embedded?.events[i] ?.classifications) {
+                        tmp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
+                    } else tmp.push("lol")
+                    //Venue
+                    let venue = '';
+                    for (let k = 0; k < jsonObj._embedded.events[i] ?._embedded.venues.length; k++) {
+                        tmp.push(jsonObj._embedded.events[i] ?._embedded.venues[k].name);
+                        venue += jsonObj._embedded.events[i] ?._embedded.venues[k].name;
+                        venue += '|';
+                    }
+                    data.push(tmp);
+                
+                    //value: venue id, artist team, venue, genre, ticket range, ticket status, buy website, photo
+                    //console.log(jsonObj._embedded.events[i].venues[0]?.id);
+                    if (jsonObj._embedded.events[i]?._embedded?.venues[0].id) temp.push(jsonObj._embedded.events[i]._embedded.venues[0]?.id);//venues.id = venue's id eg: ZFr9jZAFkF
+                    else temp.push('ZFr9jZAFkF');
 
-                // artist team should be changed again for search for event/id 
-                if (jsonObj._embedded.events[i] ?._embedded.attractions) temp.push(jsonObj._embedded.events[i] ?._embedded.attractions[0].name);
-                else temp.push('lol');
-                //
-                venue = venue.substring(0, venue.length - 1);
-                temp.push(venue);
-                //
-                temp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
-                let prange = '???';
-                //console.log(jsonObj._embedded.events[i] ?.priceRanges);
-                if (jsonObj._embedded.events[i].priceRanges && jsonObj._embedded.events[i] ?.priceRanges?.length > 0) {
-                    prange = jsonObj._embedded.events[i] ?.priceRanges[0].min + '-' + jsonObj._embedded.events[i] ?.priceRanges[0].max 
-                    if (jsonObj._embedded.events[i] ?.priceRanges.currency) prange+=jsonObj._embedded.events[i] ?.priceRanges.currency;
-                    else prange+= ' USD'
+                    // artist team should be changed again for search for event/id 
+                    if (jsonObj._embedded.events[i] ?._embedded.attractions) temp.push(jsonObj._embedded.events[i] ?._embedded.attractions[0].name);
+                    else temp.push('lol');
+                    //
+                    venue = venue.substring(0, venue.length - 1);
+                    temp.push(venue);
+                    //
+                    temp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
+                    let prange = '???';
+                    //console.log(jsonObj._embedded.events[i] ?.priceRanges);
+                    if (jsonObj._embedded?.events[i]?.priceRanges && jsonObj._embedded.events[i] ?.priceRanges?.length > 0) {
+                        prange = jsonObj._embedded.events[i] ?.priceRanges[0].min + '-' + jsonObj._embedded.events[i] ?.priceRanges[0].max 
+                        if (jsonObj._embedded.events[i] ?.priceRanges.currency) prange+=jsonObj._embedded.events[i] ?.priceRanges.currency;
+                        else prange+= ' USD'
+                    }
+                    //
+                    temp.push(prange);
+                    //
+                    temp.push(jsonObj._embedded.events[i] ?.dates.status.code);
+                    //
+                    temp.push(jsonObj._embedded.events[i] ?.url);
+                    //console.log(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
+                    if (jsonObj._embedded.events[i] ?.seatmap?.staticUrl) temp.push(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
+                    else temp.push(jsonObj._embedded.events[i] ?.url);
+                    //artist url need event id to find it
+                    temp.push(jsonObj._embedded.events[i] ?.id);
+                    //for venue logo img should be in event/id that search result
+                    //if (jsonObj._embedded.events[i] ?._embedded?.venues && jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images) temp.push(jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images[0]?.url);
+                    idMapping.set(jsonObj._embedded.events[i] ?.name, temp);
                 }
-                //
-                temp.push(prange);
-                //
-                temp.push(jsonObj._embedded.events[i] ?.dates.status.code);
-                //
-                temp.push(jsonObj._embedded.events[i] ?.url);
-                //console.log(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
-                if (jsonObj._embedded.events[i] ?.seatmap?.staticUrl) temp.push(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
-                else temp.push(jsonObj._embedded.events[i] ?.url);
-                //artist url need event id to find it
-                temp.push(jsonObj._embedded.events[i] ?.id);
-                //for venue logo img should be in event/id that search result
-                //if (jsonObj._embedded.events[i] ?._embedded?.venues && jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images) temp.push(jsonObj._embedded.events[i] ?._embedded?.venues[0]?.images[0]?.url);
-                idMapping.set(jsonObj._embedded.events[i] ?.name, temp);
             }
         }
         console.log('data length is ' + data.length);
