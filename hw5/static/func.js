@@ -316,7 +316,7 @@ function createAPIresultTable() {
                     //Genre
                     if (jsonObj._embedded?.events[i] ?.classifications) {
                         tmp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
-                    } else tmp.push("lol")
+                    } else tmp.push("N/A")
                     //Venue
                     let venue = '';
                     for (let k = 0; k < jsonObj._embedded.events[i] ?._embedded.venues.length; k++) {
@@ -333,13 +333,13 @@ function createAPIresultTable() {
 
                     // artist team should be changed again for search for event/id 
                     if (jsonObj._embedded.events[i] ?._embedded.attractions) temp.push(jsonObj._embedded.events[i] ?._embedded.attractions[0].name);
-                    else temp.push('lol');
+                    else temp.push('N/A');
                     //
                     venue = venue.substring(0, venue.length - 1);
                     temp.push(venue);
                     //
                     temp.push(jsonObj._embedded.events[i] ?.classifications[0].segment.name);
-                    let prange = '???';
+                    let prange = "N/A"
                     //console.log(jsonObj._embedded.events[i] ?.priceRanges);
                     if (jsonObj._embedded?.events[i]?.priceRanges && jsonObj._embedded.events[i] ?.priceRanges?.length > 0) {
                         prange = jsonObj._embedded.events[i] ?.priceRanges[0].min + '-' + jsonObj._embedded.events[i] ?.priceRanges[0].max 
@@ -354,7 +354,7 @@ function createAPIresultTable() {
                     temp.push(jsonObj._embedded.events[i] ?.url);
                     //console.log(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
                     if (jsonObj._embedded.events[i] ?.seatmap?.staticUrl) temp.push(jsonObj._embedded.events[i] ?.seatmap.staticUrl);
-                    else temp.push(jsonObj._embedded.events[i] ?.url);
+                    else temp.push("");
                     //artist url need event id to find it
                     temp.push(jsonObj._embedded.events[i] ?.id);
                     //for venue logo img should be in event/id that search result
