@@ -184,7 +184,7 @@ export class AppComponent implements OnInit {
       console.log('enter callAPI');
       console.log(url);
 
-          await fetch('http://localhost:3000/getTicketMasterSearch?' + new URLSearchParams({
+          await fetch('https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?' + new URLSearchParams({
                 "url": url
             }))
           //nodeJS server IP
@@ -210,7 +210,7 @@ export class AppComponent implements OnInit {
       for (let i = 1; i < totalPage; i++) {
           let p = (i + 1).toString()
 
-            await fetch('http://localhost:3000/getTicketMasterSearch?' + new URLSearchParams({
+            await fetch('https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?' + new URLSearchParams({
                 "url": url+p
             }))
             .then(response => response.json())
@@ -601,7 +601,7 @@ export class AppComponent implements OnInit {
       //let logoIMG = await searchVenue(Url);
       console.log('enter searchVenue')
       globalThis.logoIMG = "lol";
-      await fetch('http://localhost:3000/getTicketMasterSearch?' + new URLSearchParams({
+      await fetch('https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?' + new URLSearchParams({
             "url": Url
         }))
       .then(response => response.json())
@@ -625,7 +625,7 @@ export class AppComponent implements OnInit {
       console.log('### going to check event ID:' + globalThis.idMapping.get(name)![8] + ' ###');
       let url = 'https://app.ticketmaster.com/discovery/v2/events/'+ globalThis.idMapping.get(name)![8]+ '.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
       var jobjs: string = "";
-      await fetch('http://localhost:3000/getTicketMasterSearch?' + new URLSearchParams({
+      await fetch('https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?' + new URLSearchParams({
             "url": url
         }))
           .then(response => response.json())
@@ -1091,7 +1091,7 @@ export class AppComponent implements OnInit {
       //document.getElementById("vdIMG").src = ;
       //we need to get address through the api link:
       let url = 'https://app.ticketmaster.com/discovery/v2/venues/'+eid+'.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&id=KovZpZA7AAEA';
-        await fetch('http://localhost:3000/getTicketMasterSearch?' + new URLSearchParams({
+        await fetch('https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?' + new URLSearchParams({
             "url": url
         }))
           .then(response => response.json())
