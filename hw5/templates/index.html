@@ -10,12 +10,13 @@
 <body>
   <!-- <div class="flex-container"> -->
   <div class="mainPage">
-    <h1 style="text-align: center; color: white; font-family: 'Georgia', sans-serif, serif !important; margin-bottom: 0px;">Event Search
+    <h1 style="text-align: center; color: white; font-family: 'Georgia', sans-serif, serif; margin-bottom: 0px;">
+      Event Search
     </h1>
     <hr style="color: white; width: 100%; margin-bottom: 20px;">
     <form name="partOne" action="" style="color:#AAE3E2;" onsubmit="submitlol(event)">
-        <label>Keyword</label><label style="color:red;">*</label><br>
-        <input class="userInput" type="text" name="kw" required>
+      <label>Keyword</label><label style="color:red;">*</label><br>
+      <input class="userInput" type="text" name="kw" required>
       <br><br>
       <div class="twoBox">
         <div style="display: inline-block;">
@@ -37,18 +38,19 @@
         </div>
       </div>
       <br><br>
-      <div>
       <label>Location</label><label style="color:red;">*&nbsp;&nbsp;</label>
       <input type="checkbox" name="autoDetect" id="cbox" onclick="hideLocInput()">
       <label style="color: gray;"><strong>Auto-Detect Location</strong></label>
       <br>
-      <input class="userInput" type=" text" name="location" id="inputLoc" style="display:inline-block; width: 100%;" required>
+      <input class="userInput" type=" text" name="location" id="inputLoc" style="display:inline-block; width: 100%;"
+        required>
       <br><br>
       <!-- we cannot call function submit  -->
       <input type="submit" value="SUBMIT" class="subBut">
       <input type="button" value="CLEAR" class="clearBut" onclick="cc();">
     </form>
   </div>
+
   <div id="notfound">
     <h3 style="color: red; text-align: center;">No Records found</h3>
   </div>
@@ -113,7 +115,6 @@
   </div>
   <!-- </div> -->
   <script src="../static/func.js" charset="utf-8"></script>
-  </script>
 </body>
 
 </html>
