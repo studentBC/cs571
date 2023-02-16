@@ -6,6 +6,7 @@ let lat = 0,
 let jsonObjArray = [];
 let selectedName=''
 var logoIMG = 'lol'
+var latlng = '&geoPoint=';
 let tmKey = 'uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
 const base32 = '0123456789bcdefghjkmnpqrstuvwxyz'; // (geohash-specific) Base32 map
 //key: name
@@ -125,7 +126,7 @@ async function submitlol(event) {
     fc = document.forms["partOne"]["fc"].value;
     dist = document.forms["partOne"]["dm"].value;
     let dd = '';
-    let latlng = '&geoPoint=';
+    //let latlng = '&geoPoint=';
     let lat=""
     let lng=""
     if (dist) dd = '&radius=' + dist + '&unit=miles'
@@ -192,14 +193,15 @@ async function showVenue() {
     console.log('=== enter showVenue ===')
     const elems = document.getElementsByClassName("venueBut");
     for (let i = 0; i < elems.length; i++) elems[i].style.display = 'none';
-    
-    let eid = idMapping.get(selectedName)[0];
+    //using venue name + geoid to search
+    let eid = '&keyword='+idMapping.get(selectedName)[2].replace(/\s+/g, '%20');
+    eid+=latlng;
     //Z7r9jZ1AdbxAM
-    console.log('the eid we got is '+ eid);
+    //console.log('the eid we got is '+ eid);
     //document.getElementById("vdIMG").src = ;
     //we need to get address through the api link:
     let jobj;
-    let url = 'https://app.ticketmaster.com/discovery/v2/venues/'+eid+'.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ&id=KovZpZA7AAEA';
+    let url = 'https://app.ticketmaster.com/discovery/v2/venues?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ'+eid;
     await fetch('/getTicketMasterSearch?' + new URLSearchParams({
         "url": url
     }))
@@ -221,24 +223,24 @@ async function showVenue() {
         document.getElementById('vdIMG').style.display = 'none';
     }
     // let add = 'Address: ';
-    if (jobj.address.line1) {
+    if (jobj._embedded?.venues[0]?.address.line1) {
         // add+=jobj.address.line1 +"<br>";
-        document.getElementById('vdaddr').innerHTML = jobj.address.line1 +"<br>"+
-                                                    jobj.state.name +", "+ jobj.state.stateCode+"<br>"+ jobj.postalCode
+        document.getElementById('vdaddr').innerHTML = jobj._embedded?.venues[0]?.address.line1 +"<br>"+
+                                                    jobj._embedded?.venues[0]?.state.name +", "+ jobj._embedded?.venues[0]?.state.stateCode+"<br>"+ jobj._embedded?.venues[0]?.postalCode
     } else {
-        document.getElementById('vdaddr').innerHTML = jobj.state.name+", " +jobj.state.stateCode+"<br>"+jobj.postalCode
+        document.getElementById('vdaddr').innerHTML = jobj._embedded?.venues[0]?.state.name+", " +jobj._embedded?.venues[0]?.state.stateCode+"<br>"+jobj._embedded?.venues[0]?.postalCode
     }
-    if (jobj.url) document.getElementById('vdme').href = jobj.url;
+    if (jobj._embedded?.venues[0]?.url) document.getElementById('vdme').href = jobj._embedded?.venues[0]?.url;
     //for google map URL
     //it will encouner repeat state or city name especially new york ...
     //let kw = jobj.state.name +'+'+ jobj.city.name + '+' + jobj.name;
-    let kw = jobj.name + '+' + jobj.postalCode;
+    let kw = jobj._embedded?.venues[0]?.name + '+' + jobj._embedded?.venues[0]?.postalCode;
     kw = kw.replace(/\s/g, '+')
     document.getElementById('vdgm').href = 'https://www.google.com/maps/search/'+kw;
     console.log('=============');
     console.log(document.getElementById('vdgm').href);
     console.log('=============');
-    document.getElementById("vdHeader").innerHTML = jobj.name;
+    document.getElementById("vdHeader").innerHTML = jobj._embedded?.venues[0]?.name;
 
     const ele = document.getElementsByClassName("outerMargin");
     for (let i = 0; i < ele.length; i++) ele[i].style.display = "block";
