@@ -67,14 +67,14 @@ async function callAPI(url, mixedKeyWord) {
     // console.log(jsonObjArray[0].total);
     let totalPage = jsobj.page.totalPages;
     console.log('we got ' + totalPage + ' pages');
-    for (let i = 1; i < totalPage; i++) {
-        let p = (i + 1).toString()
-        await fetch('/getTicketMasterSearch?' + new URLSearchParams({
-            "url": url+ '&page=' + p
-        }))
-        .then(response => response.json())
-        .then(response => initial(response));
-    }
+    // for (let i = 1; i < totalPage; i++) {
+    //     let p = (i + 1).toString()
+    //     await fetch('/getTicketMasterSearch?' + new URLSearchParams({
+    //         "url": url+ '&page=' + p
+    //     }))
+    //     .then(response => response.json())
+    //     .then(response => initial(response));
+    // }
     console.log('######################');
     console.log(jsonObjArray.length);
     console.log('######################');
@@ -138,8 +138,13 @@ async function submitlol(event) {
         let res = JSON.parse(gr);
         console.log(res);
         //latlng+=res.results[0].geometry.location.lat + ','+res.results[0].geometry.location.lng;
-        lat = res.results[0].geometry.location.lat;
-        lng = res.results[0].geometry.location.lng;
+        if (res.results[0]) {
+            lat = res.results[0].geometry.location.lat;
+            lng = res.results[0].geometry.location.lng;
+        } else {
+            alert("Invalid Location!");
+            return;
+        }
     }
     
     if (loc === "" && selfLocate) {
@@ -167,7 +172,7 @@ async function submitlol(event) {
         fc = ''
     }
     console.log(fc);
-    url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=200' + dd + latlng;
+    url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=20' + dd + latlng;
     console.log("-----------------");
     console.log(url);
     console.log("-----------------");
@@ -549,7 +554,7 @@ async function moreInfo(row, day) {
     for (let j = 0; j < idMapping.get(name).length; j++) {
         console.log(idMapping.get(name)[j])
     }
-    if (idMapping.get(name)[4] != "???") {
+    if (idMapping.get(name)[4] != "N/A") {
         document.getElementById("prangeTitle").innerHTML = "Price Ranges"
         document.getElementById("moreInfoRange").textContent = idMapping.get(name)[4]
     }

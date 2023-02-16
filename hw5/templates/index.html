@@ -5,30 +5,28 @@
   <meta charset="utf-8">
   <title>Event Search</title>
   <link rel="stylesheet" href="../static/style.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 </head>
 
 <body>
   <!-- <div class="flex-container"> -->
   <div class="mainPage">
-    <h1 style="text-align: center; color: white; font-family: 'Times New Roman', Times, serif !important;">Event Search
+    <h1 style="text-align: center; color: white; font-family: 'Georgia', sans-serif, serif !important; margin-bottom: 0px;">Event Search
     </h1>
-    <hr>
+    <hr style="color: white; width: 100%; margin-bottom: 20px;">
     <form name="partOne" action="" style="color:#AAE3E2;" onsubmit="submitlol(event)">
-      <label>Keyword</label><label style="color:red;">*</label><br>
-      <input type="text" name="kw" required>
+        <label>Keyword</label><label style="color:red;">*</label><br>
+        <input class="userInput" type="text" name="kw" required>
       <br><br>
       <div class="twoBox">
-        <div>
+        <div style="display: inline-block;">
           <label>Distance(miles)</label>
           <br>
-          <input type="number" name="dm" value=10 style="color: gray;">
+          <input class="userInput" type="number" name="dm" value=10 style="color: gray;">
         </div>
         <div class="fc">
           <label style="text-align: right;">Category</label><label style="color:red;">*</label>
           <br>
-          <select name="fc" id="foodCategory" required>
+          <select name="fc" id="foodCategory" class="userInput" required>
             <option value="default">Default</option>
             <option value="KZFzniwnSyZfZ7v7nJ">Music</option>
             <option value="KZFzniwnSyZfZ7v7nE">Sports</option>
@@ -39,11 +37,12 @@
         </div>
       </div>
       <br><br>
+      <div>
       <label>Location</label><label style="color:red;">*&nbsp;&nbsp;</label>
       <input type="checkbox" name="autoDetect" id="cbox" onclick="hideLocInput()">
       <label style="color: gray;"><strong>Auto-Detect Location</strong></label>
       <br>
-      <input  type=" text" name="location" minlength="4" id="inputLoc" style="width: 100%;" required>
+      <input class="userInput" type=" text" name="location" id="inputLoc" style="display:inline-block; width: 100%;" required>
       <br><br>
       <!-- we cannot call function submit  -->
       <input type="submit" value="SUBMIT" class="subBut">
@@ -114,8 +113,6 @@
   </div>
   <!-- </div> -->
   <script src="../static/func.js" charset="utf-8"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
   </script>
 </body>
 
