@@ -193,10 +193,8 @@ export class AppComponent implements OnInit {
             .then(response => response.json())
             .then(response => {
                 globalThis.jsonText = JSON.stringify(response);
-                console.log(typeof (response));
                 globalThis.jsobj = response;
-                console.log(typeof (response));
-                //console.log(JSON.stringify(response));
+                console.log(JSON.stringify(response));
                 return response;
             })
             .then(response => this.initial(response));
@@ -251,7 +249,7 @@ export class AppComponent implements OnInit {
             dist = 10;
         console.log(form.value);
         kw = form.value.kw || 'usc';
-        loc = form.value.location || "los angeles";
+        loc = form.value.location || "";
         selfLocate = form.value.autoDetect || false;
         fc = form.value.fc || "default";
         dist = form.value.dm || 10;
@@ -271,15 +269,20 @@ export class AppComponent implements OnInit {
             })
                 .then(response => response.json())
                 .then(res => {
-                    //console.log(response);
+                    console.log(res);
+                    if (!res.results[0]) {
+                        alert("invalid location!");
+                        return;
+                    }
                     lat = res.results[0].geometry.location.lat;
                     lng = res.results[0].geometry.location.lng;
                 });
             // let gr = httpGet('https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + gkey);
-
+            if (lat === "") return;
         }
         let url = "";
         if (loc === "" && selfLocate) {
+            console.log("enter here man");
             await fetch('https://ipinfo.io', {
                 method: 'GET',
                 headers: {
@@ -288,13 +291,14 @@ export class AppComponent implements OnInit {
             })
                 .then(response => response.json())
                 .then(response => {
-                    //console.log(response);
+                    console.log(response);
                     const temp = response.loc.split(",");
                     lat = temp[0]
                     lng = temp[1]
                 });
         }
         const geohash = this.encode(Number(lat), Number(lng), 7);
+        console.log("===  geohash we get is " + geohash + "  ===");
         globalThis.latlng += geohash
         let mixedKeyWord = kw;
         mixedKeyWord = mixedKeyWord.replace(/\s+/g, '%20');
@@ -642,7 +646,7 @@ export class AppComponent implements OnInit {
         console.log('we got logo img: ' + globalThis.logoIMG)
 
         //under discovery/v2/events/{id}
-        console.log('### going to check event ID:' + globalThis.idMapping.get(name)![8] + ' ###');
+        console.log('### going to check event ID:  ' + globalThis.idMapping.get(name)![8] + ' ###');
         let url = 'https://app.ticketmaster.com/discovery/v2/events/' + globalThis.idMapping.get(name)![8] + '.json?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
         var jobjs: string = "";
         await fetch('https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?' + new URLSearchParams({

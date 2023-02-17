@@ -9,20 +9,22 @@
 <body>
   <div id="upperTab">
     <button type="button" id="sea" class="customBUT" (click)="clickTab('sea')">Search</button>
-    <button type="button" id="mb" style="border-color: transparent;" class="customBUT"
-      (click)="clickTab('mb')">My Bookings</button>
+    <button type="button" id="mb" style="border-color: transparent;" class="customBUT" (click)="clickTab('mb')">My
+      Bookings</button>
   </div>
   <div id="myBookingsTab" style="display: none;">
     <h1 style="text-align: center" id="mbTitle">List of your reservations</h1>
   </div>
 
   <div class="mainPage">
-    <h1 style="text-align: center; color: white; font-family: 'Times New Roman', Times, serif !important;">Event Search
+    <h1
+      style="text-align: center; color: white; font-family: 'Times New Roman', Times, serif !important; margin-bottom: 0px;">
+      Event Search
     </h1>
-    <hr>
+    <hr style="color: white; width: 100%; margin-bottom: 20px; margin-top: 0px;">
     <form name="partOne" style="color:#AAE3E2;" (ngSubmit)="submitlol(form)" #form="ngForm">
       <label>Keyword</label><label style="color:red;">*</label><br>
-      <input  class="userInput" type="text" name="kw" required ngModel name="kw">
+      <input class="userInput" type="text" name="kw" required ngModel name="kw">
       <br><br>
       <div class="twoBox">
         <div>
@@ -48,7 +50,8 @@
       <input type="checkbox" name="autoDetect" id="cbox" ngModel name="autoDetect" (click)="hideLocInput()">
       <label style="color: gray;"><strong>Auto-Detect Location</strong></label>
       <br>
-      <input class="userInput" type=" text" name="location" ngModel name="location" id="inputLoc" style="width: 100%;" required >
+      <input class="userInput" type=" text" name="location" ngModel name="location" id="inputLoc" style="width: 100%;"
+        required>
       <br><br>
       <!-- we cannot call function submit  -->
       <input type="submit" value="SUBMIT" class="subBut">
@@ -101,14 +104,17 @@
         <div id="vdLeft" style="width: 50%; text-align: center;">
           <div>
             <div style="width: 40%; display: inline-block; vertical-align: top;
-            text-align: right;"><p>Address: </p></div>
+            text-align: right;">
+              <p>Address: </p>
+            </div>
             <div style="font-style: bold;
             display: inline-block; vertical-align: top; text-align: left; width: 58%;">
-            <p id="vdaddr" style="font-style: bold;"></p>
+              <p id="vdaddr" style="font-style: bold;"></p>
             </div>
           </div>
           <a href="" id="vdgm" target="_blank">Open in Google Maps</a>
-        </div><div id="vdRight">
+        </div>
+        <div id="vdRight">
           <a href="" id="vdme" target="_blank">More Events at this venue</a>
         </div>
       </div>
