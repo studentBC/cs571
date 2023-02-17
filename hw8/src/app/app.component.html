@@ -22,18 +22,18 @@
     <hr>
     <form name="partOne" style="color:#AAE3E2;" (ngSubmit)="submitlol(form)" #form="ngForm">
       <label>Keyword</label><label style="color:red;">*</label><br>
-      <input type="text" name="kw" required ngModel name="kw">
+      <input  class="userInput" type="text" name="kw" required ngModel name="kw">
       <br><br>
       <div class="twoBox">
         <div>
           <label>Distance(miles)</label>
           <br>
-          <input type="number" name="dm" value=10 style="color: gray;" ngModel name="dm">
+          <input class="userInput" type="number" name="dm" value=10 style="color: gray;" ngModel name="dm">
         </div>
         <div class="fc">
           <label style="text-align: right;">Category</label><label style="color:red;">*</label>
           <br>
-          <select name="fc" id="foodCategory" required>
+          <select class="userInput" name="fc" id="foodCategory" required>
             <option value="default">Default</option>
             <option value="KZFzniwnSyZfZ7v7nJ">Music</option>
             <option value="KZFzniwnSyZfZ7v7nE">Sports</option>
@@ -48,7 +48,7 @@
       <input type="checkbox" name="autoDetect" id="cbox" ngModel name="autoDetect" (click)="hideLocInput()">
       <label style="color: gray;"><strong>Auto-Detect Location</strong></label>
       <br>
-      <input required type=" text" name="location" ngModel name="location" minlength="4" id="inputLoc" style="width: 100%;" >
+      <input class="userInput" type=" text" name="location" ngModel name="location" id="inputLoc" style="width: 100%;" required >
       <br><br>
       <!-- we cannot call function submit  -->
       <input type="submit" value="SUBMIT" class="subBut">
@@ -68,7 +68,7 @@
       <h3 style="color: #9DF1DF;">Date</h3>
       <p id="moreInfoDate" style="color: white;"></p>
       <h3 id="moreInfoATT" style="color: #9DF1DF;"></h3>
-      <a id="moreInfoAT" target="_blank" href="" style="color: #1F8A70; text-decoration: none;"></a>
+      <div id="moreInfoAT"></div>
       <h3 style="color: #9DF1DF;">Venue</h3>
       <p id="moreInfoVenue" style="color: white;"></p>
       <h3 style="color: #9DF1DF;">Genres</h3>
