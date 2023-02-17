@@ -2,7 +2,9 @@ h1 {
     width: 100%;
     text-align: left;
 }
-
+p{
+    font-size: large;
+}
 /* a {
     color: #8EA7E9 !important;
     text-decoration: none !important;
