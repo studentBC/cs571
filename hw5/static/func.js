@@ -28,26 +28,19 @@ function initial(jojo) {
     jsonObjArray.push(jojo);
 }
 async function searchVenue(url) {
-    console.log('enter searchVenue')
     var ans = 'lol'
     await fetch('/getTicketMasterSearch?' + new URLSearchParams({
         "url": url
     }))
     .then(response => response.json())
     .then(response => {
-        console.log('we got venue length ' + response._embedded.venues.length);
-        //console.log(response);
         for (let i = 0; i < response._embedded.venues.length; i++) {
             if (response._embedded.venues[i].images) {
-                console.log(response._embedded.venues[i].id);
-                console.log(response._embedded.venues[i].images[0].url);
                 ans =  response._embedded.venues[i].images[0].url;
-                console.log('answer is ' + ans)
                 return ans
             }
         }  
     })
-    console.log('exit searchVenue ans is ' + ans)
     return ans
 }
 async function callAPI(url, mixedKeyWord) {
@@ -66,8 +59,8 @@ async function callAPI(url, mixedKeyWord) {
     // .then(response => {
     // console.log(jsobj.total);
     // console.log(jsonObjArray[0].total);
-    let totalPage = jsobj.page.totalPages;
-    console.log('we got ' + totalPage + ' pages');
+    // let totalPage = jsobj.page.totalPages;
+    // console.log('we got ' + totalPage + ' pages');
     // for (let i = 1; i < totalPage; i++) {
     //     let p = (i + 1).toString()
     //     await fetch('/getTicketMasterSearch?' + new URLSearchParams({
@@ -95,22 +88,12 @@ async function submitlol(event) {
     idMapping.clear();
     jsonObjArray = [];
     document.getElementById('notfound').style.display = 'none';
-    console.log('---- not show elems ---');
     console.log(event);
     // document.getElementById("APIresult").style.display = "none";
     document.getElementById("outerMargin").style.display = "none";
     document.getElementById("searchResult").style.display = "none";
-    // for (let i = 0; i < a.length; i++) a[i].style.display = "none";
-    // for (let i = 0; i < b.length; i++) b[i].style.display = "none";
-    // for (let i = 0; i < b.length; i++) c[i].style.display = "none";
-    // const ele = document.getElementsByClassName("outerMargin");
-    // for (let i = 0; i < ele.length; i++) ele[i].style.display = "none";
-    // const el = document.getElementById("venueDetails");
-    // for (let i = 0; i < el.length; i++) el[i].style.display = "none";
-    console.log('---- not show elems ---');
     //form submit will refresh my page and clear log
     event.preventDefault();
-    console.log('---- go here -----');
     var kw = "",
         loc = "Taipei",
         selfLocate = false,
@@ -126,6 +109,7 @@ async function submitlol(event) {
     fc = document.forms["partOne"]["fc"].value;
     dist = document.forms["partOne"]["dm"].value;
     let dd = '';
+    latlng = '&geoPoint=';
     //let latlng = '&geoPoint=';
     let lat=""
     let lng=""
@@ -172,11 +156,7 @@ async function submitlol(event) {
     if (fc == 'default') {
         fc = ''
     }
-    console.log(fc);
     url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=20' + dd + latlng;
-    console.log("-----------------");
-    console.log(url);
-    console.log("-----------------");
     jsonObjArray = [];
     callAPI(url, mixedKeyWord);
 }
@@ -190,7 +170,6 @@ function hideLocInput() {
     }
 }
 async function showVenue() {
-    console.log('=== enter showVenue ===')
     const elems = document.getElementsByClassName("venueBut");
     for (let i = 0; i < elems.length; i++) elems[i].style.display = 'none';
     //using venue name + geoid to search
@@ -211,6 +190,7 @@ async function showVenue() {
         console.log(JSON.stringify(response));
         return response;
     })
+    if (!jobj._embedded?.venues[0]) return;
     //we will start from here
     if (logoIMG!='lol') {
         document.getElementById('vdIMG').style.display = 'block';
@@ -237,16 +217,12 @@ async function showVenue() {
     let kw = jobj._embedded?.venues[0]?.name + '+' + jobj._embedded?.venues[0]?.postalCode;
     kw = kw.replace(/\s/g, '+')
     document.getElementById('vdgm').href = 'https://www.google.com/maps/search/'+kw;
-    console.log('=============');
-    console.log(document.getElementById('vdgm').href);
-    console.log('=============');
     document.getElementById("vdHeader").innerHTML = jobj._embedded?.venues[0]?.name;
 
     const ele = document.getElementsByClassName("outerMargin");
     for (let i = 0; i < ele.length; i++) ele[i].style.display = "block";
     const elem = document.getElementById("venueDetails");
     elem.style.display = 'block';
-    console.log(elem.style.display);
     for (let i = 0; i < elem.length; i++) elem[i].style.display = 'block';
     
 }
@@ -288,22 +264,14 @@ function sortColumn(array, col) {
 }
 
 function createAPIresultTable() {
-    console.log('enter to createAPIresultTable');
     //store json obj into data array
     var len = jsonObjArray.length;
-    console.log(len);
     let data = [];
     data = [];
     if (len > 0) {
-        console.log('enter to creat !!!');
         const elems = document.getElementsByClassName("APIresult");
-        console.log('=== go remove table ===');
         document.getElementById("APIresult").innerHTML = "";
-        // const elem = document.getElementById("APIresult").innerHTML = "";
-        // while(elem.firstChild){
-        //     elem.removeChild(elem.firstChild);
-        // }
-        console.log('=== empty the table ===');
+
         for (let i = 0; i < elems.length; i++) elems[i].style.display = 'block';
         // elems.innerHTML = "";
         for (let j = 0; j < len; j++) {
@@ -447,7 +415,6 @@ function createAPIresultTable() {
         // nav3.classList.add("nav-link");
         td3 = document.createElement('td');
         td3.classList.add("bn");
-        console.log('');
         // td3.classList.add("nav");
         //creating a function which will not be executed immediately => moreinfo.bind(null, jsonObj.businesses[i].name)
         //td3.addEventListener("click", moreInfo.bind(null, jsonObj.businesses[i].name));
@@ -461,7 +428,8 @@ function createAPIresultTable() {
 
         text1 = document.createElement('p')
         text1.classList.add("datetn");
-        text1.innerHTML = data[i][0]+ "<br>"+data[i][1];
+        if (data[i][1] === undefined) text1.innerHTML = data[i][0]
+        else text1.innerHTML = data[i][0]+ "<br>"+data[i][1];
         //text1 = document.createTextNode(data[i][0] + '\n' + data[i][1]);
         text2 = document.createElement('img');
         //text2.src = jsonObj.businesses[i].image_url;
@@ -488,9 +456,6 @@ function createAPIresultTable() {
         text5.classList.add("datetn");
         text5.innerHTML = place;
         //text5 = document.createTextNode(place);
-        // console.log(jsonObj.businesses[i].name);
-        // console.log(jsonObj.businesses[i].rating);
-        // console.log(jsonObj.businesses[i].distance);
         td1.appendChild(text1);
         td2.appendChild(text2);
         td3.appendChild(text3);
@@ -509,14 +474,11 @@ function createAPIresultTable() {
     table.style.marginTop = '40px';
     table.style.marginBottom = '40px';
     //table.classList.add('table-bordered');
-    console.log('after creating table ...');
 }
 
 function showPosition(position) {
     lat = position.coords.latitude;
     long = position.coords.longitude;
-    console.log(lat);
-    console.log(long);
 }
 
 function cc() {
@@ -541,21 +503,13 @@ function cc() {
 async function moreInfo(row, day) {
     let table = document.getElementById("APIresultTable");
     let name = table.rows[row].cells[2].innerText
-    console.log('enter moreInfo');
     const elems = document.getElementsByClassName("searchResult");
     for (let i = 0; i < elems.length; i++) elems[i].style.display = 'block';
     ////value: id, artist team, venue, genre, ticket range, ticket status, buy website, photo
     document.getElementById("moreInfoHeader").textContent = name;
     document.getElementById("moreInfoDate").textContent = day.replace('undefined','');
-    // if (idMapping.get(name)[1] != 'lol') {
-    //     document.getElementById("moreInfoAT").textContent = idMapping.get(name)[1];
-    // }
     document.getElementById("moreInfoVenue").textContent = idMapping.get(name)[2]
     document.getElementById("moreInfoGen").textContent = idMapping.get(name)[3] 
-    console.log("######" + idMapping.get(name)[4] + "######")
-    for (let j = 0; j < idMapping.get(name).length; j++) {
-        console.log(idMapping.get(name)[j])
-    }
     if (idMapping.get(name)[4] != "N/A") {
         document.getElementById("prangeTitle").innerHTML = "Price Ranges"
         document.getElementById("moreInfoRange").textContent = idMapping.get(name)[4]
@@ -581,7 +535,6 @@ async function moreInfo(row, day) {
     //go search for venue
     let Url = 'https://app.ticketmaster.com/discovery/v2/venues?apikey='+ tmKey + '&keyword=' + idMapping.get(name)[2];
     //let logoIMG = await searchVenue(Url);
-    console.log('enter searchVenue')
     logoIMG = "lol";
     await fetch('/getTicketMasterSearch?' + new URLSearchParams({
         "url": Url
@@ -601,8 +554,6 @@ async function moreInfo(row, day) {
             }  
         }
     })
-
-    console.log('we got logo img: ' + logoIMG)
 
     //under discovery/v2/events/{id}
     console.log('### going to check event ID:' + idMapping.get(name)[8] + ' ###');
@@ -636,16 +587,13 @@ async function moreInfo(row, day) {
     document.getElementById("moreInfoGen").textContent = tc
 
     //venue logo the venue id may be not match to 
-    console.log('trying to get venue id: ' + jobj._embedded.venues[0].id + ' : ' + logoIMG)
     idMapping.get(name).push(logoIMG)
 
-    console.log("-----  we are going to show button   -----");
     //here display venue button
     const elem = document.getElementsByClassName("venueBut");
     elem.display = "block";
     for (let i = 0; i < elem.length; i++) elem[i].style.display = "block";
     selectedName = name;
-    console.log('showing our button man!!!')
     const ele = document.getElementsByClassName("outerMargin");
     for (let i = 0; i < ele.length; i++) ele[i].style.display = "none";
     const el = document.getElementById("venueDetails");
