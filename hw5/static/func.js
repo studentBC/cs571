@@ -565,21 +565,29 @@ async function moreInfo(row, day) {
         .then(response => response.json())
         .then(response => {
             jobj = response;
+            console.log('ola ola ola ola ');
             console.log(JSON.stringify(response));
             return response;
         })
     //this property might not have data in it ... do this!
     if (jobj._embedded.attractions) {
-        document.getElementById("moreInfoAT").href = jobj._embedded.attractions[0]?.url;
         document.getElementById("moreInfoATT").innerHTML = "Artist/Team"
-        //Genre
-        let name = ""
+        //Genre do here
+        let stop = jobj._embedded.attractions.length-1;
         for (let a = 0; a < jobj._embedded.attractions.length; a++) {
-            name+=jobj._embedded.attractions[a].name
-            name+=" | "
+            let mat = document.createElement("a");
+            mat.href = jobj._embedded.attractions[a]?.url
+            
+            if (a == 0) mat.innerHTML = jobj._embedded.attractions[a].name+"&ensp;" 
+            else mat.innerHTML = "&ensp;"+ jobj._embedded.attractions[a].name+"&ensp;"
+            mat.style.color = "#1F8A70";
+            mat.style.textDecoration = "none";
+            mat.target = "_blank";
+            document.getElementById("moreInfoAT").appendChild(mat); 
+            if (a < stop) {
+                document.getElementById("moreInfoAT").innerHTML+=" | "; 
+            }
         }
-        name = name.substring(0, name.length - 2);
-        document.getElementById("moreInfoAT").textContent = name
     }
     let tc = jobj.classifications[0]?.segment?.name + " | " + jobj.classifications[0]?.genre?.name 
             + " | " + jobj.classifications[0].subGenre?.name
