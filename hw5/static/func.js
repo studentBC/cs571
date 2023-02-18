@@ -570,6 +570,7 @@ async function moreInfo(row, day) {
             return response;
         })
     //this property might not have data in it ... do this!
+    document.getElementById("moreInfoAT").innerHTML="";
     if (jobj._embedded.attractions) {
         document.getElementById("moreInfoATT").innerHTML = "Artist/Team"
         //Genre do here
