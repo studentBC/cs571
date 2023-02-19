@@ -4,6 +4,26 @@ h1 {
   text-align: left;
 }
 
+.mainPage {
+  display: flex;
+  flex-flow: nowrap;
+  flex-direction: column;
+  /* Then we define how is distributed the remaining space */
+  justify-content: space-around;
+  width: 50%;
+  list-style: none;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 10px;
+
+  /* filter blur  */
+  backdrop-filter: blur(10px);
+  background-color: rgba(67, 66, 66, 0.6);
+}
+
 #moreInfoAT {
   display: flex;
   color: white;
@@ -142,54 +162,26 @@ input[name="kw"] {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  flex-flow: col wrap;
   justify-content: space-between;
-  width: 100%;
 }
 
 .srright {
   width: 49%;
   /* background-color: white; */
-  display: inline-block;
-  vertical-align: top;
+  /* display: inline-block;
+  vertical-align: top; */
 }
 
 .srleft {
-  width: 49%;
+  width: 50%;
   /* background-color: black; */
-  display: inline-block;
-}
-
-.fc {
-  margin-left: 5em;
-  width: 100%;
-  height: 100%;
+  /* display: inline-block; */
 }
 
 .headerCell {
   margin-top: 1em;
   margin-bottom: 1em;
   font-weight: bold;
-}
-
-.mainPage {
-  display: flex;
-  flex-flow: nowrap;
-  flex-direction: column;
-  /* Then we define how is distributed the remaining space */
-  justify-content: space-around;
-  width: 50%;
-  list-style: none;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 30px;
-  margin-bottom: 30px;
-  padding: 20px;
-  border-radius: 10px;
-
-  /* filter blur  */
-  backdrop-filter: blur(10px);
-  background-color: rgba(67, 66, 66, 0.6);
 }
 
 #moreInfoIMG {
@@ -492,7 +484,10 @@ input[name="kw"] {
   justify-content: space-evenly;
 
 }
-
+.srb {
+  display: flex;
+  align-items: center;
+}
 #carouselExampleControls {
   max-width: 30%;
   display: flex;
@@ -548,4 +543,25 @@ input[name="kw"] {
   height: 100%;
   width: 100%;
   position: absolute;
+}
+
+@media screen and (min-width: 900px) {
+  .fc {
+    margin-left: 5em;
+    width: 100%;
+    height: 100%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .fc {
+    width: 90%;
+    margin-left: 5px;
+  }
+  .lc {
+    width: 90%;
+    margin-right: 5px;
+  }
+  .mainPage {
+    width: 90%;
+  }
 }
