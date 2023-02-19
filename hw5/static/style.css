@@ -297,6 +297,7 @@ input[name="kw"] {
 .arrow:hover {
     border-bottom-width: 4px;
     border-right-width: 4px;
+    cursor: pointer;
 }
 
 .outerMargin {
