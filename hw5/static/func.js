@@ -523,6 +523,12 @@ async function moreInfo(row, day) {
     } else if (ticketStatius === 'offsale') {
         document.getElementById("moreInfoSta").classList.add('offSale');
         document.getElementById("moreInfoSta").innerHTML = 'Off Sale';
+    } else if (ticketStatius === 'canceled') {
+        document.getElementById("moreInfoSta").classList.add('canceled');
+        document.getElementById("moreInfoSta").innerHTML = 'Canceled';
+    } else if (ticketStatius === 'postponed') {
+        document.getElementById("moreInfoSta").classList.add('rescheduled');
+        document.getElementById("moreInfoSta").innerHTML = 'Postponed';
     } else {
         document.getElementById("moreInfoSta").classList.add('rescheduled');
         document.getElementById("moreInfoSta").innerHTML = 'Rescheduled';

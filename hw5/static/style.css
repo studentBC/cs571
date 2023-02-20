@@ -408,6 +408,16 @@ input[name="kw"] {
     font-size: 13px;
 }
 
+.canceled {
+    background-color: black;
+    padding: 5px;
+    width: 60px;
+    text-align: center;
+    color: white;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
 table,
 th,
 td {
