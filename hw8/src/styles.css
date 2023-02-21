@@ -256,7 +256,15 @@ input[name="kw"] {
   /* max-width: 150px; */
 }
 
-
+.canceled {
+  background-color: black;
+  padding: 5px;
+  width: 60px;
+  text-align: center;
+  color: white;
+  border-radius: 10px;
+  font-size: 15px;
+}
 
 .arow .bn {
   flex: 1 1 20px;
@@ -485,10 +493,12 @@ input[name="kw"] {
   justify-content: space-evenly;
 
 }
+
 .srb {
   display: flex;
   align-items: center;
 }
+
 #carouselExampleControls {
   max-width: 30%;
   display: flex;
@@ -553,15 +563,18 @@ input[name="kw"] {
     height: 100%;
   }
 }
+
 @media screen and (max-width: 768px) {
   .fc {
     width: 90%;
     margin-left: 5px;
   }
+
   .lc {
     width: 90%;
     margin-right: 5px;
   }
+
   .mainPage {
     width: 90%;
   }
