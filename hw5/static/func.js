@@ -287,7 +287,7 @@ function createAPIresultTable() {
                     tmp.push(jsonObj._embedded?.events[i] ?.dates.start.localDate);
                     tmp.push(jsonObj._embedded?.events[i] ?.dates.start.localTime);
                     //Icon
-                    tmp.push(jsonObj._embedded?.events[i] ?.images[2].url);
+                    tmp.push(jsonObj._embedded?.events[i] ?.images[0].url);
                     //Event
                     tmp.push(jsonObj._embedded?.events[i] ?.name);
                     //Genre
@@ -600,8 +600,28 @@ async function moreInfo(row, day) {
             }
         }
     }
-    let tc = jobj.classifications[0]?.segment?.name + " | " + jobj.classifications[0]?.genre?.name 
-            + " | " + jobj.classifications[0].subGenre?.name
+    //genere
+    let tc = ""
+    if (jobj.classifications[0]?.segment?.name) {
+        tc+=jobj.classifications[0]?.segment?.name
+    } 
+    if (jobj.classifications[0]?.genre?.name) {
+        if (tc!="") tc+=" | "
+        tc+=jobj.classifications[0]?.genre?.name
+    }
+    if (jobj.classifications[0].subGenre?.name) {
+        if (tc!="") tc+=" | "
+        tc+=jobj.classifications[0].subGenre?.name
+    }
+    if (jobj.classifications[0].type?.name) {
+        if (tc!="") tc+=" | "
+        tc+=jobj.classifications[0].type?.name
+    }
+    if (jobj.classifications[0].subType?.name) {
+        if (tc!="") tc+=" | "
+        tc+=jobj.classifications[0].subType?.name
+    }
+    
     tc = tc.replace('undefined','');
     document.getElementById("moreInfoGen").textContent = tc
 
