@@ -116,6 +116,7 @@ async function submitlol(event) {
     let lat=""
     let lng=""
     if (dist) dd = '&radius=' + dist + '&unit=miles'
+    else dd = '&radius=10&unit=miles'
     if (!selfLocate && loc != "") {
         //use google geoapi to get lat lng
         let location = loc.replace(/\s+/g, '+');
@@ -159,6 +160,7 @@ async function submitlol(event) {
         fc = ''
     }
     url = 'https://app.ticketmaster.com/discovery/v2/events?apikey=' + tmKey + '&keyword=' + mixedKeyWord + '&segmentId=' + fc + '&size=20' + dd + latlng;
+    console.log(url);
     jsonObjArray = [];
     callAPI(url, mixedKeyWord);
 }
