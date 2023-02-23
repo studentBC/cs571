@@ -77,6 +77,8 @@ async function callAPI(url, mixedKeyWord) {
         console.log(jsonObjArray[0]);
         console.log('######################');
         document.getElementById("APIresult").innerHTML = '';
+        const elem = document.getElementsByClassName("venueBut");
+        for (let i = 0; i < elem.length; i++) elem[i].style.display = 'none';
         return;
     } else createAPIresultTable();
 
@@ -224,7 +226,7 @@ async function showVenue() {
     const elem = document.getElementById("venueDetails");
     elem.style.display = 'block';
     for (let i = 0; i < elem.length; i++) elem[i].style.display = 'block';
-    
+    document.getElementById("venueDetails").scrollIntoView({ behavior: "smooth"})
 }
 function sortColumn(array, col) {
     if (prevCol == col) ascending = !ascending;
@@ -271,7 +273,7 @@ function createAPIresultTable() {
     if (len > 0) {
         const elems = document.getElementsByClassName("APIresult");
         document.getElementById("APIresult").innerHTML = "";
-
+        
         for (let i = 0; i < elems.length; i++) elems[i].style.display = 'block';
         // elems.innerHTML = "";
         for (let j = 0; j < len; j++) {
@@ -473,6 +475,7 @@ function createAPIresultTable() {
     document.getElementsByClassName("APIresult")[0].appendChild(table);
     table.style.marginTop = '40px';
     table.style.marginBottom = '40px';
+    document.getElementById("APIresult").scrollIntoView({behavior: "smooth"})
     //table.classList.add('table-bordered');
 }
 
@@ -571,16 +574,17 @@ async function moreInfo(row, day) {
         .then(response => response.json())
         .then(response => {
             jobj = response;
-            console.log('ola ola ola ola ');
             console.log(JSON.stringify(response));
             return response;
         })
     //this property might not have data in it ... do this!
     document.getElementById("moreInfoAT").innerHTML="";
-    if (jobj._embedded.attractions) {
+    document.getElementById("moreInfoATT").innerHTML = ""
+    if (jobj._embedded.attractions && jobj._embedded.attractions.length > 0) {
         document.getElementById("moreInfoATT").innerHTML = "Artist/Team"
         //Genre do here
         let stop = jobj._embedded.attractions.length-1;
+         
         for (let a = 0; a < jobj._embedded.attractions.length; a++) {
             let mat = document.createElement("a");
             mat.href = jobj._embedded.attractions[a]?.url
@@ -610,6 +614,7 @@ async function moreInfo(row, day) {
     for (let i = 0; i < elem.length; i++) elem[i].style.display = "block";
     selectedName = name;
     const ele = document.getElementsByClassName("outerMargin");
+    document.getElementById("searchResult").scrollIntoView({behavior: "smooth"})
     for (let i = 0; i < ele.length; i++) ele[i].style.display = "none";
     const el = document.getElementById("venueDetails");
     for (let i = 0; i < el.length; i++) el[i].style.display = "none";
