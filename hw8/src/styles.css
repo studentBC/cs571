@@ -101,13 +101,13 @@ select {
 
 .subBut {
   color: white;
-  background-color: #FC7300;
+  background-color: #EB455F;
 
   border-radius: 10px;
   border: 2px solid;
   border: none;
   padding: 15px 32px;
-  margin-right: 5px;
+  margin-right: 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -247,7 +247,11 @@ input[name="kw"] {
 .datetn {
   margin: 1px;
 }
-
+#twoBut {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .icon {
   /* margin-top: 1em; */
   text-align: center;
@@ -415,7 +419,6 @@ input[name="kw"] {
   font-size: 13px;
 }
 
-
 /* older versin of CSS */
 
 .wrap {
@@ -426,12 +429,15 @@ input[name="kw"] {
 
 .customBUT {
   display: inline;
-  background-color: white;
   border-radius: 28px;
   border: 1px solid #000000;
   font-family: Arial;
   font-size: 17px;
   padding: 16px 31px;
+  background: rgba(0, 0, 0, 0);
+  border: 1px white solid;
+  border-radius: 20px;
+  color: white;
 }
 
 .flex-container {

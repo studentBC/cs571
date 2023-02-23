@@ -7,10 +7,9 @@
 </head>
 
 <body>
-  <div id="upperTab">
+  <div class="d-flex justify-content-end" style="margin-top:10px;">
     <button type="button" id="sea" class="customBUT" (click)="clickTab('sea')">Search</button>
-    <button type="button" id="mb" style="border-color: transparent;" class="customBUT" (click)="clickTab('mb')">My
-      Bookings</button>
+    <button type="button" id="mb" style="border-color: transparent;" class="customBUT" (click)="clickTab('mb')">Favorites</button>
   </div>
   <div id="myBookingsTab" style="display: none;">
     <h1 style="text-align: center" id="mbTitle">List of your reservations</h1>
@@ -21,7 +20,7 @@
       style="text-align: center; color: white; font-family: 'Times New Roman', Times, serif !important; margin-bottom: 0px;">
       Event Search
     </h1>
-    <hr style="color: white; width: 100%; margin-bottom: 20px; margin-top: 0px;">
+    <hr style="color: white; width: 100%; margin-bottom: 20px; margin-top: 10px;">
     <form name="partOne" style="color:#AAE3E2;" (ngSubmit)="submitlol(form)" #form="ngForm">
       <label>Keyword</label><label style="color:red;">*</label><br>
       <input class="userInput" type="text" name="kw" required ngModel name="kw">
@@ -39,24 +38,30 @@
             <option value="default">Default</option>
             <option value="KZFzniwnSyZfZ7v7nJ">Music</option>
             <option value="KZFzniwnSyZfZ7v7nE">Sports</option>
-            <option value="KZFzniwnSyZfZ7v7na">Arts</option>
-            <option value="KZFzniwnSyZfZ7v7na">Theatre</option>
+            <option value="KZFzniwnSyZfZ7v7na">Arts & Theatre</option>
             <option value="KZFzniwnSyZfZ7v7nn">Film</option>
             <option value="KZFzniwnSyZfZ7v7n1">Miscellaneous</option>
           </select>
         </div>
       </div>
-      <br><br>
+      <br>
       <label>Location</label><label style="color:red;">*&nbsp;&nbsp;</label>
-      <input type="checkbox" name="autoDetect" id="cbox" ngModel name="autoDetect" (click)="hideLocInput()">
-      <label style="color: gray;"><strong>Auto-Detect Location</strong></label>
       <br>
       <input class="userInput" type=" text" name="location" ngModel name="location" id="inputLoc" style="width: 100%;"
-        required>
-      <br><br>
+        required="">
+      <br>
+      <br>
+      <input type="checkbox" name="autoDetect" id="cbox" ngModel name="autoDetect" (click)="hideLocInput()">
+      <label style="color: gray;"><strong>Auto-Detect your location</strong></label>
+      <br>
+      <br>
       <!-- we cannot call function submit  -->
+      <div id="twoBut">
       <input type="submit" value="SUBMIT" class="subBut">
       <input type="button" value="CLEAR" class="clearBut" (click)="form.resetForm();cc();" (click)="cc()">
+      </div>
+      <br>
+      <br>
     </form>
   </div>
   <div id="notfound">
