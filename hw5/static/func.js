@@ -563,6 +563,7 @@ async function moreInfo(row, day) {
                     console.log(response._embedded.venues[i].images[0].url);
                     logoIMG =  response._embedded.venues[i].images[0].url;
                     console.log('answer is ' + logoIMG)
+                    break
                 }
             }  
         }
