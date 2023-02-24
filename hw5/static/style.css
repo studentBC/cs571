@@ -47,10 +47,12 @@ h2 {
 
 .subBut:hover {
     background-color: #ffb87e;
+    cursor: pointer;
 }
 
 .clearBut:hover {
     background-color: #bbc8e0;
+    cursor: pointer;
 }
 
 select {

@@ -207,18 +207,20 @@ async function showVenue() {
         document.getElementById('vdIMG').style.display = 'none';
     }
     // let add = 'Address: ';
+    let kw = jobj._embedded?.venues[0]?.name + ','
     if (jobj._embedded?.venues[0]?.address.line1) {
         // add+=jobj.address.line1 +"<br>";
         document.getElementById('vdaddr').innerHTML = jobj._embedded?.venues[0]?.address.line1 +"<br>"+
-                                                    jobj._embedded?.venues[0]?.state.name +", "+ jobj._embedded?.venues[0]?.state.stateCode+"<br>"+ jobj._embedded?.venues[0]?.postalCode
+                                                    jobj._embedded?.venues[0]?.city.name +", "+ jobj._embedded?.venues[0]?.state.stateCode+"<br>"+ jobj._embedded?.venues[0]?.postalCode
+        kw+= (jobj._embedded?.venues[0]?.address.line1 +','+jobj._embedded?.venues[0]?.city.name+','+jobj._embedded?.venues[0]?.state.stateCode+','+jobj._embedded?.venues[0]?.postalCode)
     } else {
-        document.getElementById('vdaddr').innerHTML = jobj._embedded?.venues[0]?.state.name+", " +jobj._embedded?.venues[0]?.state.stateCode+"<br>"+jobj._embedded?.venues[0]?.postalCode
+        document.getElementById('vdaddr').innerHTML = jobj._embedded?.venues[0]?.city.name+", " +jobj._embedded?.venues[0]?.state.stateCode+"<br>"+jobj._embedded?.venues[0]?.postalCode
+        kw+= (jobj._embedded?.venues[0]?.city.name+','+jobj._embedded?.venues[0]?.state.stateCode+','+jobj._embedded?.venues[0]?.postalCode)
     }
     if (jobj._embedded?.venues[0]?.url) document.getElementById('vdme').href = jobj._embedded?.venues[0]?.url;
     //for google map URL
     //it will encouner repeat state or city name especially new york ...
     //let kw = jobj.state.name +'+'+ jobj.city.name + '+' + jobj.name;
-    let kw = jobj._embedded?.venues[0]?.name + '+' + jobj._embedded?.venues[0]?.postalCode;
     kw = kw.replace(/\s/g, '+')
     document.getElementById('vdgm').href = 'https://www.google.com/maps/search/'+kw;
     document.getElementById("vdHeader").innerHTML = jobj._embedded?.venues[0]?.name;
@@ -593,7 +595,7 @@ async function moreInfo(row, day) {
             
             if (a == 0) mat.innerHTML = jobj._embedded.attractions[a].name+"&ensp;" 
             else mat.innerHTML = "&ensp;"+ jobj._embedded.attractions[a].name+"&ensp;"
-            mat.style.color = "#1F8A70";
+            mat.style.color = "#B4E4FF";
             mat.style.textDecoration = "none";
             mat.target = "_blank";
             document.getElementById("moreInfoAT").appendChild(mat); 
@@ -602,27 +604,28 @@ async function moreInfo(row, day) {
             }
         }
     }
-    //genere
+    //genere fix undefined do it!
     let tc = ""
-    if (jobj.classifications[0]?.segment?.name) {
-        tc+=jobj.classifications[0]?.segment?.name
-    } 
-    if (jobj.classifications[0]?.genre?.name) {
+    if (jobj.classifications[0].subGenre?.name && jobj.classifications[0]?.subGenre?.name != 'Undefined') {
+        tc+=jobj.classifications[0].subGenre?.name
+    }
+    if (jobj.classifications[0]?.genre?.name && jobj.classifications[0]?.genre?.name != 'Undefined') {
         if (tc!="") tc+=" | "
         tc+=jobj.classifications[0]?.genre?.name
     }
-    if (jobj.classifications[0].subGenre?.name) {
+    if (jobj.classifications[0]?.segment?.name && jobj.classifications[0]?.segment?.name != 'Undefined') {
         if (tc!="") tc+=" | "
-        tc+=jobj.classifications[0].subGenre?.name
-    }
-    if (jobj.classifications[0].type?.name) {
-        if (tc!="") tc+=" | "
-        tc+=jobj.classifications[0].type?.name
-    }
-    if (jobj.classifications[0].subType?.name) {
+        tc+=jobj.classifications[0]?.segment?.name
+    } 
+    if (jobj.classifications[0].subType?.name && jobj.classifications[0]?.subType?.name != 'Undefined') {
         if (tc!="") tc+=" | "
         tc+=jobj.classifications[0].subType?.name
     }
+    if (jobj.classifications[0].type?.name && jobj.classifications[0]?.type?.name != 'Undefined') {
+        if (tc!="") tc+=" | "
+        tc+=jobj.classifications[0].type?.name
+    }
+
     
     tc = tc.replace('undefined','');
     document.getElementById("moreInfoGen").textContent = tc
