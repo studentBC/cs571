@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const apikey = 'uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ';
+var SpotifyWebApi = require('spotify-web-api-node');
+var client_id = 'e3d4c9a4a4e44b0d83df98d6b6c2571d';
+var client_secret = '6ef0289ae08b466194c47a693661ff46';
 app.use(express.json());
 //https://stackoverflow.com/questions/43871637/no-access-control-allow-origin-header-is-present-on-the-requested-resource-whe
 //https://stackoverflow.com/questions/23751914/how-can-i-set-response-header-on-express-js-assets
@@ -9,6 +12,12 @@ app.use((req, res, next) => {
   res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.append('Access-Control-Allow-Headers', 'Content-Type');
   next();
+});
+
+
+var spotifyApi = new SpotifyWebApi({
+  clientId: client_id,
+  clientSecret: client_secret
 });
 
 function SendRequest(datatosend) {
@@ -47,6 +56,28 @@ async function callAPI(url) {
     });
   return res;
 }
+
+// async function getSpotifyToken() {
+//   var authOptions = {
+//     url: 'https://accounts.spotify.com/api/token',
+//     headers: {
+//       'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+//     },
+//     form: {
+//       grant_type: 'client_credentials'
+//     },
+//     json: true
+//   };
+//   let ans=''
+//   await request.post(authOptions, function(error, response, body) {
+//     if (!error && response.statusCode === 200) {
+//       ans = body.access_token;
+//     }
+//   });
+//   return ans;
+// }
+
+
 //search for events
 app.get('/getEvents', async function (request, response) {
   console.log('getEvents was called ...');
@@ -203,15 +234,110 @@ app.get('/getTicketMasterSearch', async function (request, response) {
   response.send(jbody);
 })
 
-// app.get('/getTicketMasterSearch', async function (request, response) {
-//   console.log('node JS was called ...');
-//   let url = request.query.url;
-//   console.log('node JS was called ...');
-//   console.log(url);
-//   let jbody = await callAPI(url);
-//   console.log(jbody);
-//   response.send(jbody);
+// app.get('/getSpotifyAlbums', async function (request, response) {
+async function getAlbums(aid){
+  let ans = []
+  let jobj;
+  await spotifyApi.clientCredentialsGrant().then(
+    function(data) {
+      console.log('The access token expires in ' + data.body['expires_in']);
+      console.log('The access token is ' + data.body['access_token']);
+
+      // Save the access token so that it's used in future calls
+      spotifyApi.setAccessToken(data.body['access_token']);
+    },
+    function(err) {
+      console.log('Something went wrong when retrieving an access token', err);
+    }
+  );
+
+  await spotifyApi
+  .getArtistAlbums(aid, { limit: 3, offset: 5 })
+  .then(
+    function(data) {
+      console.log('Album information', data.body);
+      jobj = data.body;
+    },
+    function(err) {
+      console.error(err);
+    }
+  );
+  for (let i = 0; i < jobj.items.length; i++) {
+    ans.push(jobj.items[i]?.images[0]?.url)
+  }
+  return ans 
+}
+  // console.log(ans)
+  // const jsonContent = JSON.stringify(ans);
+  // response.send(jsonContent);
 // })
+
+
+app.get('/getSpotifyArtist', async function (request, response) {
+  console.log('node JS was called ...');
+  let artist = request.query.artist;
+  console.log('artist is ' + artist)
+  // credentials are optional
+  
+  // Retrieve an access token.
+  await spotifyApi.clientCredentialsGrant().then(
+    function(data) {
+      console.log('The access token expires in ' + data.body['expires_in']);
+      console.log('The access token is ' + data.body['access_token']);
+
+      // Save the access token so that it's used in future calls
+      spotifyApi.setAccessToken(data.body['access_token']);
+    },
+    function(err) {
+      console.log('Something went wrong when retrieving an access token', err);
+    }
+  );
+  var jbody
+  // for plugin
+  await spotifyApi.searchArtists(artist)
+  .then(function(data) {
+    console.log('Search artists: ' + artist, data.body);
+    jbody = data.body
+  }, function(err) {
+    console.error(err);
+  });
+  const responseData = new Map();
+  for (let i = 0; i < jbody.artists.items.length; i++) {
+    let temp = []
+    //artist id, Followers, Popularity, Spotify Link, artist icon
+    temp.push(jbody.artists.items[i].id)
+    temp.push(jbody.artists.items[i].followers.total)
+    temp.push(jbody.artists.items[i].popularity)
+    temp.push(jbody.artists.items[i].external_urls.spotify)
+    temp.push(jbody.artists.items[i].images[0].url)
+    let tmp = await getAlbums(jbody.artists.items[i].id);
+    for (let j = 0; j < tmp.length; j++) {
+      temp.push(tmp[j]);
+    }
+    responseData.set(jbody.artists.items[i].name, temp)
+  }
+  console.log("---------  the response data is ----------")
+  console.log(responseData)
+  const jsonContent = JSON.stringify(responseData);
+  //console.log(jsonContent);
+  response.send(jsonContent);
+  
+  // let token = await getSpotifyToken();
+  // https://developer.spotify.com/documentation/general/guides/authorization/client-credentials/
+  // await fetch('', {
+  //   method: 'GET',
+  //   headers: {
+  //     'Authorization': 'Bearer ' + token
+  //   }
+  // })
+  // .then(response => response.json())
+  // .then(response => {
+  //   res = response;
+  //   console.log(response);
+  //   console.log(JSON.stringify(response));
+  //   return response;
+  // });
+})
 
 app.get('/', (req, res) => {
   console.log(req.body);
