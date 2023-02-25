@@ -244,11 +244,13 @@ input[name="kw"] {
 .datetn {
   margin: 1px;
 }
+
 #twoBut {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .icon {
   /* margin-top: 1em; */
   text-align: center;
@@ -307,14 +309,10 @@ input[name="kw"] {
   cursor: pointer;
 }
 
-.outerMargin {
-  padding: 20px;
-  background-color: white;
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
-  width: 65%;
-  margin: 30px auto;
-  display: none;
+.fT {
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .outVH {
@@ -551,11 +549,11 @@ input[name="kw"] {
 }
 
 #main_wrapper li .active span {
-    border-bottom: 4px solid white;
-    color: white;
-    bottom: 0;
-    width: 100%;
-    border-radius: 10px 10px 0 0;
+  border-bottom: 4px solid white;
+  color: white;
+  bottom: 0;
+  width: 100%;
+  border-radius: 10px 10px 0 0;
 }
 
 /* heart button */
@@ -565,6 +563,7 @@ input[name="kw"] {
   --easing: cubic-bezier(0.7, 0, 0.3, 1);
   --duration: 0.5s;
 }
+
 .like-button {
   font-size: 5vmin;
   appearance: none;
@@ -580,6 +579,7 @@ input[name="kw"] {
   transition: transform var(--duration) var(--easing);
   cursor: pointer;
 }
+
 .like-button:before {
   z-index: -1;
   content: '';
@@ -590,6 +590,7 @@ input[name="kw"] {
   border-radius: inherit;
   transition: inherit;
 }
+
 .like-button:after {
   content: '';
   position: absolute;
@@ -599,82 +600,107 @@ input[name="kw"] {
   border-radius: inherit;
   z-index: -1;
 }
+
 .like-button:active:before {
   animation: depress-shadow var(--duration) var(--easing) both;
 }
+
 .like-button:focus:after {
   animation: depress var(--duration) var(--easing) both;
 }
+
 @keyframes depress {
-  from, to {
+
+  from,
+  to {
     transform: none;
- }
+  }
+
   50% {
     transform: translateY(5%) scale(0.9);
- }
+  }
 }
+
 @keyframes depress-shadow {
-  from, to {
+
+  from,
+  to {
     transform: none;
- }
+  }
+
   50% {
     transform: scale(0.5);
- }
+  }
 }
+
 .like-wrapper {
   display: grid;
   align-items: center;
   justify-content: center;
   z-index: 1;
 }
-.like-wrapper > * {
+
+.like-wrapper>* {
   margin: auto;
   grid-area: 1;
 }
+
 .heart {
   width: 0.5em;
   height: 0.5em;
   display: block;
   transform-origin: center 80%;
 }
-.heart > path {
+
+.heart>path {
   stroke: var(--color-heart);
   stroke-width: 2;
   fill: transparent;
   transition: fill var(--duration) var(--easing);
 }
-.like-button:focus .heart > path {
+
+.like-button:focus .heart>path {
   fill: var(--color-heart);
 }
+
 .like-button:focus .heart {
   animation: heart-bounce var(--duration) var(--easing);
 }
+
 .hidden-text {
   height: 54px;
   overflow: hidden;
   font-size: 16px;
 }
+
 .more-text {
   height: auto;
   font-size: 16px;
 }
+
 .vdrm {
   color: white;
 }
+
 .spoiler {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
+
 @keyframes heart-bounce {
   40% {
     transform: scale(0.7);
- }
-  0%, 80%, 100% {
+  }
+
+  0%,
+  80%,
+  100% {
     transform: scale(1);
- }
+  }
 }
+
 /* Reset the animation when clicking again! */
 .like-button:focus {
   pointer-events: none;

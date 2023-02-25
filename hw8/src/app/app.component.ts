@@ -127,19 +127,19 @@ export class AppComponent implements OnInit {
             let noTB = document.getElementById("myBookingsTab");
             noTB!.style.display = "none";
             showTB!.style.display = "block";
+            document.getElementById("favoriteTable")!.innerHTML="";
+            // for (let i = 0; i < elem.length; i++) {
+            //     (elem[i] as HTMLElement).style.display = "none";
+            // }
         } else {
             let showTB = document.getElementById("myBookingsTab") as HTMLElement;
             let noTB = document.getElementById("searchTab");
             noTB!.style.display = "none";
             showTB!.style.display = "block";
-            showTB.innerHTML = "";
+            this.cc();
+            //go clear
             //dynamically create reserve table
             this.createReserveTable();
-        }
-        const elems = document.getElementsByClassName("searchResult");
-        for (let i = 0; i < elems.length; i++) {
-            const ee = elems[i] as HTMLElement;
-            ee.style.display = 'none';
         }
     }
     putMeUp(id: string) {
@@ -177,6 +177,7 @@ export class AppComponent implements OnInit {
     }
     addFavorite() {
         console.log("ola enter addfavorite")
+        //alert("Event added to Favorites!")
         let key = document.getElementById("moreInfoHeader")!.innerHTML + document.getElementById("moreInfoDate")!.innerHTML
         if (globalThis.favoriteList.has(key)) {
             console.log("yes we have key " + key)
@@ -366,7 +367,6 @@ export class AppComponent implements OnInit {
     }
     createAPIresultTable() {
         console.log('enter to createAPIresultTable');
-        let resultTable = document.getElementsByClassName("APIresult");
         //return;
         //store json obj into data array
         var len = jsonObjArray.length;
@@ -580,7 +580,7 @@ export class AppComponent implements OnInit {
 
             table.appendChild(tr);
         }
-        document.getElementsByClassName("APIresult")[0].appendChild(table);
+        document.getElementById("APIresult")!.appendChild(table);
         table.style.marginTop = '40px';
         table.style.marginBottom = '40px';
         //table.classList.add('table-bordered');
@@ -791,32 +791,16 @@ export class AppComponent implements OnInit {
         }
     }
     cc() {
-        // document.forms["partOne"].reset();
+        (<HTMLFormElement>document.getElementById("partOne")).reset();
         document.getElementById("APIresult")!.innerHTML = '';
         document.getElementById('notfound')!.style.display = 'none';
         document.getElementById("inputLoc")!.style.display = 'block';
-        idMapping.clear();
+        globalThis.idMapping.clear();
         jsonObjArray = [];
-        // let elems = document.getElementsByClassName("APIresult");
-        // for (let i = 0; i < elems.length; i++) elems[i].remove();
+
         const elems = document.getElementsByClassName("searchResult");
         for (let i = 0; i < elems.length; i++) {
             (elems[i] as HTMLElement).style.display = "none";
-        }
-        const ele = document.getElementsByClassName("outerMargin");
-        for (let i = 0; i < ele.length; i++) {
-            (ele[i] as HTMLElement).style.display = "none";
-        }
-        const el = document.getElementById("venueDetails");
-        (el as HTMLElement).style.display = "none";
-
-        // for (let i = 0; i < el.length; i++) {
-        //   el[i].style.display = "none";
-        // }
-
-        const elem = document.getElementsByClassName("venueBut");
-        for (let i = 0; i < elem.length; i++) {
-            (elem[i] as HTMLElement).style.display = 'none';
         }
     }
 
@@ -870,28 +854,17 @@ export class AppComponent implements OnInit {
     createReserveTable() {
         console.log('enter to createReserveTable');
         //store json obj into data array
-        var len = globalThis.idMapping.size;
+        var len = globalThis.favoriteList.size;
         console.log(len);
 
         let data: any[] = [];
+        let temp = document.getElementById("mbTitle") as HTMLElement;
         if (len === 0) {
-            let title = document.createElement('h1') as HTMLElement;
-            console.log(title);
-            title!.textContent = "No reservations to show";
-            title.style.color = "red";
-            title.style.textAlign = "center";
-            let tmp = document.getElementById("myBookingsTab") as HTMLElement;
-            console.log(tmp);
-            tmp.appendChild(title);
+            temp.innerHTML="No reservations to show";
             return;
         }
-        let title = document.createElement('h1') as HTMLElement;
-        title!.textContent = "List of your favorite events";
-        title.style.color = "red";
-        title.style.textAlign = "center";
-        let tmp = document.getElementById("myBookingsTab") as HTMLElement;
-        console.log(tmp);
-        tmp.appendChild(title);
+
+        temp.innerHTML = "List of your favorite events";
 
         // no, business name, date, time, email, delet button
         var table = document.createElement('table');
@@ -991,7 +964,7 @@ export class AppComponent implements OnInit {
             no++;
         }
         console.log('after creating table ...');
-        tmp.appendChild(table);
+        document.getElementById("favoriteTable")!.appendChild(table);
     }
     //delete reservation
     delReserv(key: string, eventName: string, targetDate: string) {
@@ -1004,7 +977,9 @@ export class AppComponent implements OnInit {
             globalThis.favoriteList.delete(key);
             return;
         }
-        if (table.rows.length === 1) {
+        if (globalThis.favoriteList.size == 0) {
+            document.getElementById("favoriteTable")!.innerHTML="";
+            (<HTMLElement>document.getElementById("mbTitle"))!.innerHTML="No reservations to show";
             return;
         }
         console.log(eventName);
