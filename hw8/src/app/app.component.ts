@@ -8,7 +8,6 @@ declare global {
     var lat: number;
     var long: number;
     var selectedName: string;
-    var logoIMG: string;
     var res: 0;
     var tmKey: string;
     var jsobj: object;
@@ -31,6 +30,9 @@ declare global {
     var jsonReveiewStrArray: string[];
     var nameToUID: Map<string, string>;
     var bDetail: Map<string, string[]>;
+    var ishow: Map<string, boolean>;
+    //key will be event Name+date
+    var favoriteList: Map<string, string[]>;
     //debug usage
     var debug: boolean;
     var reserveModal: ElementRef;
@@ -62,9 +64,15 @@ export class AppComponent implements OnInit {
         globalThis.reserveNo = 1;
         globalThis.tmKey = "uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ";
         globalThis.idMapping = new Map<string, string[]>();
+        globalThis.favoriteList = new Map<string, string[]>();
         globalThis.bDetail = new Map<string, string[]>();
         globalThis.nameToUID = new Map<string, string>();
         globalThis.debug = true;
+        globalThis.ishow = new Map<string, boolean>([
+            ["vdoh", false],
+            ["vdgr", false],
+            ["vdcr", false]
+        ]);
         globalThis.latlng = '&geoPoint=';
     }
     // constructor(private http: HttpClient) {
@@ -138,8 +146,8 @@ export class AppComponent implements OnInit {
         console.log('we call tab ');
         console.log(id);
         let t1 = document.getElementById("businessTab");
-        let t2 = document.getElementById("Maplocation");
-        let t3 = document.getElementById("Reviews");
+        let t2 = document.getElementById("spotifyArtist");
+        let t3 = document.getElementById("venuesDetails");
         if (id != 'businessTab') {
             const elems = document.getElementsByClassName("promotionBut");
             for (let i = 0; i < elems.length; i++) {
@@ -166,6 +174,39 @@ export class AppComponent implements OnInit {
             //     ee.style.display = "flex";
             // }
         }
+    }
+    addFavorite() {
+        console.log("ola enter addfavorite")
+        let key = document.getElementById("moreInfoHeader")!.innerHTML + document.getElementById("moreInfoDate")!.innerHTML
+        if (globalThis.favoriteList.has(key)) {
+            console.log("yes we have key " + key)
+            globalThis.favoriteList.delete(key)
+            return
+        }
+        //date, event name, category, venue
+        let tmp: string[] = []
+        let date = document.getElementById("moreInfoDate")!.innerHTML.substring(0,10)
+        tmp.push(date)
+        tmp.push(document.getElementById("moreInfoHeader")!.innerHTML)
+        tmp.push(document.getElementById("moreInfoGen")!.innerHTML)
+        tmp.push(document.getElementById("vdHeader")!.innerHTML)
+        console.log("go set up key")
+        globalThis.favoriteList.set(key,tmp);
+    }
+    readMore(tid: string) {
+        console.log("call read more man !!!");
+        console.log('id is ' + tid)
+        document.getElementById(tid+'a')!.innerHTML="";
+        if (globalThis.ishow.get(tid)) {
+            document.getElementById(tid)?.classList.remove('more-text');
+            document.getElementById(tid)?.classList.add('hidden-text');
+            document.getElementById(tid+'a')!.innerHTML="show more<i class=\"bi bi-chevron-down\"></i>"
+        } else {
+            document.getElementById(tid)?.classList.remove('hidden-text');
+            document.getElementById(tid)?.classList.add('more-text');
+            document.getElementById(tid+'a')!.innerHTML="show less<i class=\"bi bi-chevron-up\"></i>"
+        }
+        globalThis.ishow.set(tid, !globalThis.ishow.get(tid))
     }
     ///////////// clear button  ///////////////
     // cc() {
@@ -238,7 +279,6 @@ export class AppComponent implements OnInit {
         globalThis.idMapping.clear();
         jsonStrArray = [];
         document.getElementById('notfound')!.style.display = 'none';
-        document.getElementById("outerMargin")!.style.display = "none";
         document.getElementById("searchResult")!.style.display = "none";
         globalThis.latlng = '&geoPoint=';
         //process input parameter
@@ -313,6 +353,17 @@ export class AppComponent implements OnInit {
         this.callAPI(url);
     }
     ///////////// dynamically deal with webUI ///////////////
+    goBack() {
+        console.log('going back man')
+        const elems = document.getElementsByClassName("searchResult");
+        for (let i = 0; i < elems.length; i++) {
+            (elems[i] as HTMLElement).style.display = "none";
+        }
+        const elem = document.getElementsByClassName("APIresult");
+        for (let i = 0; i < elem.length; i++) {
+            (elem[i] as HTMLElement).style.display = "block";
+        }
+    }
     createAPIresultTable() {
         console.log('enter to createAPIresultTable');
         let resultTable = document.getElementsByClassName("APIresult");
@@ -630,26 +681,13 @@ export class AppComponent implements OnInit {
         let Url = 'https://app.ticketmaster.com/discovery/v2/venues?apikey=' + tmKey + '&keyword=' + globalThis.idMapping.get(name)![2];
         //let logoIMG = await searchVenue(Url);
         console.log('enter searchVenue')
-        globalThis.logoIMG = "lol";
         await fetch('https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?' + new URLSearchParams({
             "url": Url
         }))
             .then(response => response.json())
             .then(response => {
-                console.log('we got venue length ' + response._embedded.venues.length);
-                //console.log(response);
-                for (let i = 0; i < response._embedded.venues.length; i++) {
-                    if (response._embedded.venues[i].images) {
-                        console.log(response._embedded.venues[i].id);
-                        console.log(response._embedded.venues[i].images[0].url);
-                        globalThis.logoIMG = response._embedded.venues[i].images[0].url;
-                        console.log('answer is ' + globalThis.logoIMG)
-                        break;
-                    }
-                }
+                console.log('we got venue length ' + response._embedded?.venues?.length);
             })
-
-        console.log('we got logo img: ' + globalThis.logoIMG)
 
         //under discovery/v2/events/{id}
         console.log('### going to check event ID:  ' + globalThis.idMapping.get(name)![8] + ' ###');
@@ -666,7 +704,7 @@ export class AppComponent implements OnInit {
             })
         let jobj = JSON.parse(jobjs)
         //this property might not have data in it ... do this!
-        if (jobj._embedded.attractions) {
+        if (jobj._embedded?.attractions) {
             let mtag = document.getElementById("moreInfoAT") as HTMLAnchorElement
             mtag.href = jobj._embedded.attractions[0]?.url;
             document.getElementById("moreInfoATT")!.innerHTML = "Artist/Team"
@@ -693,25 +731,20 @@ export class AppComponent implements OnInit {
         document.getElementById("moreInfoGen")!.textContent = tc
 
         //venue logo the venue id may be not match to 
-        console.log('trying to get venue id: ' + jobj._embedded.venues[0].id + ' : ' + globalThis.logoIMG)
-        globalThis.idMapping.get(name)!.push(globalThis.logoIMG)
 
-        console.log("-----  we are going to show button   -----");
+        console.log("-----  we are going to hide our search table  -----");
         //here display venue button
-        const elem = document.getElementsByClassName("venueBut");
+        const ele = document.getElementsByClassName("searchResult");
+        for (let i = 0; i < elems.length; i++) {
+            (ele[i] as HTMLElement).style.display = "block";
+        }
+        const elem = document.getElementsByClassName("APIresult");
         for (let i = 0; i < elem.length; i++) {
-            const ee = elem[i] as HTMLElement;
-            ee.style.display = "block";
+            (elem[i] as HTMLElement).style.display = "none";
         }
         globalThis.selectedName = name;
         console.log('showing our button man!!!')
-        const ele = document.getElementsByClassName("outerMargin");
-        for (let i = 0; i < ele.length; i++) {
-            const ee = ele[i] as HTMLElement;
-            ee.style.display = "none";
-        }
-        const el = document.getElementById("venueDetails") as HTMLElement;
-        el.style.display = "none";
+        this.showVenue()
     }
     // handle modal 
     //https://stackoverflow.com/questions/59590391/bootstrap-modal-is-not-shown-on-angular-8-on-click
@@ -732,7 +765,7 @@ export class AppComponent implements OnInit {
             const header = document.getElementById('currentBU') as HTMLElement;
             let name = header.innerHTML;
             console.log('***  going to cancel ' + name + '   ***');
-            this.delReserv(name);
+            // this.delReserv(name);
             //close and clear modal
             this.onCloseHandled();
             return;
@@ -816,7 +849,7 @@ export class AppComponent implements OnInit {
             but!.style.background = "linear-gradient(to bottom, #d0451b 5%, #bc3315 100%)";
             but.innerHTML = "Reserve now";
             //delete selected reservation
-            this.delReserv(name);
+            // this.delReserv(name);
             //close and clear modal
             this.onCloseHandled();
             return;
@@ -852,6 +885,14 @@ export class AppComponent implements OnInit {
             tmp.appendChild(title);
             return;
         }
+        let title = document.createElement('h1') as HTMLElement;
+        title!.textContent = "List of your favorite events";
+        title.style.color = "red";
+        title.style.textAlign = "center";
+        let tmp = document.getElementById("myBookingsTab") as HTMLElement;
+        console.log(tmp);
+        tmp.appendChild(title);
+
         // no, business name, date, time, email, delet button
         var table = document.createElement('table');
         table.setAttribute("id", "reserveTable");
@@ -863,12 +904,12 @@ export class AppComponent implements OnInit {
         var td5 = document.createElement('td');
         var td6 = document.createElement('td');
 
-        var text1 = document.createTextNode('#.');
-        var text2 = document.createTextNode('Business Name');
-        var text3 = document.createTextNode('Date');
-        var text4 = document.createTextNode('Time');
-        var text5 = document.createTextNode('E-mail');
-        var text6 = document.createTextNode('deletButton');
+        var text1 = document.createTextNode('#');
+        var text2 = document.createTextNode('Date');
+        var text3 = document.createTextNode('Event');
+        var text4 = document.createTextNode('Category');
+        var text5 = document.createTextNode('Venue');
+        var text6 = document.createTextNode('Favorite');
         tr.classList.add("arow");
         td1.appendChild(text1);
         td1.classList.add("no");
@@ -901,7 +942,7 @@ export class AppComponent implements OnInit {
         console.log('before creating table ...');
         console.log('data length is ' + len);
         let no = 1;
-        for (let [key, value] of globalThis.idMapping) {
+        for (let [key, value] of globalThis.favoriteList) {
             console.log(key + ' : ' + value + ' #### ');
             tr = document.createElement('tr');
             tr.classList.add("arow");
@@ -920,14 +961,14 @@ export class AppComponent implements OnInit {
             // td6.classList.add("bi");
             // td6.classList.add("bi-trash");
             //td6.classList.add("glyphicon glyphicon-trash");
-            td6.addEventListener("click", () => this.delReserv(key));
+            td6.addEventListener("click", () => this.delReserv(key, value[0], value[1]));
 
             text1 = document.createTextNode(no.toString());
-            text2 = document.createTextNode(value[1]);
-            text3 = document.createTextNode(value[2]);
-            text4 = document.createTextNode(value[3] + ':' + value[4]);
-            text5 = document.createTextNode(value[5]);
-            let t6 = document.createElement("p") as HTMLElement;
+            text2 = document.createTextNode(value[0]);
+            text3 = document.createTextNode(value[1]);
+            text4 = document.createTextNode(value[2]);
+            text5 = document.createTextNode(value[3]);
+            let t6 = document.createElement("i") as HTMLElement;
             t6.classList.add("fa");
             t6.classList.add("fa-trash-o");
             t6.classList.add("restButton");
@@ -950,30 +991,30 @@ export class AppComponent implements OnInit {
             no++;
         }
         console.log('after creating table ...');
-        let tmp = document.getElementById("myBookingsTab") as HTMLElement;
-        console.log(tmp);
         tmp.appendChild(table);
     }
     //delete reservation
-    delReserv(key: string) {
+    delReserv(key: string, eventName: string, targetDate: string) {
 
         console.log('enter to del key: ' + key);
-        globalThis.idMapping.delete(key);
+        globalThis.favoriteList.delete(key);
         globalThis.reserveNo--;
         let table = document.getElementById("reserveTable") as HTMLTableElement;
         if (!table) {
-            globalThis.idMapping.delete(key);
+            globalThis.favoriteList.delete(key);
             return;
         }
         if (table.rows.length === 1) {
             return;
         }
-        console.log(table.rows.length);
+        console.log(eventName);
+        console.log(targetDate);
         for (let i = 1; i < table.rows.length; i++) {
             console.log(table.rows[i]);
-            console.log(table.rows[i].cells[0].innerHTML);
             console.log(table.rows[i].cells[1].innerHTML);
-            if (table.rows[i].cells[1].innerHTML === key) {
+            console.log(table.rows[i].cells[2].innerHTML);
+            if (table.rows[i].cells[1].innerHTML == eventName &&
+                table.rows[i].cells[2].innerHTML == targetDate) {
                 table.rows[i].remove();
                 break;
             }
@@ -1137,41 +1178,41 @@ export class AppComponent implements OnInit {
             .then(response => {
                 globalThis.jsobj = response;
                 globalThis.jsonText = JSON.stringify(response);
+                console.log(globalThis.jsonText)
                 return response;
             })
         let jobj = JSON.parse(globalThis.jsonText);
         if (!jobj._embedded?.venues[0]) return;
         //we will start from here
-        if (logoIMG != 'lol') {
-            document.getElementById('vdIMG')!.style.display = 'block';
-            let vdimg = document.getElementById('vdIMG') as HTMLImageElement;
-            vdimg.src = logoIMG;//idMapping.get(selectedName)[9]; //jobj.venues[0].images[0].url;
-        } else {
-            document.getElementById('vdIMG')!.style.display = 'none';
-        }
+
         // let add = 'Address: ';
         if (jobj._embedded?.venues[0]?.address.line1) {
             // add+=jobj.address.line1 +"<br>";
-            (document.getElementById('vdaddr') as HTMLElement).innerHTML = jobj._embedded?.venues[0]?.address.line1 + "<br>" +
-                jobj._embedded?.venues[0]?.state.name + ", " + jobj._embedded?.venues[0]?.state.stateCode + "<br>" + jobj._embedded?.venues[0]?.postalCode
+            (document.getElementById('vdaddr') as HTMLElement).innerHTML = jobj._embedded?.venues[0]?.address.line1 +", "
+                jobj._embedded?.venues[0]?.city.name + ", " + jobj._embedded?.venues[0]?.state.name
         } else {
-            (document.getElementById('vdaddr') as HTMLElement).innerHTML = jobj._embedded?.venues[0]?.state.name + ", " + jobj._embedded?.venues[0]?.state.stateCode + "<br>" + jobj._embedded?.venues[0]?.postalCode
+            (document.getElementById('vdaddr') as HTMLElement).innerHTML = jobj._embedded?.venues[0]?.city.name + ", " + jobj._embedded?.venues[0]?.state.name
         }
-        if (jobj._embedded?.venues[0]?.url) (document.getElementById('vdme') as HTMLAnchorElement).href = jobj._embedded?.venues[0]?.url;
+
         //for google map URL
         //it will encouner repeat state or city name especially new york ...
         //let kw = jobj.state.name +'+'+ jobj.city.name + '+' + jobj.name;
         let kw = jobj._embedded?.venues[0]?.name + '+' + jobj._embedded?.venues[0]?.postalCode;
         kw = kw.replace(/\s/g, '+');
-        (document.getElementById('vdgm') as HTMLAnchorElement).href = 'https://www.google.com/maps/search/' + kw;
+  
 
         document.getElementById("vdHeader")!.innerHTML = jobj._embedded?.venues[0]?.name;
 
-        const ele = document.getElementsByClassName("outerMargin");
-        for (let i = 0; i < ele.length; i++) {
-            (ele[i] as HTMLElement).style.display = "block";
-        }
-        const elem = document.getElementById("venueDetails")!.style.display = 'block';
+        document.getElementById("vdphone")!.innerHTML = jobj._embedded?.venues[0]?.boxOfficeInfo?.phoneNumberDetail;
+        //open hour
+        document.getElementById("vdoh")!.innerHTML = jobj._embedded?.venues[0]?.boxOfficeInfo?.openHoursDetail;
+        //general rule
+        document.getElementById("vdgr")!.innerHTML = jobj._embedded?.venues[0]?.generalInfo?.generalRule;
+        //children rule
+        document.getElementById("vdcr")!.innerHTML = jobj._embedded?.venues[0]?.generalInfo?.childRule;
+
+
+        const elem = document.getElementById("venueDetails")!.style.display = 'flex';
 
     }
 

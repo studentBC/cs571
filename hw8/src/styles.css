@@ -144,11 +144,8 @@ select {
 
 #venueDetails {
   display: none;
-  /* flex-direction: column;
-    justify-content: center; */
-  background-color: white;
-  border-radius: 10px;
-  border: 2px solid gray;
+  flex-direction: row;
+  justify-content: center;
   padding: 20px;
   margin-left: auto;
   margin-right: auto;
@@ -345,25 +342,17 @@ input[name="kw"] {
   color: #A084DC;
 }
 
-#vdHeader {
-  border-bottom: 3px solid #7B8FA1;
-  display: inline-block;
-  margin-bottom: 20px;
-}
-
 #vdLeft {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
   border-right: 2px;
-  border-right: solid;
-  border-right-color: #BDCDD6;
-  width: 49%;
 }
 
 #vdRight {
-  display: inline-block;
-  vertical-align: top;
-  text-align: center;
-  width: 49%;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
 }
 
 #vdIMG {
@@ -444,7 +433,6 @@ input[name="kw"] {
   /* We first create a flex layout context */
   display: flex;
   width: fit-content;
-  background-color: aliceblue;
   /* Then we define the flow direction 
          and if we allow the items to wrap 
        * Remember this is the same as:
@@ -479,7 +467,7 @@ input[name="kw"] {
 
 #previousPage {
   align-self: flex-start;
-  background-color: aliceblue;
+  color: white;
 }
 
 .restButton {
@@ -561,6 +549,140 @@ input[name="kw"] {
   width: 100%;
   position: absolute;
 }
+
+#main_wrapper li .active span {
+    border-bottom: 4px solid white;
+    color: white;
+    bottom: 0;
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+}
+
+/* heart button */
+:root {
+  --color-bg: #fdf1f2;
+  --color-heart: #ea442b;
+  --easing: cubic-bezier(0.7, 0, 0.3, 1);
+  --duration: 0.5s;
+}
+.like-button {
+  font-size: 5vmin;
+  appearance: none;
+  border: none;
+  border-radius: 50%;
+  background: white;
+  width: 1em;
+  height: 1em;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  z-index: 2;
+  transition: transform var(--duration) var(--easing);
+  cursor: pointer;
+}
+.like-button:before {
+  z-index: -1;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0.3em 0.6em rgba(0, 0, 0, 0.3);
+  border-radius: inherit;
+  transition: inherit;
+}
+.like-button:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  border-radius: inherit;
+  z-index: -1;
+}
+.like-button:active:before {
+  animation: depress-shadow var(--duration) var(--easing) both;
+}
+.like-button:focus:after {
+  animation: depress var(--duration) var(--easing) both;
+}
+@keyframes depress {
+  from, to {
+    transform: none;
+ }
+  50% {
+    transform: translateY(5%) scale(0.9);
+ }
+}
+@keyframes depress-shadow {
+  from, to {
+    transform: none;
+ }
+  50% {
+    transform: scale(0.5);
+ }
+}
+.like-wrapper {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.like-wrapper > * {
+  margin: auto;
+  grid-area: 1;
+}
+.heart {
+  width: 0.5em;
+  height: 0.5em;
+  display: block;
+  transform-origin: center 80%;
+}
+.heart > path {
+  stroke: var(--color-heart);
+  stroke-width: 2;
+  fill: transparent;
+  transition: fill var(--duration) var(--easing);
+}
+.like-button:focus .heart > path {
+  fill: var(--color-heart);
+}
+.like-button:focus .heart {
+  animation: heart-bounce var(--duration) var(--easing);
+}
+.hidden-text {
+  height: 54px;
+  overflow: hidden;
+  font-size: 16px;
+}
+.more-text {
+  height: auto;
+  font-size: 16px;
+}
+.vdrm {
+  color: white;
+}
+.spoiler {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+@keyframes heart-bounce {
+  40% {
+    transform: scale(0.7);
+ }
+  0%, 80%, 100% {
+    transform: scale(1);
+ }
+}
+/* Reset the animation when clicking again! */
+.like-button:focus {
+  pointer-events: none;
+  cursor: normal;
+}
+
+
+
 
 @media screen and (min-width: 900px) {
   .fc {
