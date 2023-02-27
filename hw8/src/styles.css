@@ -4,6 +4,11 @@ h1 {
   text-align: left;
 }
 
+.my-google-map .map-container {
+  width: 400px;
+  height: 400px;
+}
+
 .mainPage {
   display: flex;
   flex-flow: nowrap;
@@ -142,7 +147,7 @@ select {
   box-shadow: inset 0 -8px 0 0 rgba(0, 0, 0, .2);
 }
 
-#venueDetails {
+#VenueDetails {
   display: none;
   flex-direction: row;
   justify-content: center;
@@ -303,6 +308,16 @@ input[name="kw"] {
   justify-content: center;
 }
 
+#gmb {
+  background-color: #ea442b;
+  color: white;
+  border-radius: 10px;
+  font-size: 13px;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .arrow:hover {
   border-bottom-width: 4px;
   border-right-width: 4px;
@@ -368,6 +383,16 @@ input[name="kw"] {
   margin-left: auto;
   margin-right: auto;
   width: 800px;
+}
+
+#noArtist {
+  display: none;
+  background-color: white;
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  border-radius: 20px;
 }
 
 /* image default inline block  */
@@ -486,13 +511,46 @@ input[name="kw"] {
 
 }
 
+.spotify-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-image: url('https://www.scdn.co/i/_global/favicon.png');
+  background-size: cover;
+  margin-right: 8px;
+}
+
 .srb {
   display: flex;
   align-items: center;
 }
 
-#carouselExampleControls {
+.albumIMG {
+  display: flex;
+  justify-content: space-between;
+}
+
+.albumIMG img {
+  flex: 1;
+  margin: 0 10px;
   max-width: 30%;
+}
+
+.spotifyItems {
+  display: flex;
+  flex-direction: column;
+}
+
+.spotifyRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.spotifyCarousel {
+  background: rgba(0, 0, 0, 0);
+}
+
+#carouselExampleControls {
   display: flex;
   align-items: center;
   justify-content: center;

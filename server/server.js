@@ -309,7 +309,9 @@ app.get('/getSpotifyArtist', async function (request, response) {
     temp.push(jbody.artists.items[i].followers.total)
     temp.push(jbody.artists.items[i].popularity)
     temp.push(jbody.artists.items[i].external_urls.spotify)
-    temp.push(jbody.artists.items[i].images[0].url)
+    if (jbody.artists.items[i].images && jbody.artists.items[i].images[0]?.url) {
+      temp.push(jbody.artists.items[i].images[0].url)
+    }
     let tmp = await getAlbums(jbody.artists.items[i].id);
     for (let j = 0; j < tmp.length; j++) {
       temp.push(tmp[j]);
@@ -318,7 +320,7 @@ app.get('/getSpotifyArtist', async function (request, response) {
   }
   console.log("---------  the response data is ----------")
   console.log(responseData)
-  const jsonContent = JSON.stringify(responseData);
+  const jsonContent = Object.fromEntries(responseData);
   //console.log(jsonContent);
   response.send(jsonContent);
   

@@ -12,6 +12,7 @@
   "author": "Lung Chin",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "spotify-web-api-node": "^5.0.2"
   }
 }

@@ -703,6 +703,7 @@ export class AppComponent implements OnInit {
                 return response;
             })
         let jobj = JSON.parse(jobjs)
+        let artistList = []
         //this property might not have data in it ... do this!
         if (jobj._embedded?.attractions) {
             let mtag = document.getElementById("moreInfoAT") as HTMLAnchorElement
@@ -713,7 +714,7 @@ export class AppComponent implements OnInit {
             for (let a = 0; a < jobj._embedded.attractions.length; a++) {
                 let mat = document.createElement("a");
                 mat.href = jobj._embedded.attractions[a]?.url
-
+                artistList.push(jobj._embedded.attractions[a].name)
                 if (a == 0) mat.innerHTML = jobj._embedded.attractions[a].name + "&ensp;"
                 else mat.innerHTML = "&ensp;" + jobj._embedded.attractions[a].name + "&ensp;"
                 mat.style.color = "#1F8A70";
@@ -725,9 +726,30 @@ export class AppComponent implements OnInit {
                 }
             }
         }
-        let tc = jobj.classifications[0]?.segment?.name + " | " + jobj.classifications[0]?.genre?.name
-            + " | " + jobj.classifications[0].subGenre?.name
-        tc = tc.replace('undefined', '');
+        let tc = ""
+        if (jobj.classifications !== null) {
+            if (jobj.classifications[0].subGenre?.name && jobj.classifications[0]?.subGenre?.name != 'Undefined') {
+                tc+=jobj.classifications[0].subGenre?.name
+            }
+            if (jobj.classifications[0]?.genre?.name && jobj.classifications[0]?.genre?.name != 'Undefined') {
+                if (tc!="") tc+=" | "
+                tc+=jobj.classifications[0]?.genre?.name
+            }
+            if (jobj.classifications[0]?.segment?.name && jobj.classifications[0]?.segment?.name != 'Undefined') {
+                if (tc!="") tc+=" | "
+                tc+=jobj.classifications[0]?.segment?.name
+            } 
+            if (jobj.classifications[0].subType?.name && jobj.classifications[0]?.subType?.name != 'Undefined') {
+                if (tc!="") tc+=" | "
+                tc+=jobj.classifications[0].subType?.name
+            }
+            if (jobj.classifications[0].type?.name && jobj.classifications[0]?.type?.name != 'Undefined') {
+                if (tc!="") tc+=" | "
+                tc+=jobj.classifications[0].type?.name
+            }
+        }
+
+        tc = tc.replace('undefined','');
         document.getElementById("moreInfoGen")!.textContent = tc
 
         //venue logo the venue id may be not match to 
@@ -745,38 +767,21 @@ export class AppComponent implements OnInit {
         globalThis.selectedName = name;
         console.log('showing our button man!!!')
         this.showVenue()
+        for (let i = 0; i < artistList.length; i++) {
+            this.showSpotify(artistList[i])
+        }
+        if (artistList.length == 0) {
+            document.getElementById('noArtist')!.style.display = "block";
+            document.getElementById('carouselExampleControls')!.style.display = "none";
+        }
     }
     // handle modal 
     //https://stackoverflow.com/questions/59590391/bootstrap-modal-is-not-shown-on-angular-8-on-click
     openModal() {
         console.log('enter to open');
-        // this.reserveModal.nativeElement.className = 'modal fade show';
-        // this.reserveModal.open();
-        //let tmp = document.getElementById('reserveModal');
-        // tmp.style.display = "contents";
-        let but = document.getElementsByClassName("resBut")[0] as HTMLButtonElement;
-        console.log('------------------');
-        console.log(but.innerHTML[0]);
-        if (but.innerHTML[0] == 'C') {
-            but!.style.backgroundColor = "#d0451b";
-            but!.style.background = "linear-gradient(to bottom, #d0451b 5%, #bc3315 100%)";
-            but.innerHTML = "Reserve now";
-            //delete selected reservation
-            const header = document.getElementById('currentBU') as HTMLElement;
-            let name = header.innerHTML;
-            console.log('***  going to cancel ' + name + '   ***');
-            // this.delReserv(name);
-            //close and clear modal
-            this.onCloseHandled();
-            return;
-        } else {
-            // console.log(globalThis.reserveModal);
-            // console.log(globalThis.reserveModal.nativeElement.getElementById('reserveModal'));
-            // if (!globalThis.reserveModal) console.log('fuck there is no use');
-            // else globalThis.reserveModal.nativeElement.click(); 
-            let tmpbut = document.getElementById('realOpen') as HTMLButtonElement;
-            tmpbut.click();
-        }
+    }
+    onCloseHandled() {
+        document.getElementById("reserveModal")!.tabIndex = -1;
     }
     hideLocInput() {
         let cb = document.getElementById('cbox') as HTMLInputElement;
@@ -802,53 +807,6 @@ export class AppComponent implements OnInit {
         for (let i = 0; i < elems.length; i++) {
             (elems[i] as HTMLElement).style.display = "none";
         }
-    }
-
-    onCloseHandled() {
-        console.log('enter to onCloseHandled');
-        let tt = document.getElementById('reserve-form') as HTMLFormElement;
-        tt!.reset();
-    }
-    submitModal(form: NgForm): void {
-        alert('Reservation created!');
-        // no name date time email
-        let no = globalThis.reserveNo.toString(),
-            name = globalThis.clickedBN,
-            email = form.value.mem,
-            date = form.value.mdate,
-            hour = form.value.mmh,
-            min = form.value.mmm;
-        console.log(no);
-        console.log(name);
-        console.log(email);
-        console.log(date);
-        console.log(hour);
-        console.log(min);
-        let but = document.getElementsByClassName("resBut")[0] as HTMLButtonElement;
-        console.log('------------------');
-        console.log(but.innerHTML[0]);
-        if (but.innerHTML[0] == 'C') {
-            globalThis.reserveModal.nativeElement
-            but!.style.backgroundColor = "#d0451b";
-            but!.style.background = "linear-gradient(to bottom, #d0451b 5%, #bc3315 100%)";
-            but.innerHTML = "Reserve now";
-            //delete selected reservation
-            // this.delReserv(name);
-            //close and clear modal
-            this.onCloseHandled();
-            return;
-        }
-        // console.log(form.value);
-        globalThis.reserveNo++;
-        console.log('we set db key: ' + name);
-        globalThis.idMapping.set(name, [no, name, date, hour, min, email]);
-        //turn reserve button to cancel button
-        but!.style.backgroundColor = "#019ad2";
-        but!.style.background = "linear-gradient(to bottom, #33bdef 5%, #019ad2 100%)";
-        but.innerHTML = "Cancel reservation";
-        //close and clear modal
-        this.onCloseHandled();
-        return;
     }
     ///////////// dynamically deal with reservation table ///////////////
     createReserveTable() {
@@ -995,26 +953,7 @@ export class AppComponent implements OnInit {
             }
         }
     }
-    //it should include all business detail including open hour
-    async callImgAPI(bid: string) {
-        //https://api.yelp.com/v3/businesses/_n-F9OKGHcfaC8Fs9NZKag/reviews?limit=20&sort_by=yelp_sort
-        //nodeJS server IP
-        let url = 'https://api.yelp.com/v3/businesses/' + bid;
-        await fetch('http://127.0.0.1:3000/getYelpSearch', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "url": url
-            })
-        })
-            .then(response => response.json())
-            .then(response => this.getBinfo(response));
-        console.log('---- come out ----');
-        this.createCarouselImg(bid);
-    }
+
     //create carousel img
     createCarouselImg(bid: string) {
         let inner = document.getElementById("carousel-inner") as HTMLElement;
@@ -1037,41 +976,7 @@ export class AppComponent implements OnInit {
         }
         console.log('after creating table ...');
     }
-    // curl --request GET \
-    //  --url 'https://api.yelp.com/v3/businesses/business_id_or_alias/reviews?limit=20&sort_by=yelp_sort' \
-    //  --header 'accept: application/json'
-    // B3FleeBQX8tsgBhMwdFXLQ
-    async callReviewAPI(bid: string) {
-        //https://api.yelp.com/v3/businesses/_n-F9OKGHcfaC8Fs9NZKag/reviews?limit=20&sort_by=yelp_sort
-        //nodeJS server IP
-        let url = 'https://api.yelp.com/v3/businesses/' + bid + '/reviews?sort_by=yelp_sort&limit=50';
-        await fetch('http://127.0.0.1:3000/getYelpSearch', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "url": url
-            })
-        })
-            .then(response => response.json())
-            .then(response => {
-                globalThis.jsonReviewText = JSON.stringify(response);
-                console.log(typeof (response));
-                return response;
-            })
-            .then(response => this.getReveiew(response));
-        console.log('---- come out ----');
-        let jojo = JSON.parse(globalThis.jsonReviewText);
-        console.log(typeof (jojo));
-        console.log(jojo.total);
-        // console.log(jsonObjArray[0].total);
-        let left = jojo.total - jojo.reviews.length, start = 50;
-        console.log('left: ' + left);
 
-        this.createReviewTable(bid);
-    }
     //create review table
     createReviewTable(bid: string) {
         console.log('enter to createReserveTable');
@@ -1132,12 +1037,120 @@ export class AppComponent implements OnInit {
         console.log(tmp);
         tmp.appendChild(table);
     }
+    async showSpotify(artist: string) {
+
+        await fetch('https://yukichat-ios13.wl.r.appspot.com/getSpotifyArtist?' + new URLSearchParams({
+            "artist": artist
+        }))
+        .then(response => response.json())
+        .then(response => {
+            globalThis.jsobj = response;
+            globalThis.jsonText = JSON.stringify(response);
+            console.log(globalThis.jsonText)
+            return response;
+        })
+        let artists = JSON.parse(globalThis.jsonText);
+        let count = 0
+        console.log('-------- lets go ---------')
+        for (const name in artists) {
+            console.log(name);
+            count+=1
+            var dd = document.createElement('div');
+            dd.classList.add('carousel-item');
+            var content = document.createElement('div');
+            content.classList.add('spotifyCarousel');
+            
+            //create first row
+            //artist icon + name
+            var fr = document.createElement('div');
+            fr.classList.add('spotifyRow');
+            var c1 = document.createElement('div');
+            c1.classList.add('spotifyItems');
+            var title = document.createElement('h4');
+            title.style.color = "#9DF1DF"
+            title.innerHTML = name
+            //for artist icon
+            //globalThis.jsobj[name][4]
+            c1.appendChild(title)
+            fr.appendChild(c1);
+            //popularity
+            var c2 = document.createElement('div');
+            c2.classList.add('spotifyItems');
+            title = document.createElement('h4');
+            title.style.color = "#9DF1DF"
+            title.innerHTML = "Popularity"
+            var words = document.createElement('h4');
+            words.style.color = "white"
+            words.innerHTML = artists[name][2]
+            c2.appendChild(title)
+            c2.appendChild(words)
+            fr.appendChild(c2);
+            //followers
+            c2 = document.createElement('div');
+            c2.classList.add('spotifyItems');
+            title = document.createElement('h4');
+            title.style.color = "#9DF1DF"
+            title.innerHTML = "Followers"
+            var words = document.createElement('h4');
+            words.style.color = "white"
+            words.innerHTML = artists[name][1]
+            c2.appendChild(title)
+            c2.appendChild(words)
+            fr.appendChild(c2);
+            //spotify link
+            c2 = document.createElement('div');
+            c2.classList.add('spotifyItems');
+            title = document.createElement('h4');
+            title.style.color = "#9DF1DF"
+            title.innerHTML = "Spotify Link"
+//             <a href="https://www.spotify.com/" target="_blank" rel="noopener noreferrer">
+//   <span class="spotify-icon"></span>
+// </a>         
+            var tag = document.createElement('a');
+            tag.href = artists[name][3]
+            tag.target = "_blank"
+            tag.rel = "noopener noreferrer"
+            var sp = document.createElement('span');
+            sp.classList.add("spotify-icon")
+            tag.appendChild(sp)
+            c2.appendChild(title)
+            c2.appendChild(tag)
+            fr.appendChild(c2);
+            //create second row
+            var sr = document.createElement('div');
+            sr.classList.add('spotifyItems');
+            title = document.createElement('h4');
+            title.style.color = "#9DF1DF"
+            title.innerHTML = "Album featuring "+artist
+            sr.appendChild(title)
+            //put 3 album img
+            var ssr = document.createElement('div');
+            var albumImgs = document.createElement('div');
+            albumImgs.classList.add('albumIMG')
+            ssr.appendChild(albumImgs)
+            for (let j = 5; j < artists[name].length; j++) {
+                let img = document.createElement('img');
+                img.src = artists[name][j]
+                // img.classList.add('albumIMG')
+                albumImgs.appendChild(img)
+            }
+            sr.appendChild(ssr);
+            content.appendChild(fr)
+            var newline = document.createElement('br')
+            content.appendChild(newline)
+            content.appendChild(newline)
+            content.appendChild(sr)
+            dd.appendChild(content)
+            document.getElementById('cinner')!.appendChild(dd)
+        }
+        console.log("artist count is " + count)
+        if (count == 0) {
+            document.getElementById('noArtist')!.style.display = "block";
+            document.getElementById('carouselExampleControls')!.style.display = "none";
+        }
+    }
     async showVenue() {
         console.log('=== enter showVenue ===')
-        const elems = document.getElementsByClassName("venueBut");
-        for (let i = 0; i < elems.length; i++) {
-            (elems[i] as HTMLElement).style.display = 'none';
-        }
 
         let eid = '&keyword=' + globalThis.idMapping.get(selectedName)![2].replace(/\s+/g, '%20');
         eid += globalThis.latlng;
@@ -1185,9 +1198,10 @@ export class AppComponent implements OnInit {
         document.getElementById("vdgr")!.innerHTML = jobj._embedded?.venues[0]?.generalInfo?.generalRule;
         //children rule
         document.getElementById("vdcr")!.innerHTML = jobj._embedded?.venues[0]?.generalInfo?.childRule;
+        //deal with google map tab
 
 
-        const elem = document.getElementById("venueDetails")!.style.display = 'flex';
+        const elem = document.getElementById("VenueDetails")!.style.display = 'flex';
 
     }
 
