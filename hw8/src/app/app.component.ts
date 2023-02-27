@@ -1,7 +1,8 @@
-import { Component, OnInit, ElementRef, ViewChild } from "@angular/core";
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { HttpClient, HttpXsrfTokenExtractor } from "@angular/common/http"
 import { NONE_TYPE } from "@angular/compiler";
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 // import { ModalModule, BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 declare global {
@@ -54,6 +55,7 @@ export class AppComponent implements OnInit {
     //     console.log(globalThis.reserveModal.nativeElement);
     //     if (content) globalThis.reserveModal = content;
     // }
+    // @ViewChild(MatProgressSpinnerModule) progressSpinner: MatProgressSpinnerModule;
     ngOnInit(): void {
         globalThis.ascending = true;
         globalThis.jsonObjArray = [];
@@ -245,19 +247,6 @@ export class AppComponent implements OnInit {
         let jojo = JSON.parse(globalThis.jsonText);
         console.log(typeof (jojo));
         console.log(jojo.total);
-        // console.log(jsonObjArray[0].total);
-        let totalPage = jojo.page.totalPages;
-
-
-        //   for (let i = 1; i < totalPage; i++) {
-        //       let p = (i + 1).toString()
-
-        //         await fetch('https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?' + new URLSearchParams({
-        //             "url": url+p
-        //         }))
-        //         .then(response => response.json())
-        //         .then(response => this.initial(response))
-        //     }
         console.log('######################');
         console.log(jsonObjArray.length);
         console.log('######################');
@@ -768,8 +757,9 @@ export class AppComponent implements OnInit {
         console.log('showing our button man!!!')
         this.showVenue()
         for (let i = 0; i < artistList.length; i++) {
-            this.showSpotify(artistList[i])
+            await this.showSpotify(artistList[i])
         }
+        console.log('cinner nodes: ' + document.getElementById('cinner')!.childNodes.length)
         if (artistList.length == 0) {
             document.getElementById('noArtist')!.style.display = "block";
             document.getElementById('carouselExampleControls')!.style.display = "none";
@@ -1054,9 +1044,9 @@ export class AppComponent implements OnInit {
         console.log('-------- lets go ---------')
         for (const name in artists) {
             console.log(name);
-            count+=1
             var dd = document.createElement('div');
             dd.classList.add('carousel-item');
+            if (count == 0) dd.classList.add('active');
             var content = document.createElement('div');
             content.classList.add('spotifyCarousel');
             
@@ -1069,9 +1059,13 @@ export class AppComponent implements OnInit {
             var title = document.createElement('h4');
             title.style.color = "#9DF1DF"
             title.innerHTML = name
+            var artitIcon = document.createElement('img');
+            artitIcon.src = artists[name][4]
+            artitIcon.classList.add('artistIcon');
             //for artist icon
             //globalThis.jsobj[name][4]
             c1.appendChild(title)
+            c1.appendChild(artitIcon)
             fr.appendChild(c1);
             //popularity
             var c2 = document.createElement('div');
@@ -1079,9 +1073,13 @@ export class AppComponent implements OnInit {
             title = document.createElement('h4');
             title.style.color = "#9DF1DF"
             title.innerHTML = "Popularity"
-            var words = document.createElement('h4');
-            words.style.color = "white"
-            words.innerHTML = artists[name][2]
+            //<mat-spinner color="accent" mode="determinate" diameter="60">66</mat-spinner>
+            var words = document.createElement('mat-progress-spinner');
+            words.setAttribute('mode', 'determinate');
+            words.setAttribute('value', artists[name][2]);
+            words.setAttribute('color', 'accent');
+            // words.setAttribute('diameter', "60");
+            // words.innerHTML = artists[name][2]
             c2.appendChild(title)
             c2.appendChild(words)
             fr.appendChild(c2);
@@ -1091,7 +1089,7 @@ export class AppComponent implements OnInit {
             title = document.createElement('h4');
             title.style.color = "#9DF1DF"
             title.innerHTML = "Followers"
-            var words = document.createElement('h4');
+            words = document.createElement('h4');
             words.style.color = "white"
             words.innerHTML = artists[name][1]
             c2.appendChild(title)
@@ -1142,6 +1140,7 @@ export class AppComponent implements OnInit {
             content.appendChild(sr)
             dd.appendChild(content)
             document.getElementById('cinner')!.appendChild(dd)
+            count+=1
         }
         console.log("artist count is " + count)
         if (count == 0) {
