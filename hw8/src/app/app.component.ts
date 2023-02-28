@@ -415,6 +415,7 @@ export class AppComponent implements OnInit {
         var table = document.createElement('table');
         table.setAttribute("id", "APIresultTable");
         var tr = document.createElement('tr');
+        tr.style.backgroundColor = "#2B2B2B";
         var td1 = document.createElement('td');
         var td2 = document.createElement('td');
         var td3 = document.createElement('td');
@@ -476,6 +477,8 @@ export class AppComponent implements OnInit {
         console.log('data length is ' + data.length);
         for (let i = 0; i < data.length; i++) {
             tr = document.createElement('tr');
+            if (i%2 === 0) tr.style.backgroundColor = "#423F3E"
+            else tr.style.backgroundColor = "#2B2B2B"
             // tr.classList.add("arow");
             td1 = document.createElement('td');
             td1.classList.add("no");
@@ -742,10 +745,17 @@ export class AppComponent implements OnInit {
             (elem[i] as HTMLElement).style.display = "none";
         }
         globalThis.selectedName = name;
-        console.log('showing our button man!!!')
+        console.log('showing our artists man!!!')
         this.showVenue()
-        for (let i = 0; i < artistList.length; i++) {
-            await this.showSpotify(artistList[i])
+        if (tc.includes('Music')) {
+            for (let i = 0; i < artistList.length; i++) {
+                console.log(artistList[i]);
+                await this.showSpotify(artistList[i])
+            }
+        } else {
+            document.getElementById('noArtist')!.style.display = "block";
+            document.getElementById('carouselExampleControls')!.style.display = "none";
+            return;
         }
         console.log('cinner nodes: ' + document.getElementById('cinner')!.childNodes.length)
         if (artistList.length == 0) {
@@ -861,7 +871,7 @@ export class AppComponent implements OnInit {
         for (let [key, value] of globalThis.favoriteList) {
             console.log(key + ' : ' + value + ' #### ');
             tr = document.createElement('tr');
-            tr.classList.add("arow");
+            tr.classList.add("aarow");
             td1 = document.createElement('td');
             td1.classList.add("no");
             td2 = document.createElement('td');
@@ -911,7 +921,7 @@ export class AppComponent implements OnInit {
     }
     //delete reservation
     delReserv(key: string, eventName: string, targetDate: string) {
-
+        alert("Event Removed from Favorites!");
         console.log('enter to del key: ' + key);
         globalThis.favoriteList.delete(key);
         globalThis.reserveNo--;
@@ -1094,16 +1104,13 @@ export class AppComponent implements OnInit {
             words.style.color = "white"
             let fn=[]
             const str = artists[name][1].toString();
-            console.log('follower is ',str)
             //if (str[-1] == '0') str.pop()
-            for (let a = 0, b = 1; a < str.length; a++, b++) {
-                fn.push(str[a])
-                if (b%3 === 0 && a != str.length-1) {
-                    fn.push(",")
+            for (let a = str.length-1, b = 1; a > -1; a--, b++) {
+                fn.unshift(str[a])
+                if (b%3 === 0 && a != 0) {
+                    fn.unshift(",")
                 }
             }
-            console.log('the fn is')
-            console.log(fn)
             words.innerHTML = fn.join('');
             c2.appendChild(title)
             c2.appendChild(words)
@@ -1160,8 +1167,8 @@ export class AppComponent implements OnInit {
             dd.appendChild(content)
             document.getElementById('cinner')!.appendChild(dd)
             count+=1
+            break;
         }
-        console.log("artist count is " + count)
         if (count === 0) {
             document.getElementById('noArtist')!.style.display = "block";
             document.getElementById('carouselExampleControls')!.style.display = "none";
