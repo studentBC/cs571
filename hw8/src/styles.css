@@ -191,11 +191,10 @@ input[name="kw"] {
   display: block;
   margin: auto;
 }
-
 .searchResult {
   display: none;
   /* flex-flow: row wrap; */
-  border-radius: 10px;
+  /* border-radius: 10px; */
   margin-left: auto;
   margin-right: auto;
   /* Then we define how is distributed the remaining space */

@@ -81,30 +81,31 @@
     </div>
   </div>
 
-  <div id="searchResult" class="searchResult">
-    <button type="button" style="padding: 0px;" class="btn" id="previousPage" (click)="goBack()"><span
-        class="bi bi-chevron-left">Back</span></button>
+  <div id="searchResult">
+    <div class="searchResult" style="padding-bottom: 0px; border-top-left-radius: 10px; border-top-right-radius: 10px">
+      <button type="button" style="padding: 0px;" class="btn" id="previousPage" (click)="goBack()"><span
+          class="bi bi-chevron-left">Back</span></button>
 
-    <div class="restButton">
-      <!-- use either (click)="openModal() or data-bs-target="#reserveModal" here" -->
-      <button style="display:none;" id="realOpen" data-bs-toggle="modal" data-bs-target="#reserveModal"></button>
-      <h2 id="moreInfoHeader" style="text-align: center; color: #DDDDDD; margin-bottom: 1em"></h2>
-      <div (click)="addFavorite()">
-        <button class="like-button" onclick="addFavorite()">
-          <div class="like-wrapper">
-            <svg class="heart" width="24" height="24" viewBox="0 0 24 24">
-              <path
-                d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z">
-              </path>
-            </svg>
-          </div>
-        </button>
+      <div class="restButton">
+        <!-- use either (click)="openModal() or data-bs-target="#reserveModal" here" -->
+        <button style="display:none;" id="realOpen" data-bs-toggle="modal" data-bs-target="#reserveModal"></button>
+        <h2 id="moreInfoHeader" style="text-align: center; color: #DDDDDD; margin-bottom: 1em"></h2>
+        <div (click)="addFavorite()">
+          <button class="like-button" onclick="addFavorite()">
+            <div class="like-wrapper">
+              <svg class="heart" width="24" height="24" viewBox="0 0 24 24">
+                <path
+                  d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z">
+                </path>
+              </svg>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
 
 
-    <h1 style="text-align: center;" id="currentBU"></h1>
-    <div id="main_wrapper">
+    <div id="main_wrapper" class="searchResult" style="padding-right: 0px;padding-left: 0px; border-radius: 0px">
       <ul class="nav" id="nav-tabs" style="background-color: #1F8A70;">
         <li class="nav-item active">
           <a class="nav-link" (click)="putMeUp('businessTab')" href="#businessTab" style="color: white;">Events
@@ -122,7 +123,7 @@
         </li>
       </ul>
     </div>
-    <div>
+    <div class="searchResult" style="padding-top: 0px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px">
       <section id="businessTab">
         <div class="srb">
           <div class="srleft">
@@ -146,17 +147,19 @@
           </div>
         </div>
         <div class="promotionBut" id="promotionBut">
-           
+
           <div class="socialShare">
             <p style="color: white; margin-bottom: 0px;">Shared on:</p>
-            <a id="twitterIcon" href="https://twitter.com/intent/tweet?url=https://example.com&text=Check%20out%20this%20awesome%20website!&via=myTwitterHandle" target="_blank">
-              <div style="color: #9DF1DF; margin-left: 5x; margin-right: 5px;" >
+            <a id="twitterIcon"
+              href="https://twitter.com/intent/tweet?url=https://example.com&text=Check%20out%20this%20awesome%20website!&via=myTwitterHandle"
+              target="_blank">
+              <div style="color: #9DF1DF; margin-left: 5x; margin-right: 5px;">
                 <i class="fab fa-twitter fa-2x"></i>
               </div>
             </a>
             <a id="fbIcon" href="https://www.facebook.com/sharer/sharer.php?u=https://example.com" target="_blank">
               <i class="fab fa-facebook-square fa-2x"></i>
-            </a>            
+            </a>
             <!-- <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button"
               data-show-count="false">Tweet</a> -->
             <!-- <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
@@ -181,12 +184,12 @@
               <div class="d-block w-100" style="width: 500px; height: 500px; background-color:#1F8A70;"></div>
             </div> -->
           </div>
-          <a id = "carouselBack" class="carousel-control-prev" href="#carouselExampleControls" role="button"
+          <a id="carouselBack" class="carousel-control-prev" href="#carouselExampleControls" role="button"
             data-bs-target="#carouselExampleControls" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
           </a>
-          <a id = "carouselNext" class="carousel-control-next" href="#carouselExampleControls" role="button"
+          <a id="carouselNext" class="carousel-control-next" href="#carouselExampleControls" role="button"
             data-bs-target="#carouselExampleControls" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
@@ -210,25 +213,25 @@
                 <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Open Hours:</h3>
                 <p id="vdoh" class="hidden-text vdrm" style="color: white; margin-bottom: 0px;"></p>
               </div>
-              <a (click)="readMore('vdoh')" style="color: white; margin-left:auto; margin-right: auto;" id="vdoha"> show
+              <a (click)="readMore('vdoh')" style="color: #95BDFF; margin-left:auto; margin-right: auto; text-decoration: underline;" id="vdoha"> show
                 more<i class="bi bi-chevron-down"></i></a>
 
               <div class="spoiler">
                 <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">General Rule:</h3>
                 <p class="vdrm hidden-text" style="color: white; margin-bottom: 0px;" id="vdgr"></p>
               </div>
-              <a (click)="readMore('vdgr')" style="color: white; margin-left:auto; margin-right: auto;" id="vdgra"> show
+              <a (click)="readMore('vdgr')" style="color: #95BDFF; margin-left:auto; margin-right: auto; text-decoration: underline;" id="vdgra"> show
                 more<i class="bi bi-chevron-down"></i></a>
 
               <div class="spoiler">
                 <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Child Rule:</h3>
                 <p id="vdcr" class="vdrm hidden-text" style="color: white; margin-bottom: 0px;"></p>
               </div>
-              <a (click)="readMore('vdcr')" style="color: white; margin-left:auto; margin-right: auto;" id="vdcra"> show
+              <a (click)="readMore('vdcr')" style="color: #95BDFF; margin-left:auto; margin-right: auto; text-decoration: underline;" id="vdcra"> show
                 more<i class="bi bi-chevron-down"></i></a>
             </div>
           </div>
-          <button id="gmb" data-bs-toggle="modal" data-bs-target="#reserveModal" onclick="openModan()">Show venue on
+          <button id="gmb" data-bs-toggle="modal" data-bs-target="#reserveModal" (click)="openModan()">Show venue on
             Google map</button>
         </div>
       </section>
@@ -245,8 +248,8 @@
           <!--Google map-->
           <div class="container-fluid">
             <div class="map-responsive">
-              <google-map height="400px" width="100%" [center]="{lat: 37.4219999, lng: -122.0840575}">
-                <map-marker [position]="{lat: 37.4219999, lng: -122.0840575}"></map-marker>
+              <google-map height="400px" width="100%" [center]="gcenter">
+                <map-marker [position]="gposition"></map-marker>
               </google-map>
             </div>
           </div>

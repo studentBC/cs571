@@ -1,5 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, OnInit, ElementRef, NgModule } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import { BrowserModule } from '@angular/platform-browser';
 import { HttpClient, HttpXsrfTokenExtractor } from "@angular/common/http"
 import { NONE_TYPE } from "@angular/compiler";
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -56,6 +57,10 @@ export class AppComponent implements OnInit {
     //     if (content) globalThis.reserveModal = content;
     // }
     // @ViewChild(MatProgressSpinnerModule) progressSpinner: MatProgressSpinnerModule;
+    // gposition = {lat: 34.1027421, lng: -118.3403834};
+    // gcenter= {lat: 34.1027421, lng: -118.3403834}
+    gcenter: google.maps.LatLngLiteral = { lat: 34.1027421, lng: -118.3403834 }; // default center
+    gposition: google.maps.LatLngLiteral = { lat: 34.1027421, lng: -118.3403834 }; // default position
     ngOnInit(): void {
         globalThis.ascending = true;
         globalThis.jsonObjArray = [];
@@ -77,9 +82,6 @@ export class AppComponent implements OnInit {
         ]);
         globalThis.latlng = '&geoPoint=';
     }
-    // constructor(private http: HttpClient) {
-
-    // }
 
     initial(jojo: object) {
         console.log(typeof (jojo));
@@ -87,30 +89,6 @@ export class AppComponent implements OnInit {
         globalThis.jsobj = jojo;
         globalThis.jsonObjArray.push(jojo);
         globalThis.jsonStrArray.push(JSON.stringify(jojo));
-    }
-    getReveiew(jojo: object) {
-        globalThis.jsonReveiewStrArray.push(JSON.stringify(jojo));
-    }
-    getBinfo(jojo: object) {
-        let jobj = JSON.parse(JSON.stringify(jojo));
-        if (jobj.id in globalThis.bDetail.keys) return;
-        let tmp: string[] = [];
-        //photos , daily open hours
-
-        for (let i = 0; i < jobj.photos.length; i++) {
-            tmp.push(jobj.photos[i]);
-        }
-        for (let i = 0; i < jobj.hours.open; i++) {
-            tmp.push(jobj.hours.open[i].start + ':' + jobj.hours.open[i].end);
-        }
-        globalThis.bDetail.set(jobj.id, tmp);
-
-    }
-    showPosition(position: any) {
-        globalThis.lat = position.coords.latitude;
-        globalThis.long = position.coords.longitude;
-        console.log(globalThis.lat);
-        console.log(globalThis.long);
     }
     ///////////////// deal with UI click /////////////////
     clickTab(id: string) {
@@ -209,6 +187,8 @@ export class AppComponent implements OnInit {
             document.getElementById(tid)?.classList.add('more-text');
             document.getElementById(tid+'a')!.innerHTML="show less<i class=\"bi bi-chevron-up\"></i>"
         }
+        document.getElementById(tid+'a')!.style.color = "#95BDFF"
+        document.getElementById(tid+'a')!.style.textDecoration = "underline"
         globalThis.ishow.set(tid, !globalThis.ishow.get(tid))
     }
     ///////////// clear button  ///////////////
@@ -259,12 +239,7 @@ export class AppComponent implements OnInit {
         } else this.createAPIresultTable();
         return;
     }
-    // showPosition(position: JSON) {
-    //     lat = position.coords.latitude;
-    //     long = position.coords.longitude;
-    //     console.log(lat);
-    //     console.log(long);
-    // }
+
     async submitlol(form: NgForm) {
         globalThis.idMapping.clear();
         jsonStrArray = [];
@@ -345,6 +320,7 @@ export class AppComponent implements OnInit {
     ///////////// dynamically deal with webUI ///////////////
     goBack() {
         console.log('going back man')
+        document.getElementById("searchResult")!.style.display = "none";
         const elems = document.getElementsByClassName("searchResult");
         for (let i = 0; i < elems.length; i++) {
             (elems[i] as HTMLElement).style.display = "none";
@@ -616,11 +592,15 @@ export class AppComponent implements OnInit {
 
     //when user click the title and ask for more info
     async moreInfo(row: number, day: string) {
+        console.log('----- get started !!!!! -----')
+        console.log(this.gcenter)
+        console.log(this.gposition)
         let table = document.getElementById("APIresultTable") as HTMLTableElement;
         let name = table.rows[row].cells[2].innerText
         if (!globalThis.idMapping.has(name)) return;
         console.log('enter moreInfo');
         //let search result table gone
+        document.getElementById("searchResult")!.style.display = "block";
         const elems = document.getElementsByClassName("searchResult");
         for (let i = 0; i < elems.length; i++) {
             const ee = elems[i] as HTMLElement;
@@ -752,6 +732,7 @@ export class AppComponent implements OnInit {
 
         console.log("-----  we are going to hide our search table  -----");
         //here display venue button
+        document.getElementById("searchResult")!.style.display = "block";
         const ele = document.getElementsByClassName("searchResult");
         for (let i = 0; i < elems.length; i++) {
             (ele[i] as HTMLElement).style.display = "block";
@@ -780,9 +761,7 @@ export class AppComponent implements OnInit {
     }
     // handle modal 
     //https://stackoverflow.com/questions/59590391/bootstrap-modal-is-not-shown-on-angular-8-on-click
-    openModal() {
-        console.log('enter to open');
-    }
+
     onCloseHandled() {
         document.getElementById("reserveModal")!.tabIndex = -1;
     }
@@ -805,7 +784,7 @@ export class AppComponent implements OnInit {
         document.getElementById("inputLoc")!.style.display = 'block';
         globalThis.idMapping.clear();
         jsonObjArray = [];
-
+        document.getElementById("searchResult")!.style.display = "none";
         const elems = document.getElementsByClassName("searchResult");
         for (let i = 0; i < elems.length; i++) {
             (elems[i] as HTMLElement).style.display = "none";
@@ -1113,7 +1092,19 @@ export class AppComponent implements OnInit {
             title.innerHTML = "Followers"
             words = document.createElement('h4');
             words.style.color = "white"
-            words.innerHTML = artists[name][1]
+            let fn=[]
+            const str = artists[name][1].toString();
+            console.log('follower is ',str)
+            //if (str[-1] == '0') str.pop()
+            for (let a = 0, b = 1; a < str.length; a++, b++) {
+                fn.push(str[a])
+                if (b%3 === 0 && a != str.length-1) {
+                    fn.push(",")
+                }
+            }
+            console.log('the fn is')
+            console.log(fn)
+            words.innerHTML = fn.join('');
             c2.appendChild(title)
             c2.appendChild(words)
             fr.appendChild(c2);
@@ -1130,8 +1121,14 @@ export class AppComponent implements OnInit {
             tag.href = artists[name][3]
             tag.target = "_blank"
             tag.rel = "noopener noreferrer"
+            tag.style.color = "green"
+            tag.style.marginRight="auto"
+            tag.style.marginLeft="auto"
             var sp = document.createElement('span');
-            sp.classList.add("spotify-icon")
+            sp.classList.add("fa-brands")
+            sp.classList.add("fa-spotify")
+            sp.classList.add("fa-3x")
+            sp.style.color = "green"
             tag.appendChild(sp)
             c2.appendChild(title)
             c2.appendChild(tag)
@@ -1169,6 +1166,17 @@ export class AppComponent implements OnInit {
             document.getElementById('noArtist')!.style.display = "block";
             document.getElementById('carouselExampleControls')!.style.display = "none";
         }
+    }
+    openModan() {
+        this.gposition.lat = this.gcenter.lat = globalThis.lat
+        this.gposition.lng = this.gcenter.lng = globalThis.long
+        // this.gposition.lat = 34.0611387
+        // this.gposition.lng = -118.3084775
+        // this.gposition = { lat: globalThis.lat, lng: globalThis.long }; 
+        // this.gcenter = { lat: globalThis.lat, lng: globalThis.long }; 
+        console.log("===== update gpos ===")
+        console.log(this.gposition)
+        console.log(this.gcenter)
     }
     async showVenue() {
         console.log('=== enter showVenue ===')
@@ -1223,7 +1231,22 @@ export class AppComponent implements OnInit {
 
 
         const elem = document.getElementById("VenueDetails")!.style.display = 'flex';
-
+        let location = document.getElementById('vdaddr')?.innerHTML.replace(/\s+/g, '+');
+        let gkey = 'AIzaSyBdSh29p_B93XTLF7qB0XtnfnjxQudHCA8';
+        let gr = this.httpGet('https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + gkey);
+        //call python get method to get the address
+        let res = JSON.parse(gr);
+        console.log(res);
+        //latlng+=res.results[0].geometry.location.lat + ','+res.results[0].geometry.location.lng;
+        if (res.results[0]) {
+            globalThis.lat = Number(res.results[0].geometry.location.lat);
+            globalThis.long = Number(res.results[0].geometry.location.lng);
+            console.log("---- we got from geo api ----")
+            console.log(globalThis.lat, globalThis.long)
+        } 
+        console.log(" we change map loc to ")
+        console.log(this.gposition)
+        console.log(this.gcenter)
     }
 
 
