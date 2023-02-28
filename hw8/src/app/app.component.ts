@@ -301,7 +301,7 @@ export class AppComponent implements OnInit {
                 .then(res => {
                     console.log(res);
                     if (!res.results[0]) {
-                        alert("invalid location!");
+                        document.getElementById("notfound")!.style.display = "block";
                         return;
                     }
                     lat = res.results[0].geometry.location.lat;
@@ -664,6 +664,13 @@ export class AppComponent implements OnInit {
         const mtag = document.getElementById("moreInfoBuy") as HTMLAnchorElement;
         mtag.href = globalThis.idMapping.get(name)![6];
         console.log(globalThis.idMapping.get(name)![7]);
+        //for fb and twitter icon button
+        let nn = name.replace(/\s+/g, '%20');
+        const twurl = "https://twitter.com/intent/tweet?url=Check%20"+ nn +"%20on%20Ticketmaster%20,"+ mtag.href;
+        (<HTMLAnchorElement>document.getElementById('twitterIcon')).href = twurl;
+        (<HTMLElement>document.getElementById('fbIcon')).setAttribute('href', 'https://www.facebook.com/sharer/sharer.php?u='+mtag.href);
+
+
         //error occur
         (document.getElementById("moreInfoIMG") as HTMLImageElement).src = globalThis.idMapping.get(name)![7];
         //go search for venue
@@ -763,7 +770,13 @@ export class AppComponent implements OnInit {
         if (artistList.length == 0) {
             document.getElementById('noArtist')!.style.display = "block";
             document.getElementById('carouselExampleControls')!.style.display = "none";
+            return;
+        } else if (artistList.length == 1) {
+            //hide prev and back
+            document.getElementById('carouselNext')!.style.display = "none";
+            document.getElementById('carouselBack')!.style.display = "none";
         }
+        (<HTMLElement>document.getElementById('cinner')!.childNodes[0]).classList.add('active');
     }
     // handle modal 
     //https://stackoverflow.com/questions/59590391/bootstrap-modal-is-not-shown-on-angular-8-on-click
@@ -807,13 +820,16 @@ export class AppComponent implements OnInit {
 
         let data: any[] = [];
         let temp = document.getElementById("mbTitle") as HTMLElement;
+        temp.classList.remove("hasEvents");
+        temp.classList.remove("hasnoEvents");
         if (len === 0) {
-            temp.innerHTML="No reservations to show";
+            temp.innerHTML="No favorite events to show";
+            temp.classList.add("hasnoEvents")
             return;
         }
 
         temp.innerHTML = "List of your favorite events";
-
+        temp.classList.add("hasEvents")
         // no, business name, date, time, email, delet button
         var table = document.createElement('table');
         table.setAttribute("id", "reserveTable");
@@ -925,9 +941,12 @@ export class AppComponent implements OnInit {
             globalThis.favoriteList.delete(key);
             return;
         }
+        (<HTMLElement>document.getElementById("mbTitle")).classList.remove("hasEvents");
+        (<HTMLElement>document.getElementById("mbTitle")).classList.remove("hasnoEvents");
         if (globalThis.favoriteList.size == 0) {
             document.getElementById("favoriteTable")!.innerHTML="";
-            (<HTMLElement>document.getElementById("mbTitle"))!.innerHTML="No reservations to show";
+            (<HTMLElement>document.getElementById("mbTitle"))!.innerHTML="No favorite events to show";
+            (<HTMLElement>document.getElementById("mbTitle")).classList.add("hasnoEvents")
             return;
         }
         console.log(eventName);
@@ -1046,7 +1065,7 @@ export class AppComponent implements OnInit {
             console.log(name);
             var dd = document.createElement('div');
             dd.classList.add('carousel-item');
-            if (count == 0) dd.classList.add('active');
+            //if (count === 0) dd.classList.add('active');
             var content = document.createElement('div');
             content.classList.add('spotifyCarousel');
             
@@ -1058,14 +1077,17 @@ export class AppComponent implements OnInit {
             c1.classList.add('spotifyItems');
             var title = document.createElement('h4');
             title.style.color = "#9DF1DF"
+            title.style.marginLeft = "auto"
+            title.style.marginRight = "auto"
+            title.style.marginTop = "5px"
             title.innerHTML = name
             var artitIcon = document.createElement('img');
             artitIcon.src = artists[name][4]
             artitIcon.classList.add('artistIcon');
             //for artist icon
             //globalThis.jsobj[name][4]
-            c1.appendChild(title)
             c1.appendChild(artitIcon)
+            c1.appendChild(title)
             fr.appendChild(c1);
             //popularity
             var c2 = document.createElement('div');
@@ -1143,7 +1165,7 @@ export class AppComponent implements OnInit {
             count+=1
         }
         console.log("artist count is " + count)
-        if (count == 0) {
+        if (count === 0) {
             document.getElementById('noArtist')!.style.display = "block";
             document.getElementById('carouselExampleControls')!.style.display = "none";
         }

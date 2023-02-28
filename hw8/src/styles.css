@@ -267,7 +267,21 @@ input[name="kw"] {
   width: 15%;
   /* max-width: 150px; */
 }
-
+#mbTitle {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hasnoEvents {
+  color: red;
+  padding: 10px;
+  background-color: white;
+  width: 80%;
+  border-radius: 20px;
+}
+.hasEvents {
+  color: #30E3DF;
+}
 .canceled {
   background-color: black;
   padding: 5px;
@@ -386,7 +400,8 @@ input[name="kw"] {
   background-color: white;
   margin-left: auto;
   margin-right: auto;
-  width: 800px;
+  width: 80%;
+  border-radius: 20px;
 }
 
 #noArtist {
@@ -506,13 +521,14 @@ input[name="kw"] {
 
 #promotionBut {
   display: show;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .socialShare {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-
 }
 
 .spotify-icon {
