@@ -843,3 +843,29 @@ input[name="kw"] {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+
+
+#nav-tabs .nav-link {
+  color: #3E54AC;
+  font-size: 1.1em;
+}
+#nav-tabs .nav-item {
+  position: relative;
+}
+#nav-tabs .nav-item::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-color: #3E54AC;
+  width: 0%;
+  content: "";
+  height: 4px;
+}
+#nav-tabs .nav-item.active::after {
+  width: 100%;
+}

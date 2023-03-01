@@ -139,7 +139,10 @@ export class AppComponent implements OnInit {
         t1!.style.display = "none";
         t2!.style.display = "none";
         t3!.style.display = "none";
-
+        document.getElementById("businessTabb")!.classList.remove("active");
+        document.getElementById("spotifyArtistb")!.classList.remove("active");
+        document.getElementById("venuesDetailsb")!.classList.remove("active");
+        document.getElementById(id+"b")!.classList.add("active");
         if (id != 'businessTab') tt!.style.display = "block";
         else {
             console.log('enter to change bussinees tab');
