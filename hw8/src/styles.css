@@ -164,6 +164,7 @@ select {
   padding: 20px;
   margin-left: auto;
   margin-right: auto;
+  width: 100%;
 }
 
 input[name="kw"] {
@@ -664,12 +665,6 @@ input[name="kw"] {
 }
 
 /* heart button */
-:root {
-  --color-bg: #fdf1f2;
-  --color-heart: #ea442b;
-  --easing: cubic-bezier(0.7, 0, 0.3, 1);
-  --duration: 0.5s;
-}
 
 .like-button {
   font-size: 5vmin;
@@ -687,92 +682,26 @@ input[name="kw"] {
   cursor: pointer;
 }
 
-.like-button:before {
-  z-index: -1;
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  box-shadow: 0 0.3em 0.6em rgba(0, 0, 0, 0.3);
-  border-radius: inherit;
-  transition: inherit;
-}
-
-.like-button:after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: #fff;
-  border-radius: inherit;
-  z-index: -1;
-}
-
-.like-button:active:before {
-  animation: depress-shadow var(--duration) var(--easing) both;
-}
-
-.like-button:focus:after {
-  animation: depress var(--duration) var(--easing) both;
-}
-
-@keyframes depress {
-
-  from,
-  to {
-    transform: none;
-  }
-
-  50% {
-    transform: translateY(5%) scale(0.9);
-  }
-}
-
-@keyframes depress-shadow {
-
-  from,
-  to {
-    transform: none;
-  }
-
-  50% {
-    transform: scale(0.5);
-  }
-}
-
 .like-wrapper {
   display: grid;
   align-items: center;
   justify-content: center;
   z-index: 1;
 }
-
-.like-wrapper>* {
-  margin: auto;
-  grid-area: 1;
-}
-
 .heart {
   width: 0.5em;
   height: 0.5em;
   display: block;
   transform-origin: center 80%;
 }
-
 .heart>path {
-  stroke: var(--color-heart);
+  stroke: red;
   stroke-width: 2;
   fill: transparent;
-  transition: fill var(--duration) var(--easing);
+  transition: fill;
 }
 
-.like-button:focus .heart>path {
-  fill: var(--color-heart);
-}
 
-.like-button:focus .heart {
-  animation: heart-bounce var(--duration) var(--easing);
-}
 
 .hidden-text {
   height: 54px;
@@ -796,17 +725,6 @@ input[name="kw"] {
   justify-content: center;
 }
 
-@keyframes heart-bounce {
-  40% {
-    transform: scale(0.7);
-  }
-
-  0%,
-  80%,
-  100% {
-    transform: scale(1);
-  }
-}
 
 /* Reset the animation when clicking again! */
 .like-button:focus {

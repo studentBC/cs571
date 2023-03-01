@@ -89,8 +89,8 @@
       <div class="restButton">
         <!-- use either (click)="openModal() or data-bs-target="#reserveModal" here" -->
         <button style="display:none;" id="realOpen" data-bs-toggle="modal" data-bs-target="#reserveModal"></button>
-        <h2 id="moreInfoHeader" style="text-align: center; color: #DDDDDD; margin-bottom: 1em"></h2>
-        <div (click)="addFavorite()">
+        <p id="moreInfoHeader" style="text-align: center; color: #DDDDDD; margin-bottom: 1em; display: inline-block; margin-top: 1em; margin-right: 5px; font-size: x-large;"></p>
+        <div style="display: inline-block;" (click)="addFavorite()">
           <button class="like-button" onclick="addFavorite()">
             <div class="like-wrapper">
               <svg class="heart" width="24" height="24" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@
     </div>
 
 
-    <div id="main_wrapper" class="searchResult" style="padding-right: 0px;padding-left: 0px; border-radius: 0px">      
+    <div id="main_wrapper" class="searchResult" style="padding-right: 0px;padding-left: 0px; border-radius: 0px; padding-top: 0px;">      
       <ul class="nav" id="nav-tabs" style="background-color: #1F8A70;">
         <li id="businessTabb" class="nav-item" role="presentation">
           <a class="nav-link" (click)="putMeUp('businessTab')" href="#businessTab" style="color: white;">Events

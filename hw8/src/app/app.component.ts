@@ -161,12 +161,16 @@ export class AppComponent implements OnInit {
     addFavorite() {
         console.log("ola enter addfavorite")
         //alert("Event added to Favorites!")
+        const heartPath = document.querySelector('.heart > path') as HTMLElement;
         let key = document.getElementById("moreInfoHeader")!.innerHTML + document.getElementById("moreInfoDate")!.innerHTML
         if (globalThis.favoriteList.has(key)) {
             console.log("yes we have key " + key)
             globalThis.favoriteList.delete(key)
+            heartPath!.style.fill = 'transparent';
             return
         }
+        // change the fill property
+        heartPath!.style.fill = 'red';
         //date, event name, category, venue
         let tmp: string[] = []
         let date = document.getElementById("moreInfoDate")!.innerHTML.substring(0,10)
@@ -176,6 +180,8 @@ export class AppComponent implements OnInit {
         tmp.push(document.getElementById("vdHeader")!.innerHTML)
         console.log("go set up key")
         globalThis.favoriteList.set(key,tmp);
+        
+        
     }
     readMore(tid: string) {
         console.log("call read more man !!!");
@@ -655,7 +661,15 @@ export class AppComponent implements OnInit {
         const twurl = "https://twitter.com/intent/tweet?url=Check%20"+ nn +"%20on%20Ticketmaster%20,"+ mtag.href;
         (<HTMLAnchorElement>document.getElementById('twitterIcon')).href = twurl;
         (<HTMLElement>document.getElementById('fbIcon')).setAttribute('href', 'https://www.facebook.com/sharer/sharer.php?u='+mtag.href);
-
+        
+        //change heart color
+        const heartPath = document.querySelector('.heart > path') as HTMLElement;
+        let key = document.getElementById("moreInfoHeader")!.innerHTML + document.getElementById("moreInfoDate")!.innerHTML
+        if (globalThis.favoriteList.has(key)) {
+            heartPath!.style.fill = 'red';
+        } else {
+            heartPath!.style.fill = 'transparent';
+        }
 
         //error occur
         (document.getElementById("moreInfoIMG") as HTMLImageElement).src = globalThis.idMapping.get(name)![7];
@@ -750,6 +764,7 @@ export class AppComponent implements OnInit {
         globalThis.selectedName = name;
         console.log('showing our artists man!!!')
         this.showVenue()
+        document.getElementById('cinner')!.innerHTML = ""
         if (tc.includes('Music')) {
             for (let i = 0; i < artistList.length; i++) {
                 console.log(artistList[i]);
@@ -771,6 +786,7 @@ export class AppComponent implements OnInit {
             document.getElementById('carouselBack')!.style.display = "none";
         }
         (<HTMLElement>document.getElementById('cinner')!.childNodes[0]).classList.add('active');
+        
     }
     // handle modal 
     //https://stackoverflow.com/questions/59590391/bootstrap-modal-is-not-shown-on-angular-8-on-click
