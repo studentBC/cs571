@@ -197,7 +197,11 @@
                   </div>
                   <div class="spotifyItems">
                     <h4 style="color: rgb(157, 241, 223);">Popularity</h4>
-                    <mat-progress-spinner mode="determinate" value={{sa[2]}} color="accent"></mat-progress-spinner>
+                    <mat-progress-spinner mode="determinate" value={{sa[2]}} color="white" diameter="40">
+                      <span class="mat-progress-spinner-content">
+                        {{sa[2]}}
+                      </span>
+                    </mat-progress-spinner>
                   </div>
                   <div class="spotifyItems">
                     <h4 style="color: rgb(157, 241, 223);">Followers</h4>
@@ -241,7 +245,7 @@
       <section id="venuesDetails" style="display: none;">
         <div style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
           <div id="VenueDetails">
-            <div id="vdLeft" style="width: 50%; text-align: center;">
+            <div id="vdLeft" style="text-align: center;">
               <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Name:</h3>
               <p id="vdHeader" style="color: white;"></p>
               <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Address:</h3>
@@ -293,13 +297,13 @@
         </div>
         <div class="modal-body">
           <!--Google map-->
-          <div class="container-fluid">
-            <div class="map-responsive">
+          <!-- <div class="container-fluid">
+            <div class="map-responsive"> -->
               <google-map height="400px" width="100%" [center]="gcenter">
                 <map-marker [position]="gposition"></map-marker>
               </google-map>
-            </div>
-          </div>
+            <!-- </div>
+          </div> -->
           <!--Google Maps-->
         </div>
         <div class="modal-footer" style="justify-content: left;">

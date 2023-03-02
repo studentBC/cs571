@@ -69,22 +69,17 @@ table,
 th,
 td {
   border-style: solid;
-  border: 1px solid black !important;
   border-collapse: collapse;
-  border-width: 1px;
   text-align: center;
   margin: auto;
   color: white;
-  /* background-color: #DDDDDD; */
 }
 
 #favoriteTable table,
 th,
 td {
   border-style: solid;
-  border: 1px solid black !important;
   border-collapse: collapse;
-  border-width: 1px;
   text-align: center;
   margin: auto;
   color: black;
@@ -113,7 +108,11 @@ select {
   margin-right: auto;
   width: 85%;
 }
-
+#favoriteTable {
+  margin-left: auto;
+  margin-right: auto;
+  width: 85%;
+}
 .flex-container {
   background-color: gray;
 }
@@ -266,7 +265,7 @@ input[name="kw"] {
 .no {
   white-space: pre-wrap;
   word-wrap: break-word;
-  width: 15%;
+  width: 10%;
 }
 
 .arow .no {
@@ -594,7 +593,15 @@ input[name="kw"] {
   margin: 0 10px;
   max-width: 30%;
 }
-
+.mat-progress-spinner circle, .mat-spinner circle::ng-deep circle{
+  stroke: #FFA3FD;
+}
+.mat-spinner::ng-deep circle {
+  stroke: #FFA3FD;
+}
+.mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: red;
+}
 .spotifyItems {
   display: flex;
   flex-direction: column;
@@ -620,9 +627,30 @@ input[name="kw"] {
   max-width: 30%;
 }
 
-/* img {
-    img-fluid
-  } */
+/* for rounded table */
+.rounded-table {
+  /* border-collapse: separate; */
+  border: none;
+  border-radius: 10px;
+}
+
+.rounded-table tr:first-child td:first-child {
+  border-top-left-radius: 10px;
+}
+
+.rounded-table tr:first-child td:last-child {
+  border-top-right-radius: 10px;
+}
+
+.rounded-table tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+.rounded-table tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+}
+
+
 .resBut {
   box-shadow: inset 0px 0px 0px 0px #cf866c;
   background: linear-gradient(to bottom, #d0451b 5%, #bc3315 100%);
@@ -637,7 +665,13 @@ input[name="kw"] {
   text-decoration: none;
   text-shadow: 0px 1px 10px #854629;
 }
-
+.artistPhoto {
+  width: 50%; 
+  object-fit: scale-down; 
+  max-width: 150px; 
+  margin-bottom: 10px; 
+  margin-top: 10px;
+}
 /* 
 #favoriteTable tr:hover {
   color: #D1D1D1;
@@ -751,48 +785,7 @@ input[name="kw"] {
   pointer-events: none;
   cursor: normal;
 }
-
-
-
-
-@media screen and (min-width: 900px) {
-  .fc {
-    margin-left: 5em;
-    width: 100%;
-    height: 100%;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .fc {
-    width: 90%;
-    margin-left: 5px;
-  }
-
-  .lc {
-    width: 90%;
-    margin-right: 5px;
-  }
-
-  .mainPage {
-    width: 90%;
-  }
-}
-
-html,
-body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-
-
-
-
+/* navigation tab */
 #nav-tabs .nav-link {
   color: #3E54AC;
   font-size: 1.1em;
@@ -816,4 +809,114 @@ body {
 
 #nav-tabs .nav-item.active::after {
   width: 100%;
+}
+
+
+@media screen and (min-width: 900px) {
+  .fc {
+    margin-left: 5em;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .fc {
+    width: 80%;
+    margin-top: 20px;
+  }
+
+  .lc {
+    width: 100%;
+  }
+
+  .mainPage {
+    width: 90%;
+  }
+  .twoBox {
+    display: block;
+    /* flex-direction: column;
+    align-items: flex-start; */
+  }
+  #APIresultTable {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+  }
+  #favoriteTable {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+  }
+  #reserveTable {
+    width: 100%;
+  }
+  .icon {
+    width: 100%;
+  }
+  .artistPhoto {
+    width: 100%; 
+    object-fit: scale-down; 
+    max-width: 150px; 
+  }
+  .searchResult {
+    display: none;
+    /* flex-flow: row wrap; */
+    /* border-radius: 10px; */
+    margin-left: auto;
+    margin-right: auto;
+    /* Then we define how is distributed the remaining space */
+    justify-content: center;
+    list-style: none;
+    width: 95%;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    background-color: rgba(67, 66, 66, 0.6);
+  }
+  .srb {
+    flex-direction: column;
+  }
+  .srleft {
+    width: 100%;
+  }
+  .srright {
+    width: 100%;
+  }
+  .albumIMG {
+    display: flex;
+    flex-direction: column;
+  }
+  .albumIMG img {
+    flex: 1;
+    max-width: 100%;
+    margin-top: 20px;
+  }
+  .spotifyRow {
+    flex-direction: column;
+  }
+  #vdLeft {
+    width: 100%;
+  }
+  #vdRight {
+    width: 100%;
+  }
+  #VenueDetails {
+    flex-direction: column;
+  }
+  .modal {
+    height: fit-content;
+  }
+  .modal-body {
+    height: 400px;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }

@@ -425,6 +425,7 @@ export class AppComponent implements OnInit {
 
         var table = document.createElement('table');
         table.setAttribute("id", "APIresultTable");
+        table.classList.add("rounded-table");
         var tr = document.createElement('tr');
         tr.style.backgroundColor = "#2B2B2B";
         var td1 = document.createElement('td');
@@ -520,11 +521,13 @@ export class AppComponent implements OnInit {
             let text2 = document.createElement('img');
             //text2.src = jsonObj.businesses[i].image_url;
             text2.src = data[i][2];
-            text2.style.width = "50%";
-            text2.style.objectFit = 'scale-down';
-            text2.style.maxWidth = '150px';
-            text2.style.marginBottom = '10px';
-            text2.style.marginTop = '10px';
+            text2.classList.add("artistPhoto");
+            // text2.style.width = "50%";
+            // text2.style.objectFit = 'scale-down';
+            // text2.style.maxWidth = '150px';
+            // text2.style.marginBottom = '10px';
+            // text2.style.marginTop = '10px';
+
             // text3 = document.createTextNode(jsonObj.businesses[i].name);
             // text4 = document.createTextNode(jsonObj.businesses[i].rating);
             // text5 = document.createTextNode(jsonObj.businesses[i].distance);
@@ -835,6 +838,8 @@ export class AppComponent implements OnInit {
         // no, business name, date, time, email, delet button
         var table = document.createElement('table');
         table.setAttribute("id", "reserveTable");
+        table.style.width="100%";
+        table.classList.add("rounded-table");
         var tr = document.createElement('tr');
         var td1 = document.createElement('td');
         var td2 = document.createElement('td');
