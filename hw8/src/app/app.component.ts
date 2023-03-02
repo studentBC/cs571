@@ -1,9 +1,10 @@
-import { Component, OnInit, ElementRef, NgModule } from "@angular/core";
+import { Component, OnInit, ElementRef, NgModule, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClient, HttpXsrfTokenExtractor } from "@angular/common/http"
 import { NONE_TYPE } from "@angular/compiler";
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { GoogleMap } from "@angular/google-maps";
 // import { ModalModule, BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 declare global {
@@ -46,7 +47,6 @@ declare global {
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-
 export class AppComponent implements OnInit {
     /////////////// inital variable realted ////////////
     //https://stackoverflow.com/questions/39366981/viewchild-in-ngif
@@ -56,11 +56,13 @@ export class AppComponent implements OnInit {
     //     console.log(globalThis.reserveModal.nativeElement);
     //     if (content) globalThis.reserveModal = content;
     // }
+    @ViewChild(GoogleMap) map!: GoogleMap;
     // @ViewChild(MatProgressSpinnerModule) progressSpinner: MatProgressSpinnerModule;
     // gposition = {lat: 34.1027421, lng: -118.3403834};
     // gcenter= {lat: 34.1027421, lng: -118.3403834}
     gcenter: google.maps.LatLngLiteral = { lat: 34.1027421, lng: -118.3403834 }; // default center
     gposition: google.maps.LatLngLiteral = { lat: 34.1027421, lng: -118.3403834 }; // default position
+    spotifyArtists: any[] = [];
     ngOnInit(): void {
         globalThis.ascending = true;
         globalThis.jsonObjArray = [];
@@ -707,6 +709,7 @@ export class AppComponent implements OnInit {
             document.getElementById("moreInfoATT")!.innerHTML = "Artist/Team"
             //Genre
             let stop = jobj._embedded.attractions.length - 1;
+            (document.getElementById("moreInfoAT") as HTMLElement).innerHTML = ""
             for (let a = 0; a < jobj._embedded.attractions.length; a++) {
                 let mat = document.createElement("a");
                 mat.href = jobj._embedded.attractions[a]?.url
@@ -764,28 +767,34 @@ export class AppComponent implements OnInit {
         globalThis.selectedName = name;
         console.log('showing our artists man!!!')
         this.showVenue()
-        document.getElementById('cinner')!.innerHTML = ""
-        if (tc.includes('Music')) {
-            for (let i = 0; i < artistList.length; i++) {
-                console.log(artistList[i]);
-                await this.showSpotify(artistList[i])
-            }
-        } else {
-            document.getElementById('noArtist')!.style.display = "block";
-            document.getElementById('carouselExampleControls')!.style.display = "none";
-            return;
+
+        for (let i = 0; i < artistList.length; i++) {
+            console.log(artistList[i]);
+            await this.showSpotify(artistList[i])
         }
-        console.log('cinner nodes: ' + document.getElementById('cinner')!.childNodes.length)
-        if (artistList.length == 0) {
-            document.getElementById('noArtist')!.style.display = "block";
-            document.getElementById('carouselExampleControls')!.style.display = "none";
-            return;
-        } else if (artistList.length == 1) {
-            //hide prev and back
-            document.getElementById('carouselNext')!.style.display = "none";
-            document.getElementById('carouselBack')!.style.display = "none";
-        }
-        (<HTMLElement>document.getElementById('cinner')!.childNodes[0]).classList.add('active');
+
+        // document.getElementById('cinner')!.innerHTML = ""
+        // if (tc.includes('Music')) {
+        //     for (let i = 0; i < artistList.length; i++) {
+        //         console.log(artistList[i]);
+        //         await this.showSpotify(artistList[i])
+        //     }
+        // } else {
+        //     document.getElementById('noArtist')!.style.display = "block";
+        //     document.getElementById('carouselExampleControls')!.style.display = "none";
+        //     return;
+        // }
+        // console.log('cinner nodes: ' + document.getElementById('cinner')!.childNodes.length)
+        // if (artistList.length == 0) {
+        //     document.getElementById('noArtist')!.style.display = "block";
+        //     document.getElementById('carouselExampleControls')!.style.display = "none";
+        //     return;
+        // } else if (artistList.length == 1) {
+        //     //hide prev and back
+        //     document.getElementById('carouselNext')!.style.display = "none";
+        //     document.getElementById('carouselBack')!.style.display = "none";
+        // }
+        //(<HTMLElement>document.getElementById('cinner')!.childNodes[0]).classList.add('active');
         
     }
     // handle modal 
@@ -1069,58 +1078,12 @@ export class AppComponent implements OnInit {
         let artists = JSON.parse(globalThis.jsonText);
         let count = 0
         console.log('-------- lets go ---------')
+        let temp: any = []
         for (const name in artists) {
-            console.log(name);
-            var dd = document.createElement('div');
-            dd.classList.add('carousel-item');
-            //if (count === 0) dd.classList.add('active');
-            var content = document.createElement('div');
-            content.classList.add('spotifyCarousel');
-            
-            //create first row
-            //artist icon + name
-            var fr = document.createElement('div');
-            fr.classList.add('spotifyRow');
-            var c1 = document.createElement('div');
-            c1.classList.add('spotifyItems');
-            var title = document.createElement('h4');
-            title.style.color = "#9DF1DF"
-            title.style.marginLeft = "auto"
-            title.style.marginRight = "auto"
-            title.style.marginTop = "5px"
-            title.innerHTML = name
-            var artitIcon = document.createElement('img');
-            artitIcon.src = artists[name][4]
-            artitIcon.classList.add('artistIcon');
-            //for artist icon
-            //globalThis.jsobj[name][4]
-            c1.appendChild(artitIcon)
-            c1.appendChild(title)
-            fr.appendChild(c1);
-            //popularity
-            var c2 = document.createElement('div');
-            c2.classList.add('spotifyItems');
-            title = document.createElement('h4');
-            title.style.color = "#9DF1DF"
-            title.innerHTML = "Popularity"
-            //<mat-spinner color="accent" mode="determinate" diameter="60">66</mat-spinner>
-            var words = document.createElement('mat-progress-spinner');
-            words.setAttribute('mode', 'determinate');
-            words.setAttribute('value', artists[name][2]);
-            words.setAttribute('color', 'accent');
-            // words.setAttribute('diameter', "60");
-            // words.innerHTML = artists[name][2]
-            c2.appendChild(title)
-            c2.appendChild(words)
-            fr.appendChild(c2);
-            //followers
-            c2 = document.createElement('div');
-            c2.classList.add('spotifyItems');
-            title = document.createElement('h4');
-            title.style.color = "#9DF1DF"
-            title.innerHTML = "Followers"
-            words = document.createElement('h4');
-            words.style.color = "white"
+            temp.push(artists[name][4]);
+            temp.push(name);
+            temp.push(artists[name][2]);
+
             let fn=[]
             const str = artists[name][1].toString();
             //if (str[-1] == '0') str.pop()
@@ -1130,64 +1093,139 @@ export class AppComponent implements OnInit {
                     fn.unshift(",")
                 }
             }
-            words.innerHTML = fn.join('');
-            c2.appendChild(title)
-            c2.appendChild(words)
-            fr.appendChild(c2);
-            //spotify link
-            c2 = document.createElement('div');
-            c2.classList.add('spotifyItems');
-            title = document.createElement('h4');
-            title.style.color = "#9DF1DF"
-            title.innerHTML = "Spotify Link"
-//             <a href="https://www.spotify.com/" target="_blank" rel="noopener noreferrer">
-//   <span class="spotify-icon"></span>
-// </a>         
-            var tag = document.createElement('a');
-            tag.href = artists[name][3]
-            tag.target = "_blank"
-            tag.rel = "noopener noreferrer"
-            tag.style.color = "green"
-            tag.style.marginRight="auto"
-            tag.style.marginLeft="auto"
-            var sp = document.createElement('span');
-            sp.classList.add("fa-brands")
-            sp.classList.add("fa-spotify")
-            sp.classList.add("fa-3x")
-            sp.style.color = "green"
-            tag.appendChild(sp)
-            c2.appendChild(title)
-            c2.appendChild(tag)
-            fr.appendChild(c2);
-            //create second row
-            var sr = document.createElement('div');
-            sr.classList.add('spotifyItems');
-            title = document.createElement('h4');
-            title.style.color = "#9DF1DF"
-            title.innerHTML = "Album featuring "+artist
-            sr.appendChild(title)
-            //put 3 album img
-            var ssr = document.createElement('div');
-            var albumImgs = document.createElement('div');
-            albumImgs.classList.add('albumIMG')
-            ssr.appendChild(albumImgs)
+            temp.push(fn.join(''));
+            temp.push(artists[name][3]);
+            temp.push(artist)
             for (let j = 5; j < artists[name].length; j++) {
-                let img = document.createElement('img');
-                img.src = artists[name][j]
-                // img.classList.add('albumIMG')
-                albumImgs.appendChild(img)
+                temp.push(artists[name][j])
             }
-            sr.appendChild(ssr);
-            content.appendChild(fr)
-            var newline = document.createElement('br')
-            content.appendChild(newline)
-            content.appendChild(newline)
-            content.appendChild(sr)
-            dd.appendChild(content)
-            document.getElementById('cinner')!.appendChild(dd)
-            count+=1
+            console.log("=========== loop ========");
+            for (var item of temp) {
+                console.log(item);
+            }
+            console.log("=========================");
+            count++;
+//             console.log(name);
+//             var dd = document.createElement('div');
+//             dd.classList.add('carousel-item');
+//             //if (count === 0) dd.classList.add('active');
+//             var content = document.createElement('div');
+//             content.classList.add('spotifyCarousel');
+            
+//             //create first row
+//             //artist icon + name
+//             var fr = document.createElement('div');
+//             fr.classList.add('spotifyRow');
+//             var c1 = document.createElement('div');
+//             c1.classList.add('spotifyItems');
+//             var title = document.createElement('h4');
+//             title.style.color = "#9DF1DF"
+//             title.style.marginLeft = "auto"
+//             title.style.marginRight = "auto"
+//             title.style.marginTop = "5px"
+//             title.innerHTML = name
+//             var artitIcon = document.createElement('img');
+//             artitIcon.src = artists[name][4]
+//             artitIcon.classList.add('artistIcon');
+//             //for artist icon
+//             //globalThis.jsobj[name][4]
+//             c1.appendChild(artitIcon)
+//             c1.appendChild(title)
+//             fr.appendChild(c1);
+//             //popularity
+//             var c2 = document.createElement('div');
+//             c2.classList.add('spotifyItems');
+//             title = document.createElement('h4');
+//             title.style.color = "#9DF1DF"
+//             title.innerHTML = "Popularity"
+//             //<mat-spinner color="accent" mode="determinate" diameter="60">66</mat-spinner>
+//             var words = document.createElement('mat-progress-spinner');
+//             words.setAttribute('mode', 'determinate');
+//             words.setAttribute('value', artists[name][2]);
+//             words.setAttribute('color', 'accent');
+//             // words.setAttribute('diameter', "60");
+//             // words.innerHTML = artists[name][2]
+//             c2.appendChild(title)
+//             c2.appendChild(words)
+//             fr.appendChild(c2);
+//             //followers
+//             c2 = document.createElement('div');
+//             c2.classList.add('spotifyItems');
+//             title = document.createElement('h4');
+//             title.style.color = "#9DF1DF"
+//             title.innerHTML = "Followers"
+//             words = document.createElement('h4');
+//             words.style.color = "white"
+//             let fn=[]
+//             const str = artists[name][1].toString();
+//             //if (str[-1] == '0') str.pop()
+//             for (let a = str.length-1, b = 1; a > -1; a--, b++) {
+//                 fn.unshift(str[a])
+//                 if (b%3 === 0 && a != 0) {
+//                     fn.unshift(",")
+//                 }
+//             }
+//             words.innerHTML = fn.join('');
+//             temp.push()
+
+//             c2.appendChild(title)
+//             c2.appendChild(words)
+//             fr.appendChild(c2);
+//             //spotify link
+//             c2 = document.createElement('div');
+//             c2.classList.add('spotifyItems');
+//             title = document.createElement('h4');
+//             title.style.color = "#9DF1DF"
+//             title.innerHTML = "Spotify Link"
+// //             <a href="https://www.spotify.com/" target="_blank" rel="noopener noreferrer">
+// //   <span class="spotify-icon"></span>
+// // </a>         
+//             var tag = document.createElement('a');
+//             tag.href = artists[name][3]
+//             tag.target = "_blank"
+//             tag.rel = "noopener noreferrer"
+//             tag.style.color = "green"
+//             tag.style.marginRight="auto"
+//             tag.style.marginLeft="auto"
+//             var sp = document.createElement('span');
+//             sp.classList.add("fa-brands")
+//             sp.classList.add("fa-spotify")
+//             sp.classList.add("fa-3x")
+//             sp.style.color = "green"
+//             tag.appendChild(sp)
+//             c2.appendChild(title)
+//             c2.appendChild(tag)
+//             fr.appendChild(c2);
+//             //create second row
+//             var sr = document.createElement('div');
+//             sr.classList.add('spotifyItems');
+//             title = document.createElement('h4');
+//             title.style.color = "#9DF1DF"
+//             title.innerHTML = "Album featuring "+artist
+//             sr.appendChild(title)
+//             //put 3 album img
+//             var ssr = document.createElement('div');
+//             var albumImgs = document.createElement('div');
+//             albumImgs.classList.add('albumIMG')
+//             ssr.appendChild(albumImgs)
+//             for (let j = 5; j < artists[name].length; j++) {
+//                 let img = document.createElement('img');
+//                 img.src = artists[name][j]
+//                 // img.classList.add('albumIMG')
+//                 albumImgs.appendChild(img)
+//             }
+            // sr.appendChild(ssr);
+            // content.appendChild(fr)
+            // var newline = document.createElement('br')
+            // content.appendChild(newline)
+            // content.appendChild(newline)
+            // content.appendChild(sr)
+            // dd.appendChild(content)
+            // document.getElementById('cinner')!.appendChild(dd)
+            // count+=1
             break;
         }
+        this.spotifyArtists.push(temp);
         if (count === 0) {
             document.getElementById('noArtist')!.style.display = "block";
             document.getElementById('carouselExampleControls')!.style.display = "none";
@@ -1196,6 +1234,7 @@ export class AppComponent implements OnInit {
     openModan() {
         this.gposition.lat = this.gcenter.lat = globalThis.lat
         this.gposition.lng = this.gcenter.lng = globalThis.long
+        this.map.panTo(this.gposition);
         // this.gposition.lat = 34.0611387
         // this.gposition.lng = -118.3084775
         // this.gposition = { lat: globalThis.lat, lng: globalThis.long }; 

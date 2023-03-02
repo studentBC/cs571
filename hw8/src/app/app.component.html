@@ -8,7 +8,6 @@
 </head>
 
 <body>
-  <!-- <mat-progress-spinner mode="determinate" color="accent" value="65">65</mat-progress-spinner> -->
   <div class="d-flex justify-content-end" style="margin-top:10px;">
     <button type="button" id="sea" class="customBUT" (click)="clickTab('sea')">Search</button>
     <button type="button" id="mb" style="border-color: transparent;" class="customBUT"
@@ -89,7 +88,9 @@
       <div class="restButton">
         <!-- use either (click)="openModal() or data-bs-target="#reserveModal" here" -->
         <button style="display:none;" id="realOpen" data-bs-toggle="modal" data-bs-target="#reserveModal"></button>
-        <p id="moreInfoHeader" style="text-align: center; color: #DDDDDD; margin-bottom: 1em; display: inline-block; margin-top: 1em; margin-right: 5px; font-size: x-large;"></p>
+        <p id="moreInfoHeader"
+          style="text-align: center; color: #DDDDDD; margin-bottom: 1em; display: inline-block; margin-top: 1em; margin-right: 5px; font-size: x-large;">
+        </p>
         <div style="display: inline-block;" (click)="addFavorite()">
           <button class="like-button" onclick="addFavorite()">
             <div class="like-wrapper">
@@ -105,7 +106,8 @@
     </div>
 
 
-    <div id="main_wrapper" class="searchResult" style="padding-right: 0px;padding-left: 0px; border-radius: 0px; padding-top: 0px;">      
+    <div id="main_wrapper" class="searchResult"
+      style="padding-right: 0px;padding-left: 0px; border-radius: 0px; padding-top: 0px;">
       <ul class="nav" id="nav-tabs" style="background-color: #1F8A70;">
         <li id="businessTabb" class="nav-item" role="presentation">
           <a class="nav-link" (click)="putMeUp('businessTab')" href="#businessTab" style="color: white;">Events
@@ -123,56 +125,58 @@
         </li>
       </ul>
     </div>
-    <div class="searchResult" style="padding-top: 20px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px">
+    <div class="searchResult"
+      style="padding-top: 20px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px">
       <section id="businessTab">
         <div style="display: flex; flex-direction: column; width: 100%; margin-left: auto; margin-right: auto;">
-        <div class="srb">
-          <div class="srleft">
-            <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 10px;">Date</h3>
-            <p id="moreInfoDate" style="color: white;"></p>
-            <h3 id="moreInfoATT" style="color: #9DF1DF; margin-bottom: 0px;"></h3>
-            <div id="moreInfoAT"></div>
-            <h3 style="color: #9DF1DF; margin-bottom: 0px;">Venue</h3>
-            <p id="moreInfoVenue" style="color: white;"></p>
-            <h3 style="color: #9DF1DF; margin-bottom: 0px;">Genres</h3>
-            <p id="moreInfoGen" style="color: white;"></p>
-            <h3 id="prangeTitle" style="color: #9DF1DF; margin-bottom: 0px;"></h3>
-            <p id="moreInfoRange" style="color: white;"></p>
-            <h3 style="color: #9DF1DF; margin-bottom: 0px;">Ticket Status</h3>
-            <div id="moreInfoSta"></div>
-            <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Buy Ticket At:</h3>
-            <a href="" id="moreInfoBuy" target="_blank" style="color: #1F8A70; text-decoration: none;">Ticketmaster</a>
+          <div class="srb">
+            <div class="srleft">
+              <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 10px;">Date</h3>
+              <p id="moreInfoDate" style="color: white;"></p>
+              <h3 id="moreInfoATT" style="color: #9DF1DF; margin-bottom: 0px;"></h3>
+              <div id="moreInfoAT"></div>
+              <h3 style="color: #9DF1DF; margin-bottom: 0px;">Venue</h3>
+              <p id="moreInfoVenue" style="color: white;"></p>
+              <h3 style="color: #9DF1DF; margin-bottom: 0px;">Genres</h3>
+              <p id="moreInfoGen" style="color: white;"></p>
+              <h3 id="prangeTitle" style="color: #9DF1DF; margin-bottom: 0px;"></h3>
+              <p id="moreInfoRange" style="color: white;"></p>
+              <h3 style="color: #9DF1DF; margin-bottom: 0px;">Ticket Status</h3>
+              <div id="moreInfoSta"></div>
+              <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Buy Ticket At:</h3>
+              <a href="" id="moreInfoBuy" target="_blank"
+                style="color: #1F8A70; text-decoration: none;">Ticketmaster</a>
+            </div>
+            <div class="srright">
+              <img id="moreInfoIMG" src="" alt="">
+            </div>
           </div>
-          <div class="srright">
-            <img id="moreInfoIMG" src="" alt="">
-          </div>
-        </div>
-        <br>
-        <br>
-        <div class="promotionBut" id="promotionBut">
+          <br>
+          <br>
+          <div class="promotionBut" id="promotionBut">
 
-          <div class="socialShare">
-            <p style="color: white; margin-bottom: 0px;">Shared on:</p>
-            <a id="twitterIcon"
-              href="https://twitter.com/intent/tweet?url=https://example.com&text=Check%20out%20this%20awesome%20website!&via=myTwitterHandle"
-              target="_blank">
-              <div style="color: #9DF1DF; margin-left: 5x; margin-right: 5px;">
-                <i class="fab fa-twitter fa-2x"></i>
-              </div>
-            </a>
-            <a id="fbIcon" href="https://www.facebook.com/sharer/sharer.php?u=https://example.com" target="_blank">
-              <i class="fab fa-facebook-square fa-2x"></i>
-            </a>
-            <!-- <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button"
+            <div class="socialShare">
+              <p style="color: white; margin-bottom: 0px;">Shared on:</p>
+              <a id="twitterIcon"
+                href="https://twitter.com/intent/tweet?url=https://example.com&text=Check%20out%20this%20awesome%20website!&via=myTwitterHandle"
+                target="_blank">
+                <div style="color: #9DF1DF; margin-left: 5x; margin-right: 5px;">
+                  <i class="fab fa-twitter fa-2x"></i>
+                </div>
+              </a>
+              <a id="fbIcon" href="https://www.facebook.com/sharer/sharer.php?u=https://example.com" target="_blank">
+                <i class="fab fa-facebook-square fa-2x"></i>
+              </a>
+              <!-- <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button"
               data-show-count="false">Tweet</a> -->
-            <!-- <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
-            <!-- <iframe
+              <!-- <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
+              <!-- <iframe
               src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=small&width=60&height=20&appId"
               width="60" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0"
               allowfullscreen="true"
               allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe> -->
+            </div>
           </div>
-        </div>
         </div>
       </section>
 
@@ -184,6 +188,37 @@
         <!-- carousel -->
         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
           <div class="carousel-inner" id="cinner" style="width: 80%;">
+            <div *ngFor="let sa of spotifyArtists; let i=index" [class.carousel-item]="i==0" [class.active]="i==0">
+              <div class="d-block w-100" style="width: 500px; height: 500px;">
+                <div class="spotifyCarousel">
+                  <div class="spotifyRow">
+                    <div class="spotifyItems">
+                      <img src={{sa[0]}} class="artistIcon">
+                      <h4 style="color: rgb(157, 241, 223); margin-left: auto; margin-right: auto; margin-top: 5px;">{{sa[1]}}</h4>
+                    </div>
+                    <div class="spotifyItems">
+                      <h4 style="color: rgb(157, 241, 223);">Popularity</h4>
+                      <mat-progress-spinner mode="determinate" value={{sa[2]}} color="accent"></mat-progress-spinner>
+                    </div>
+                    <div class="spotifyItems">
+                      <h4 style="color: rgb(157, 241, 223);">Followers</h4>
+                      <h4 style="color: white;">{{sa[3]}}</h4>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="spotifyItems">
+                    <h4 style="color: rgb(157, 241, 223);">Album featuring  {{sa[4]}}</h4>
+                    <div>
+                        <div class="albumIMG">
+                          <img src={{sa[5]}}>
+                          <img src={{sa[6]}}>
+                          <img src={{sa[7]}}>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <!-- <div class="carousel-item active">
               <div class="d-block w-100" style="width: 500px; height: 500px; background-color:#1F8A70;"></div>
             </div> -->
@@ -217,21 +252,27 @@
                 <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Open Hours:</h3>
                 <p id="vdoh" class="hidden-text vdrm" style="color: white; margin-bottom: 0px;"></p>
               </div>
-              <a (click)="readMore('vdoh')" style="color: #95BDFF; margin-left:auto; margin-right: auto; text-decoration: underline;" id="vdoha"> show
+              <a (click)="readMore('vdoh')"
+                style="color: #95BDFF; margin-left:auto; margin-right: auto; text-decoration: underline;" id="vdoha">
+                show
                 more<i class="bi bi-chevron-down"></i></a>
 
               <div class="spoiler">
                 <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">General Rule:</h3>
                 <p class="vdrm hidden-text" style="color: white; margin-bottom: 0px;" id="vdgr"></p>
               </div>
-              <a (click)="readMore('vdgr')" style="color: #95BDFF; margin-left:auto; margin-right: auto; text-decoration: underline;" id="vdgra"> show
+              <a (click)="readMore('vdgr')"
+                style="color: #95BDFF; margin-left:auto; margin-right: auto; text-decoration: underline;" id="vdgra">
+                show
                 more<i class="bi bi-chevron-down"></i></a>
 
               <div class="spoiler">
                 <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Child Rule:</h3>
                 <p id="vdcr" class="vdrm hidden-text" style="color: white; margin-bottom: 0px;"></p>
               </div>
-              <a (click)="readMore('vdcr')" style="color: #95BDFF; margin-left:auto; margin-right: auto; text-decoration: underline;" id="vdcra"> show
+              <a (click)="readMore('vdcr')"
+                style="color: #95BDFF; margin-left:auto; margin-right: auto; text-decoration: underline;" id="vdcra">
+                show
                 more<i class="bi bi-chevron-down"></i></a>
             </div>
           </div>
