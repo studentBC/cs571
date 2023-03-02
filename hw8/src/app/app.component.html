@@ -154,7 +154,6 @@
           <br>
           <br>
           <div class="promotionBut" id="promotionBut">
-
             <div class="socialShare">
               <p style="color: white; margin-bottom: 0px;">Shared on:</p>
               <a id="twitterIcon"
@@ -188,40 +187,43 @@
         <!-- carousel -->
         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
           <div class="carousel-inner" id="cinner" style="width: 80%;">
-            <div *ngFor="let sa of spotifyArtists; let i=index" [class.carousel-item]="i==0" [class.active]="i==0">
-              <div class="d-block w-100" style="width: 500px; height: 500px;">
-                <div class="spotifyCarousel">
-                  <div class="spotifyRow">
-                    <div class="spotifyItems">
-                      <img src={{sa[0]}} class="artistIcon">
-                      <h4 style="color: rgb(157, 241, 223); margin-left: auto; margin-right: auto; margin-top: 5px;">{{sa[1]}}</h4>
-                    </div>
-                    <div class="spotifyItems">
-                      <h4 style="color: rgb(157, 241, 223);">Popularity</h4>
-                      <mat-progress-spinner mode="determinate" value={{sa[2]}} color="accent"></mat-progress-spinner>
-                    </div>
-                    <div class="spotifyItems">
-                      <h4 style="color: rgb(157, 241, 223);">Followers</h4>
-                      <h4 style="color: white;">{{sa[3]}}</h4>
-                    </div>
-                  </div>
-                  <br>
+            <div *ngFor="let sa of spotifyArtists; let i=index" [class.carousel-item]="i>-1" [class.active]="i==0">
+              <div class="spotifyCarousel">
+                <div class="spotifyRow">
                   <div class="spotifyItems">
-                    <h4 style="color: rgb(157, 241, 223);">Album featuring  {{sa[4]}}</h4>
+                    <img src={{sa[0]}} class="artistIcon">
+                    <h4 style="color: rgb(157, 241, 223); margin-left: auto; margin-right: auto; margin-top: 5px;">
+                      {{sa[1]}}</h4>
+                  </div>
+                  <div class="spotifyItems">
+                    <h4 style="color: rgb(157, 241, 223);">Popularity</h4>
+                    <mat-progress-spinner mode="determinate" value={{sa[2]}} color="accent"></mat-progress-spinner>
+                  </div>
+                  <div class="spotifyItems">
+                    <h4 style="color: rgb(157, 241, 223);">Followers</h4>
+                    <h4 style="color: white;">{{sa[3]}}</h4>
+                  </div>
+                  <div class="spotifyItems">
+                    <h4 style="color: rgb(157, 241, 223);">Spotify Link</h4><a href={{sa[4]}} target="_blank"
+                      rel="noopener noreferrer" style="color: green; margin-right: auto; margin-left: auto;"><span
+                        class="fa-brands fa-spotify fa-3x" style="color: green;"></span></a>
+                  </div>
+                </div>
+                <br>
+                <div class="spotifyRow">
+                  <div class="spotifyItems">
+                    <h4 style="color: rgb(157, 241, 223);">Album featuring {{sa[5]}}</h4>
                     <div>
-                        <div class="albumIMG">
-                          <img src={{sa[5]}}>
-                          <img src={{sa[6]}}>
-                          <img src={{sa[7]}}>
-                        </div>
+                      <div class="albumIMG">
+                        <img src={{sa[6]}}>
+                        <img src={{sa[7]}}>
+                        <img src={{sa[8]}}>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- <div class="carousel-item active">
-              <div class="d-block w-100" style="width: 500px; height: 500px; background-color:#1F8A70;"></div>
-            </div> -->
           </div>
           <a id="carouselBack" class="carousel-control-prev" href="#carouselExampleControls" role="button"
             data-bs-target="#carouselExampleControls" data-bs-slide="prev">
