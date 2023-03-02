@@ -768,6 +768,7 @@ export class AppComponent implements OnInit {
         console.log('showing our artists man!!!')
         this.showVenue()
         this.spotifyArtists = []
+        if (tc.includes('Music'))
         for (let i = 0; i < artistList.length; i++) {
             console.log(artistList[i]);
             await this.showSpotify(artistList[i])
@@ -775,6 +776,10 @@ export class AppComponent implements OnInit {
         if (this.spotifyArtists.length === 0) {
             document.getElementById('noArtist')!.style.display = "block";
             document.getElementById('carouselExampleControls')!.style.display = "none";
+        } else if (this.spotifyArtists.length === 1) {
+            //hide prev and back
+            document.getElementById('carouselNext')!.style.display = "none";
+            document.getElementById('carouselBack')!.style.display = "none";
         }
     }
     // handle modal 
