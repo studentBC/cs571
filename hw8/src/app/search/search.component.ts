@@ -1,13 +1,8 @@
-import { Component, OnInit, ElementRef, NgModule, ViewChild } from "@angular/core";
-import { NgForm } from "@angular/forms";
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClient, HttpXsrfTokenExtractor } from "@angular/common/http"
-import { NONE_TYPE } from "@angular/compiler";
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { GoogleMap } from "@angular/google-maps";
-// import { ModalModule, BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { GoogleMap } from '@angular/google-maps';
 
-declare global {
+  declare global {
     var lat: number;
     var long: number;
     var selectedName: string;
@@ -38,16 +33,15 @@ declare global {
     var favoriteList: Map<string, string[]>;
     //debug usage
     var debug: boolean;
-    var reserveModal: ElementRef;
     var gMLoc: string;
     var latlng: string;
 }
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+  selector: 'app-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.css']
 })
-export class AppComponent implements OnInit {
+export class SearchComponent implements OnInit {
     /////////////// inital variable realted ////////////
     //https://stackoverflow.com/questions/39366981/viewchild-in-ngif
     //https://stackblitz.com/edit/angular-t5dfp7?file=app%2Fservice-component.ts
@@ -56,6 +50,7 @@ export class AppComponent implements OnInit {
     //     console.log(globalThis.reserveModal.nativeElement);
     //     if (content) globalThis.reserveModal = content;
     // }
+    
     @ViewChild(GoogleMap) map!: GoogleMap;
     // @ViewChild(MatProgressSpinnerModule) progressSpinner: MatProgressSpinnerModule;
     // gposition = {lat: 34.1027421, lng: -118.3403834};
@@ -1023,3 +1018,4 @@ export class AppComponent implements OnInit {
         return geohash;
     }
 }
+

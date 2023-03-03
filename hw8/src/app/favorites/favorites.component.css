@@ -1,0 +1,28 @@
+#mbTitle {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+#favoriteTable table,
+th,
+td {
+  border-style: solid;
+  border-collapse: collapse;
+  text-align: center;
+  margin: auto;
+  color: black;
+  /* background-color: #DDDDDD; */
+}
+#favoriteTable {
+    margin-left: auto;
+    margin-right: auto;
+    width: 85%;
+}
+
+@media screen and (max-width: 425px) {
+    #favoriteTable {
+      margin-left: auto;
+      margin-right: auto;
+      width: 500px;
+    }
+}

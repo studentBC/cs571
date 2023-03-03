@@ -7,11 +7,15 @@ import { FormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FavoritesComponent } from './favorites/favorites.component';
+import { SearchComponent } from './search/search.component';
 // import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    FavoritesComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,
