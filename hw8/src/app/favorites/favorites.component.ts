@@ -1,16 +1,23 @@
 import { Component } from '@angular/core';
+import { favoriteList } from '../search/search.component';
+import { Injectable } from '@angular/core';
 
+@Injectable({
+  providedIn: 'root'
+})
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.component.html',
   styleUrls: ['./favorites.component.css']
 })
 export class FavoritesComponent {
+
     ///////////// dynamically deal with reservation table ///////////////
     createReserveTable() {
       console.log('enter to createReserveTable');
       //store json obj into data array
-      var len = globalThis.favoriteList.size;
+      console.log(favoriteList)
+      var len = favoriteList.size;
       console.log(len);
 
       let data: any[] = [];
@@ -76,7 +83,7 @@ export class FavoritesComponent {
       console.log('before creating table ...');
       console.log('data length is ' + len);
       let no = 1;
-      for (let [key, value] of globalThis.favoriteList) {
+      for (let [key, value] of favoriteList) {
           console.log(key + ' : ' + value + ' #### ');
           tr = document.createElement('tr');
           tr.classList.add("aarow");
@@ -128,19 +135,18 @@ export class FavoritesComponent {
       document.getElementById("favoriteTable")!.appendChild(table);
   }
       //delete reservation
-      delReserv(key: string, eventName: string, targetDate: string) {
+    delReserv(key: string, eventName: string, targetDate: string) {
         alert("Event Removed from Favorites!");
         console.log('enter to del key: ' + key);
-        globalThis.favoriteList.delete(key);
-        globalThis.reserveNo--;
+        favoriteList.delete(key);
         let table = document.getElementById("reserveTable") as HTMLTableElement;
         if (!table) {
-            globalThis.favoriteList.delete(key);
+            favoriteList.delete(key);
             return;
         }
         (<HTMLElement>document.getElementById("mbTitle")).classList.remove("hasEvents");
         (<HTMLElement>document.getElementById("mbTitle")).classList.remove("hasnoEvents");
-        if (globalThis.favoriteList.size == 0) {
+        if (favoriteList.size == 0) {
             document.getElementById("favoriteTable")!.innerHTML="";
             (<HTMLElement>document.getElementById("mbTitle"))!.innerHTML="No favorite events to show";
             (<HTMLElement>document.getElementById("mbTitle")).classList.add("hasnoEvents")

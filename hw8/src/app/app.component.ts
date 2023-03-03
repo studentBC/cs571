@@ -5,6 +5,7 @@ import { HttpClient, HttpXsrfTokenExtractor } from "@angular/common/http"
 import { NONE_TYPE } from "@angular/compiler";
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { GoogleMap } from "@angular/google-maps";
+import { FavoritesComponent } from './favorites/favorites.component';
 // import { ModalModule, BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 declare global {
@@ -49,6 +50,11 @@ declare global {
 })
 export class AppComponent implements OnInit {
     /////////////// inital variable realted ////////////
+    constructor(private fav: FavoritesComponent) {}
+
+    callOtherModuleFunction() {
+      this.fav.createReserveTable();
+    }
     //https://stackoverflow.com/questions/39366981/viewchild-in-ngif
     //https://stackblitz.com/edit/angular-t5dfp7?file=app%2Fservice-component.ts
     // @ViewChild('reserveModal') set content(content: ElementRef) {

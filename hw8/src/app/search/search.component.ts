@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { GoogleMap } from '@angular/google-maps';
 
-  declare global {
+declare global {
     var lat: number;
     var long: number;
     var selectedName: string;
@@ -30,12 +30,13 @@ import { GoogleMap } from '@angular/google-maps';
     var bDetail: Map<string, string[]>;
     var ishow: Map<string, boolean>;
     //key will be event Name+date
-    var favoriteList: Map<string, string[]>;
+    var favoriteList: Map<string, string[]>
     //debug usage
     var debug: boolean;
     var gMLoc: string;
     var latlng: string;
 }
+export var favoriteList: Map<string, string[]>;
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -69,6 +70,7 @@ export class SearchComponent implements OnInit {
         globalThis.tmKey = "uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ";
         globalThis.idMapping = new Map<string, string[]>();
         globalThis.favoriteList = new Map<string, string[]>();
+        favoriteList = new Map<string, string[]>();
         globalThis.bDetail = new Map<string, string[]>();
         globalThis.nameToUID = new Map<string, string>();
         globalThis.debug = true;
@@ -160,9 +162,9 @@ export class SearchComponent implements OnInit {
         //alert("Event added to Favorites!")
         const heartPath = document.querySelector('.heart > path') as HTMLElement;
         let key = document.getElementById("moreInfoHeader")!.innerHTML + document.getElementById("moreInfoDate")!.innerHTML
-        if (globalThis.favoriteList.has(key)) {
+        if (favoriteList.has(key)) {
             console.log("yes we have key " + key)
-            globalThis.favoriteList.delete(key)
+            favoriteList.delete(key)
             heartPath!.style.fill = 'transparent';
             return
         }
@@ -176,7 +178,7 @@ export class SearchComponent implements OnInit {
         tmp.push(document.getElementById("moreInfoGen")!.innerHTML)
         tmp.push(document.getElementById("vdHeader")!.innerHTML)
         console.log("go set up key")
-        globalThis.favoriteList.set(key,tmp);
+        favoriteList.set(key,tmp);
         
         
     }
@@ -665,7 +667,7 @@ export class SearchComponent implements OnInit {
         //change heart color
         const heartPath = document.querySelector('.heart > path') as HTMLElement;
         let key = document.getElementById("moreInfoHeader")!.innerHTML + document.getElementById("moreInfoDate")!.innerHTML
-        if (globalThis.favoriteList.has(key)) {
+        if (favoriteList.has(key)) {
             heartPath!.style.fill = 'red';
         } else {
             heartPath!.style.fill = 'transparent';
