@@ -5,13 +5,12 @@ import { SearchComponent } from './search/search.component';
 import { FavoritesComponent } from './favorites/favorites.component';
 
 const routes: Routes = [
-  { path: '', component: AppComponent },
   { path: 'search', component: SearchComponent },
   { path: 'favorites', component: FavoritesComponent },
   { path: '#businessTab', component: SearchComponent },
   { path: '#spotifyArtist', component: SearchComponent },
   { path: '#venuesDetails', component: SearchComponent },
-  { path: '**', redirectTo: ''}
+  { path: '**', redirectTo: 'search'}
 ];
 
 @NgModule({

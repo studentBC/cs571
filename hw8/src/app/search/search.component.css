@@ -1,0 +1,8 @@
+#moreInfoBuy:hover {
+    color: #95BDFF !important;
+}
+
+.spotifyAlbumItems {
+    display: flex;
+    flex-direction: column;
+}

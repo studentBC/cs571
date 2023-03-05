@@ -7,7 +7,18 @@
         <hr style="color: white; width: 100%; margin-bottom: 20px; margin-top: 10px;">
         <form id="partOne" style="color:#AAE3E2;" (ngSubmit)="submitlol(form)" #form="ngForm">
             <label>Keyword</label><label style="color:red;">*</label><br>
-            <input class="userInput" type="text" name="kw" required="" ngModel name="kw">
+            <input matInput style="width: 100%;" class="userInput" type="text" [(ngModel)]="kw" [matAutocomplete]="auto"
+            [formControl]="searchEventCtrl">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)='onSelected()'>
+                <mat-option *ngIf="isLoading" class="is-loading readonly">
+                    <mat-spinner diameter="20"></mat-spinner>
+                </mat-option>
+                <ng-container *ngIf="!isLoading">
+                    <mat-option *ngFor="let k of filteredEvents" [value]="k">
+                        {{ k }}
+                    </mat-option>
+                </ng-container>
+            </mat-autocomplete>
             <br><br>
             <div class="twoBox">
                 <div class="lc">
@@ -36,7 +47,7 @@
                 style="width: 100%;" required="">
             <br>
             <br>
-            <input type="checkbox" name="autoDetect" id="cbox" ngModel name="autoDetect" (click)="hideLocInput()">
+            <input type="checkbox" id="cbox" ngModel name="autoDetect" (click)="hideLocInput()">
             <label style="color: gray;"><strong>Auto-Detect your location</strong></label>
             <br>
             <br>
@@ -119,7 +130,7 @@
                         <div id="moreInfoSta"></div>
                         <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Buy Ticket At:</h3>
                         <a href="" id="moreInfoBuy" target="_blank"
-                            style="color: #1F8A70; text-decoration: none;">Ticketmaster</a>
+                            style="color: #B4E4FF; text-decoration: none;">Ticketmaster</a>
                     </div>
                     <div class="srright">
                         <img id="moreInfoIMG" src="" alt="">
@@ -195,7 +206,7 @@
                             </div>
                             <br>
                             <div class="spotifyRow">
-                                <div class="spotifyItems">
+                                <div class="spotifyAlbumItems">
                                     <h4 style="color: rgb(157, 241, 223);">Album featuring {{sa[5]}}</h4>
                                     <div>
                                         <div class="albumIMG">
@@ -284,8 +295,8 @@
                 <!--Google map-->
                 <!-- <div class="container-fluid">
                 <div class="map-responsive"> -->
-                <google-map height="400px" width="100%" [center]="gcenter">
-                    <map-marker [position]="gposition"></map-marker>
+                <google-map height="400px" width="100%" [zoom]="17" [center]="gcenter" #gmap>
+                    <map-marker [position]="gcenter"></map-marker>
                 </google-map>
                 <!-- </div>
               </div> -->

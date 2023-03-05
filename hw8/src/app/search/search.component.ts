@@ -1,6 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { GoogleMap } from '@angular/google-maps';
+import { Subject } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { debounceTime, tap, switchMap, finalize, distinctUntilChanged, filter } from 'rxjs/operators';
 
 declare global {
     var lat: number;
@@ -46,19 +50,43 @@ export class SearchComponent implements OnInit {
     /////////////// inital variable realted ////////////
     //https://stackoverflow.com/questions/39366981/viewchild-in-ngif
     //https://stackblitz.com/edit/angular-t5dfp7?file=app%2Fservice-component.ts
-    // @ViewChild('reserveModal') set content(content: ElementRef) {
-    //     console.log(globalThis.reserveModal);
-    //     console.log(globalThis.reserveModal.nativeElement);
-    //     if (content) globalThis.reserveModal = content;
-    // }
-    
-    @ViewChild(GoogleMap) map!: GoogleMap;
+    @ViewChild('gmap') gmap!: GoogleMap;
+    // @ViewChild(GoogleMap) gmap!: GoogleMap;
     // @ViewChild(MatProgressSpinnerModule) progressSpinner: MatProgressSpinnerModule;
     // gposition = {lat: 34.1027421, lng: -118.3403834};
     // gcenter= {lat: 34.1027421, lng: -118.3403834}
     gcenter: google.maps.LatLngLiteral = { lat: 34.1027421, lng: -118.3403834 }; // default center
     gposition: google.maps.LatLngLiteral = { lat: 34.1027421, lng: -118.3403834 }; // default position
     spotifyArtists: any[] = [];
+    //for auto complete
+    isLoading = true;
+    keywords = new Subject<string>();
+    kw:any = "";
+
+    searchEventCtrl = new FormControl();
+    filteredEvents: any[] = [];
+    errorMsg!: string;
+    minLengthTerm = 3;
+    selectedEvent: any = "";
+  
+    constructor(
+      private http: HttpClient
+    ) { }
+  
+    onSelected() {
+      console.log(this.selectedEvent);
+      this.selectedEvent = this.selectedEvent;
+    }
+  
+    displayWith(value: any) {
+      return value?.Title;
+    }
+  
+    clearSelection() {
+      this.selectedEvent = "";
+      this.filteredEvents = [];
+    }
+
     ngOnInit(): void {
         globalThis.ascending = true;
         globalThis.jsonObjArray = [];
@@ -80,6 +108,43 @@ export class SearchComponent implements OnInit {
             ["vdcr", false]
         ]);
         globalThis.latlng = '&geoPoint=';
+
+        this.searchEventCtrl.valueChanges
+        .pipe(
+            filter(res => {
+            return res !== null && res.length >= this.minLengthTerm
+            }),
+            distinctUntilChanged(),
+            debounceTime(1000),
+            tap(() => {
+            this.errorMsg = "";
+            this.filteredEvents = [];
+            this.isLoading = true;
+            }),
+            switchMap(value => this.http.get('https://app.ticketmaster.com/discovery/v2/suggest/?apikey=' + globalThis.tmKey + '&keyword=' + value)
+            .pipe(
+                finalize(() => {
+                this.isLoading = false
+                }),
+            )
+            )
+        )
+        .subscribe((data: any) => {
+            console.log('we got kw data is')
+            console.log(data);
+            if (!data._embedded) {
+            this.errorMsg = 'Error';
+            this.filteredEvents = [];
+            } else {
+                this.errorMsg = "";
+                for (let i = 0; i < data._embedded.attractions.length; i++) {
+                    console.log(data._embedded.attractions[i]);
+                    this.filteredEvents.push(data._embedded.attractions[i].name);
+                }
+            }
+            console.log(this.filteredEvents);
+        });
+        
     }
 
     initial(jojo: object) {
@@ -255,13 +320,13 @@ export class SearchComponent implements OnInit {
         document.getElementById("searchResult")!.style.display = "none";
         globalThis.latlng = '&geoPoint=';
         //process input parameter
-        let kw = "",
+        let kw = this.kw,
             loc = "Taipei",
             selfLocate = false,
             fc = "Default",
             dist = 10;
         console.log(form.value);
-        kw = form.value.kw || 'usc';
+        console.log('we got kw ', this.kw);
         loc = form.value.location || "";
         selfLocate = form.value.autoDetect || false;
         fc = form.value.fc || "default";
@@ -791,13 +856,7 @@ export class SearchComponent implements OnInit {
     hideLocInput() {
         let cb = document.getElementById('cbox') as HTMLInputElement;
         if (cb.checked == true) {
-            let cla = document.getElementById("inputLoc") as HTMLElement;
-            cla.removeAttribute("required");
-            let inloc = document.getElementById("inputLoc") as HTMLElement;
-            inloc.style.display = 'none';
-        } else {
-            let inloc = document.getElementById('inputLoc') as HTMLElement;
-            inloc.style.display = 'block';
+            (<HTMLInputElement>document.getElementById('inputLoc')).value="";
         }
     }
     cc() {
@@ -886,7 +945,8 @@ export class SearchComponent implements OnInit {
     openModan() {
         this.gposition.lat = this.gcenter.lat = globalThis.lat
         this.gposition.lng = this.gcenter.lng = globalThis.long
-        this.map.panTo(this.gposition);
+        // this.gmap.panTo(this.gposition);
+        this.gmap.panTo(this.gcenter);
         // this.gposition.lat = 34.0611387
         // this.gposition.lng = -118.3084775
         // this.gposition = { lat: globalThis.lat, lng: globalThis.long }; 
@@ -949,6 +1009,7 @@ export class SearchComponent implements OnInit {
 
         const elem = document.getElementById("VenueDetails")!.style.display = 'flex';
         let location = document.getElementById('vdaddr')?.innerHTML.replace(/\s+/g, '+');
+        console.log('the location we got is ', location);
         let gkey = 'AIzaSyBdSh29p_B93XTLF7qB0XtnfnjxQudHCA8';
         let gr = this.httpGet('https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + gkey);
         //call python get method to get the address

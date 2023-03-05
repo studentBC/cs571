@@ -3,12 +3,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FavoritesComponent } from './favorites/favorites.component';
 import { SearchComponent } from './search/search.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 // import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
@@ -21,10 +24,14 @@ import { SearchComponent } from './search/search.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    MatAutocompleteModule,
+    MatInputModule,
     HttpClientModule,
     GoogleMapsModule,
     MatProgressSpinnerModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]
