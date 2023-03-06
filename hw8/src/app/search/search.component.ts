@@ -303,6 +303,7 @@ export class SearchComponent implements OnInit {
         console.log('######################');
         console.log(jsonObjArray.length);
         console.log('######################');
+        console.log()
         if (jojo.page.totalElements === 0) {
             document.getElementById('notfound')!.style.display = 'block';
             console.log(jsonObjArray[0]);
