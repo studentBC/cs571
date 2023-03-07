@@ -1,3 +1,4 @@
 #/bin/bash
-node server/server.js &
-ng serve
+ng build
+gcloud app deploy app.yaml -y
+

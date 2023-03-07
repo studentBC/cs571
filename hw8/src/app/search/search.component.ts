@@ -857,8 +857,9 @@ export class SearchComponent implements OnInit {
     hideLocInput() {
         let cb = document.getElementById('cbox') as HTMLInputElement;
         if (cb.checked == true) {
+            (<HTMLInputElement>document.getElementById('inputLoc')).required = false;
             (<HTMLInputElement>document.getElementById('inputLoc')).value="";
-        }
+        } else (<HTMLInputElement>document.getElementById('inputLoc')).required = true;
     }
     cc() {
         (<HTMLFormElement>document.getElementById("partOne")).reset();
