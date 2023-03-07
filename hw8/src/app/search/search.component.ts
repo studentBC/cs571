@@ -959,7 +959,7 @@ export class SearchComponent implements OnInit {
     }
     async showVenue() {
         console.log('=== enter showVenue ===')
-
+        document.getElementById("vdRight")!.style.display="flex";
         let eid = '&keyword=' + globalThis.idMapping.get(selectedName)![2].replace(/\s+/g, '%20');
         eid += globalThis.latlng;
         //Z7r9jZ1AdbxAM
@@ -1000,12 +1000,34 @@ export class SearchComponent implements OnInit {
         document.getElementById("vdHeader")!.innerHTML = jobj._embedded?.venues[0]?.name;
 
         document.getElementById("vdphone")!.innerHTML = jobj._embedded?.venues[0]?.boxOfficeInfo?.phoneNumberDetail;
+        let hasSomething = false
         //open hour
-        document.getElementById("vdoh")!.innerHTML = jobj._embedded?.venues[0]?.boxOfficeInfo?.openHoursDetail;
+        if (jobj._embedded?.venues[0]?.boxOfficeInfo?.openHoursDetail) {
+            document.getElementById("vdoh")!.innerHTML = jobj._embedded?.venues[0]?.boxOfficeInfo?.openHoursDetail;
+            document.getElementById("openhour")!.style.display="block"
+            hasSomething = true
+        } else {
+            document.getElementById("openhour")!.style.display="none"
+        }
         //general rule
-        document.getElementById("vdgr")!.innerHTML = jobj._embedded?.venues[0]?.generalInfo?.generalRule;
+        if (jobj._embedded?.venues[0]?.generalInfo?.generalRule) {
+            document.getElementById("vdgr")!.innerHTML = jobj._embedded?.venues[0]?.generalInfo?.generalRule;
+            document.getElementById("generalRule")!.style.display="block";
+            hasSomething = true
+        } else {
+            document.getElementById("generalRule")!.style.display="none"
+        }
         //children rule
-        document.getElementById("vdcr")!.innerHTML = jobj._embedded?.venues[0]?.generalInfo?.childRule;
+        if (jobj._embedded?.venues[0]?.generalInfo?.childRule) {
+            document.getElementById("vdcr")!.innerHTML = jobj._embedded?.venues[0]?.generalInfo?.childRule;
+            document.getElementById("childRule")!.style.display="block";
+            hasSomething = true
+        } else {
+            document.getElementById("childRule")!.style.display="none"
+        }
+        if (!hasSomething) {
+            document.getElementById("vdRight")!.style.display="none";
+        }
         //deal with google map tab
 
 

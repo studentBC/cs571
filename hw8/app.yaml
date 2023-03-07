@@ -1,7 +1,15 @@
 runtime: nodejs18
 
 handlers:
-- url: /
+
+  static_files: dist/hw8/index.html
+  upload: dist/hw8/index.html
+
+- url: /search
+  static_files: dist/hw8/index.html
+  upload: dist/hw8/index.html
+  
+- url: /favorites
   static_files: dist/hw8/index.html
   upload: dist/hw8/index.html
 
