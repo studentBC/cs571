@@ -1,37 +1,53 @@
-import { Component } from '@angular/core';
-import { favoriteList } from '../search/search.component';
+import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { favoriteList } from '../app.component';
 import { Injectable } from '@angular/core';
-
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.component.html',
   styleUrls: ['./favorites.component.css']
 })
-export class FavoritesComponent {
-
+export class FavoritesComponent implements AfterViewInit {
+    @ViewChild('mbTitle')mbTitle!: ElementRef;
+    @ViewChild("favoriteTable") favoriteTable!: ElementRef;
+    ngAfterViewInit(): void {
+        this.createReserveTable()
+    }
+    
     ///////////// dynamically deal with reservation table ///////////////
     createReserveTable() {
       console.log('enter to createReserveTable');
+      console.log(this.mbTitle.nativeElement.innerHTML)
+    //   let tmp = this.el.nativeElement.querySelector('.fT');
+    //     console.log(tmp);
       //store json obj into data array
+      this.mbTitle.nativeElement.classList.remove("hasEvents");
+      this.mbTitle.nativeElement.classList.remove("hasnoEvents");
       console.log(favoriteList)
+      if (!favoriteList) {
+        this.mbTitle.nativeElement.innerHTML="No favorite events to show";
+        this.mbTitle.nativeElement.classList.add("hasnoEvents")
+        console.log('go to exit')
+        return;
+      }
       var len = favoriteList.size;
       console.log(len);
 
       let data: any[] = [];
-      let temp = document.getElementById("mbTitle") as HTMLElement;
-      temp.classList.remove("hasEvents");
-      temp.classList.remove("hasnoEvents");
+      
+      //let temp = document.getElementById("mbTitle") as HTMLElement;
+      //console.log('temp is ' ,temp)
+      
       if (len === 0) {
-          temp.innerHTML="No favorite events to show";
-          temp.classList.add("hasnoEvents")
+            this.mbTitle.nativeElement.innerHTML="No favorite events to show";
+            this.mbTitle.nativeElement.classList.add("hasnoEvents")
           return;
       }
 
-      temp.innerHTML = "List of your favorite events";
-      temp.classList.add("hasEvents")
+      this.mbTitle.nativeElement.innerHTML = "List of your favorite events";
+      this.mbTitle.nativeElement.classList.add("hasEvents")
       // no, business name, date, time, email, delet button
       var table = document.createElement('table');
       table.setAttribute("id", "reserveTable");
@@ -132,7 +148,8 @@ export class FavoritesComponent {
           no++;
       }
       console.log('after creating table ...');
-      document.getElementById("favoriteTable")!.appendChild(table);
+      this.favoriteTable.nativeElement.appendChild(table)
+      //document.getElementById("favoriteTable")!.appendChild(table);
   }
       //delete reservation
     delReserv(key: string, eventName: string, targetDate: string) {
@@ -151,7 +168,7 @@ export class FavoritesComponent {
             (<HTMLElement>document.getElementById("mbTitle"))!.innerHTML="No favorite events to show";
             (<HTMLElement>document.getElementById("mbTitle")).classList.add("hasnoEvents")
             return;
-        }
+        } else  this.mbTitle.nativeElement.classList.add("hasEvents")
         console.log(eventName);
         console.log(targetDate);
         for (let i = 1; i < table.rows.length; i++) {

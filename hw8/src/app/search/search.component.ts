@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Injectable} from '@angular/core';
+import { favoriteList } from '../app.component';
 import { NgForm } from '@angular/forms';
 import { GoogleMap } from '@angular/google-maps';
 import { Subject } from 'rxjs';
@@ -33,14 +34,14 @@ declare global {
     var nameToUID: Map<string, string>;
     var bDetail: Map<string, string[]>;
     var ishow: Map<string, boolean>;
-    //key will be event Name+date
-    var favoriteList: Map<string, string[]>
     //debug usage
     var debug: boolean;
     var gMLoc: string;
     var latlng: string;
 }
-export var favoriteList: Map<string, string[]>;
+@Injectable({
+    providedIn: 'root'
+})
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -97,8 +98,6 @@ export class SearchComponent implements OnInit {
         globalThis.reserveNo = 1;
         globalThis.tmKey = "uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ";
         globalThis.idMapping = new Map<string, string[]>();
-        globalThis.favoriteList = new Map<string, string[]>();
-        favoriteList = new Map<string, string[]>();
         globalThis.bDetail = new Map<string, string[]>();
         globalThis.nameToUID = new Map<string, string>();
         globalThis.debug = true;

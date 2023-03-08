@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, NgModule, ViewChild } from "@angular/core";
+import { Component, OnInit, ElementRef, NgModule, ViewChild, Injectable } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClient, HttpXsrfTokenExtractor } from "@angular/common/http"
@@ -7,16 +7,21 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { GoogleMap } from "@angular/google-maps";
 import { FavoritesComponent } from './favorites/favorites.component';
 // import { ModalModule, BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-
+export var favoriteList: Map<string, string[]>;
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
     /////////////// inital variable realted ////////////
-    constructor(private fav: FavoritesComponent) {}
-
+    constructor(private fav: FavoritesComponent) {
+        
+    }
+    ngOnInit(): void {
+        favoriteList = new Map<string, string[]>();
+    }
+    
     callOtherModuleFunction() {
       this.fav.createReserveTable();
     }
@@ -31,40 +36,40 @@ export class AppComponent {
         tabs!.style.borderColor = 'transparent';
         t!.style.borderColor = 'white';
         // show tab
-        let tabID: string;
-        if (id == 'sea') {
-            tabID = "searchTab";
-            let showTB = document.getElementById("searchTab");
-            let noTB = document.getElementById("myBookingsTab");
-            noTB!.style.display = "none";
-            showTB!.style.display = "block";
-            document.getElementById("favoriteTable")!.innerHTML="";
-            // for (let i = 0; i < elem.length; i++) {
-            //     (elem[i] as HTMLElement).style.display = "none";
-            // }
-        } else {
-            let showTB = document.getElementById("myBookingsTab") as HTMLElement;
-            let noTB = document.getElementById("searchTab");
-            noTB!.style.display = "none";
-            showTB!.style.display = "block";
-            this.cc();
-            //go clear
-            //dynamically create reserve table
+        // let tabID: string;
+        // if (id == 'sea') {
+        //     tabID = "searchTab";
+        //     let showTB = document.getElementById("searchTab");
+        //     let noTB = document.getElementById("myBookingsTab");
+        //     noTB!.style.display = "none";
+        //     showTB!.style.display = "block";
+        //     document.getElementById("favoriteTable")!.innerHTML="";
+        //     // for (let i = 0; i < elem.length; i++) {
+        //     //     (elem[i] as HTMLElement).style.display = "none";
+        //     // }
+        // } else {
+        //     let showTB = document.getElementById("myBookingsTab") as HTMLElement;
+        //     // let noTB = document.getElementById("searchTab");
+        //     // noTB!.style.display = "none";
+        //     showTB!.style.display = "block";
+        //     // this.cc();
+        //     //go clear
+        //     //dynamically create reserve table
             
-        }
+        // }
     }
 
-    cc() {
-        (<HTMLFormElement>document.getElementById("partOne")).reset();
-        document.getElementById("APIresult")!.innerHTML = '';
-        document.getElementById('notfound')!.style.display = 'none';
-        document.getElementById("inputLoc")!.style.display = 'block';
-        globalThis.idMapping.clear();
-        jsonObjArray = [];
-        document.getElementById("searchResult")!.style.display = "none";
-        const elems = document.getElementsByClassName("searchResult");
-        for (let i = 0; i < elems.length; i++) {
-            (elems[i] as HTMLElement).style.display = "none";
-        }
-    }
+    // cc() {
+    //     (<HTMLFormElement>document.getElementById("partOne")).reset();
+    //     document.getElementById("APIresult")!.innerHTML = '';
+    //     document.getElementById('notfound')!.style.display = 'none';
+    //     document.getElementById("inputLoc")!.style.display = 'block';
+    //     globalThis.idMapping.clear();
+    //     jsonObjArray = [];
+    //     document.getElementById("searchResult")!.style.display = "none";
+    //     const elems = document.getElementsByClassName("searchResult");
+    //     for (let i = 0; i < elems.length; i++) {
+    //         (elems[i] as HTMLElement).style.display = "none";
+    //     }
+    // }
 }
