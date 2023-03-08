@@ -13,6 +13,12 @@ export class FavoritesComponent implements AfterViewInit {
     @ViewChild('mbTitle')mbTitle!: ElementRef;
     @ViewChild("favoriteTable") favoriteTable!: ElementRef;
     ngAfterViewInit(): void {
+        let tabs = document.getElementById("sea");
+        let target = document.getElementById("mb");
+        // tabs.classList.add('active');
+        target!.style.borderColor = 'transparent';
+        tabs!.style.borderColor = 'transparent';
+        target!.style.borderColor = 'white';
         this.createReserveTable()
     }
     
