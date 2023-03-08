@@ -800,6 +800,10 @@ input[name="kw"] {
   width: 100%;
 }
 
+#nav-tabs :hover {
+  cursor: pointer !important;
+}
+
 
 @media screen and (min-width: 900px) {
   .fc {
