@@ -781,7 +781,7 @@ export class SearchComponent implements OnInit {
                 artistList.push(jobj._embedded.attractions[a].name)
                 if (a == 0) mat.innerHTML = jobj._embedded.attractions[a].name + "&ensp;"
                 else mat.innerHTML = "&ensp;" + jobj._embedded.attractions[a].name + "&ensp;"
-                mat.style.color = "#1F8A70";
+                mat.style.color = "white";
                 mat.style.textDecoration = "none";
                 mat.target = "_blank";
                 (document.getElementById("moreInfoAT") as HTMLElement).appendChild(mat);
