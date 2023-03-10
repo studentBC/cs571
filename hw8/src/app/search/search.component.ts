@@ -234,6 +234,9 @@ export class SearchComponent implements OnInit {
             console.log("yes we have key " + key)
             favoriteList.delete(key)
             heartPath!.style.fill = 'transparent';
+            // Store
+            const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
+            localStorage.setItem("favoriteList", myMapJSON);
             return
         }
         // change the fill property
@@ -248,7 +251,9 @@ export class SearchComponent implements OnInit {
         console.log("go set up key")
         favoriteList.set(key,tmp);
         
-        
+        // Store
+        const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
+        localStorage.setItem("favoriteList", myMapJSON);
     }
     readMore(tid: string) {
         console.log("call read more man !!!");
@@ -487,6 +492,13 @@ export class SearchComponent implements OnInit {
                 }
             }
         }
+
+        //sort the table by event date ascending order
+        data.sort(function (a: any, b: any) {
+            var x = a[0]+a[1];
+            var y = b[0]+b[1];
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        });
         console.log('data length is ' + data.length);
 
         var table = document.createElement('table');
@@ -573,7 +585,7 @@ export class SearchComponent implements OnInit {
             //creating a function which will not be executed immediately => moreinfo.bind(null, jsonObj.businesses[i].name)
             //td3.addEventListener("click", moreInfo.bind(null, jsonObj.businesses[i].name));
             let day = data[i][0] + ' ' + data[i][1];
-            td3.addEventListener("click", () => this.moreInfo(i + 1, day));
+            tr.addEventListener("click", () => this.moreInfo(i + 1, day));
             td4 = document.createElement('td');
             td4.classList.add("rating");
             td5 = document.createElement('td');
@@ -651,11 +663,11 @@ export class SearchComponent implements OnInit {
             });
         }
         let table = document.getElementById("APIresultTable") as HTMLTableElement;
-        for (let i = 1; i < array.length; i++) {
-            table.rows[i].cells[0].innerText = array[i][0] + '\n' + array[i][1];
+        for (let i = 0; i < array.length; i++) {
+            table.rows[i+1].cells[0].innerText = array[i][0] + '\n' + array[i][1];
             //the image is not inner text so we need to change it!
             //table.rows[i].cells[1].innerText = array[i][1];
-            table.rows[i].cells[1].innerText = "";
+            table.rows[i+1].cells[1].innerText = "";
             let img = document.createElement('img');
             img.style.width = "50%";
             img.style.objectFit = 'scale-down';
@@ -663,11 +675,11 @@ export class SearchComponent implements OnInit {
             img.style.marginBottom = '10px';
             img.style.marginTop = '10px';
             img.src = array[i][2];
-            table.rows[i].cells[1].appendChild(img);
+            table.rows[i+1].cells[1].appendChild(img);
             //the business name still need to show its link
-            table.rows[i].cells[2].innerText = array[i][3];
-            table.rows[i].cells[3].innerText = array[i][4];
-            table.rows[i].cells[4].innerText = array[i][5];
+            table.rows[i+1].cells[2].innerText = array[i][3];
+            table.rows[i+1].cells[3].innerText = array[i][4];
+            table.rows[i+1].cells[4].innerText = array[i][5];
         }
         globalThis.prevCol = col;
     }
@@ -918,6 +930,7 @@ export class SearchComponent implements OnInit {
         console.log('-------- lets go ---------')
         let temp: any = []
         for (const name in artists) {
+            // if (!name.includes(artist)) continue;
             temp.push(artists[name][4]);
             temp.push(name);
             temp.push(artists[name][2]);
