@@ -235,8 +235,8 @@ export class SearchComponent implements OnInit {
             favoriteList.delete(key)
             heartPath!.style.fill = 'transparent';
             // Store
-            const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
-            localStorage.setItem("favoriteList", myMapJSON);
+            // const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
+            // localStorage.setItem("favoriteList", myMapJSON);
             return
         }
         // change the fill property
@@ -252,8 +252,8 @@ export class SearchComponent implements OnInit {
         favoriteList.set(key,tmp);
         
         // Store
-        const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
-        localStorage.setItem("favoriteList", myMapJSON);
+        // const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
+        // localStorage.setItem("favoriteList", myMapJSON);
     }
     readMore(tid: string) {
         console.log("call read more man !!!");

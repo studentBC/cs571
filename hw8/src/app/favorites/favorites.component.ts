@@ -33,7 +33,7 @@ export class FavoritesComponent implements AfterViewInit {
       this.mbTitle.nativeElement.classList.remove("hasnoEvents");
       console.log(favoriteList)
       if (!favoriteList) {
-        localStorage.clear();
+        // localStorage.clear();
         this.mbTitle.nativeElement.innerHTML="No favorite events to show";
         this.mbTitle.nativeElement.classList.add("hasnoEvents")
         console.log('go to exit')
@@ -167,20 +167,20 @@ export class FavoritesComponent implements AfterViewInit {
         if (!table) {
             favoriteList.delete(key);
             // Store
-            const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
-            localStorage.setItem("favoriteList", myMapJSON);
+            // const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
+            // localStorage.setItem("favoriteList", myMapJSON);
             return;
         }
         // Store
-        const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
-        localStorage.setItem("favoriteList", myMapJSON);
+        // const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
+        // localStorage.setItem("favoriteList", myMapJSON);
         (<HTMLElement>document.getElementById("mbTitle")).classList.remove("hasEvents");
         (<HTMLElement>document.getElementById("mbTitle")).classList.remove("hasnoEvents");
         if (favoriteList.size == 0) {
             document.getElementById("favoriteTable")!.innerHTML="";
             (<HTMLElement>document.getElementById("mbTitle"))!.innerHTML="No favorite events to show";
             (<HTMLElement>document.getElementById("mbTitle")).classList.add("hasnoEvents")
-            localStorage.clear();
+            // localStorage.clear();
             return;
         } else  this.mbTitle.nativeElement.classList.add("hasEvents")
         console.log(eventName);

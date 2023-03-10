@@ -19,17 +19,18 @@ export class AppComponent implements OnInit {
         
     }
     ngOnInit(): void {
+        favoriteList = new Map<string, string[]>();
         // localStorage.removeItem("favoriteList");
-        if (typeof(Storage) !== "undefined") {
-            if (localStorage.getItem("favoriteList")) {
-                favoriteList = JSON.parse(localStorage.getItem("favoriteList")!);
-            } else {
-                favoriteList = new Map<string, string[]>();
-            }
-        } else {
-            // Sorry! No Web Storage support..
-            favoriteList = new Map<string, string[]>();
-        }
+        // if (typeof(Storage) !== "undefined") {
+        //     if (localStorage.getItem("favoriteList")) {
+        //         favoriteList = JSON.parse(localStorage.getItem("favoriteList")!);
+        //     } else {
+        //         favoriteList = new Map<string, string[]>();
+        //     }
+        // } else {
+        //     // Sorry! No Web Storage support..
+        //     favoriteList = new Map<string, string[]>();
+        // }
     }
     
     callOtherModuleFunction() {
