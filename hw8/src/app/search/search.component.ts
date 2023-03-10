@@ -107,7 +107,6 @@ export class SearchComponent implements OnInit {
             ["vdcr", false]
         ]);
         globalThis.latlng = '&geoPoint=';
-
         this.searchEventCtrl.valueChanges
         .pipe(
             filter(res => {
@@ -120,11 +119,16 @@ export class SearchComponent implements OnInit {
             this.filteredEvents = [];
             this.isLoading = true;
             }),
-            switchMap(value => this.http.get('https://app.ticketmaster.com/discovery/v2/suggest/?apikey=' + globalThis.tmKey + '&keyword=' + value)
-            .pipe(
-                finalize(() => {
-                this.isLoading = false
-                }),
+            //https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?
+            switchMap(value => 
+                this.http.get('https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?' + 
+                new URLSearchParams({
+                    "url": 'https://app.ticketmaster.com/discovery/v2/suggest/?apikey=' + globalThis.tmKey + '&keyword=' + value
+                }))
+                .pipe(
+                    finalize(() => {
+                    this.isLoading = false
+                    }),
             )
             )
         )
@@ -303,7 +307,7 @@ export class SearchComponent implements OnInit {
         console.log(jsonObjArray.length);
         console.log('######################');
         console.log()
-        if (jojo.page.totalElements === 0) {
+        if (jojo.page?.totalElements && jojo.page.totalElements === 0) {
             document.getElementById('notfound')!.style.display = 'block';
             console.log(jsonObjArray[0]);
             console.log('######################');
@@ -725,7 +729,7 @@ export class SearchComponent implements OnInit {
         console.log(globalThis.idMapping.get(name)![7]);
         //for fb and twitter icon button
         let nn = name.replace(/\s+/g, '%20');
-        const twurl = "https://twitter.com/intent/tweet?url=Check%20"+ nn +"%20on%20Ticketmaster%20,"+ mtag.href;
+        const twurl = "https://twitter.com/intent/tweet?url=Check%20"+ nn +"%20on%20Ticketmaster%20."+ mtag.href;
         (<HTMLAnchorElement>document.getElementById('twitterIcon')).href = twurl;
         (<HTMLElement>document.getElementById('fbIcon')).setAttribute('href', 'https://www.facebook.com/sharer/sharer.php?u='+mtag.href);
         

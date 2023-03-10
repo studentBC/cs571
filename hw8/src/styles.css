@@ -72,7 +72,7 @@ td {
   border-collapse: collapse;
   text-align: center;
   margin: auto;
-  color: white;
+  /* color: white; */
 }
 
 select {
@@ -96,12 +96,15 @@ select {
   margin-left: auto;
   margin-right: auto;
   width: 85%;
+  color: white;
 }
+
 #favoriteTable {
   margin-left: auto;
   margin-right: auto;
   width: 85%;
 }
+
 .flex-container {
   background-color: gray;
 }
@@ -395,7 +398,12 @@ input[name="kw"] {
 #vdgm:hover {
   color: #A084DC;
 }
-
+#main_wrapper {
+  padding-right: 0px;
+  padding-left: 0px;
+  border-radius: 0px;
+  padding-top: 0px;
+}
 #vdme:hover {
   color: #A084DC;
 }
@@ -541,6 +549,7 @@ input[name="kw"] {
 
 .restButton {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
 
@@ -582,19 +591,25 @@ input[name="kw"] {
   margin: 0 10px;
   max-width: 30%;
 }
-.mat-progress-spinner circle, .mat-spinner circle::ng-deep circle{
+
+.mat-progress-spinner circle,
+.mat-spinner circle::ng-deep circle {
   stroke: #FFA3FD;
 }
+
 .mat-spinner::ng-deep circle {
   stroke: #FFA3FD;
 }
+
 .mat-mdc-progress-spinner {
   --mdc-circular-progress-active-indicator-color: red;
 }
+
 .spotifyItems {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 .spotifyRow {
@@ -604,6 +619,16 @@ input[name="kw"] {
 
 .spotifyCarousel {
   background: rgba(0, 0, 0, 0);
+}
+
+#moreInfoHeader {
+  text-align: center;
+  color: #DDDDDD;
+  margin-bottom: 1em;
+  display: inline-block;
+  margin-top: 1em;
+  margin-right: 5px;
+  font-size: x-large;
 }
 
 #carouselExampleControls {
@@ -654,13 +679,15 @@ input[name="kw"] {
   text-decoration: none;
   text-shadow: 0px 1px 10px #854629;
 }
+
 .artistPhoto {
-  width: 50%; 
-  object-fit: scale-down; 
-  max-width: 150px; 
-  margin-bottom: 10px; 
+  width: 50%;
+  object-fit: scale-down;
+  max-width: 150px;
+  margin-bottom: 10px;
   margin-top: 10px;
 }
+
 /* 
 #favoriteTable tr:hover {
   color: #D1D1D1;
@@ -713,8 +740,8 @@ input[name="kw"] {
   border: none;
   border-radius: 50%;
   background: white;
-  width: 1em;
-  height: 1em;
+  width: 35px;
+  height: 35px;
   padding: 0;
   margin: 0;
   outline: none;
@@ -731,8 +758,8 @@ input[name="kw"] {
 }
 
 .heart {
-  width: 0.5em;
-  height: 0.5em;
+  width: 20px;
+  height: 20px;
   display: block;
   transform-origin: center 80%;
 }
@@ -774,6 +801,7 @@ input[name="kw"] {
   pointer-events: none;
   cursor: normal;
 }
+
 /* navigation tab */
 #nav-tabs .nav-link {
   color: #3E54AC;
@@ -826,32 +854,40 @@ input[name="kw"] {
   .mainPage {
     width: 90%;
   }
+
   .twoBox {
     display: block;
     /* flex-direction: column;
     align-items: flex-start; */
   }
+
   #APIresultTable {
     margin-left: auto;
     margin-right: auto;
     width: 500px;
+    color: white;
   }
+
   #favoriteTable {
     margin-left: auto;
     margin-right: auto;
     width: 500px;
   }
+
   #reserveTable {
     width: 100%;
   }
+
   .icon {
     width: 100%;
   }
+
   .artistPhoto {
-    width: 100%; 
-    object-fit: scale-down; 
-    max-width: 150px; 
+    width: 100%;
+    object-fit: scale-down;
+    max-width: 150px;
   }
+
   .searchResult {
     display: none;
     /* flex-flow: row wrap; */
@@ -866,42 +902,68 @@ input[name="kw"] {
     backdrop-filter: blur(10px);
     background-color: rgba(67, 66, 66, 0.6);
   }
+
   .srb {
     flex-direction: column;
   }
+
   .srleft {
     width: 100%;
   }
+
   .srright {
     width: 100%;
   }
+
   .albumIMG {
     display: flex;
     flex-direction: column;
   }
+
   .albumIMG img {
     flex: 1;
     max-width: 100%;
     margin-top: 20px;
   }
+
   .spotifyRow {
     flex-direction: column;
   }
+
   #vdLeft {
     width: 100%;
   }
+
   #vdRight {
     width: 100%;
   }
+
   #VenueDetails {
     flex-direction: column;
   }
+
   .modal {
     height: fit-content;
   }
+
   .modal-body {
     height: 400px;
   }
+
+  #moreInfoHeader {
+    margin-bottom: 10px;
+  }
+  
+  #main_wrapper {
+    padding-top: 10px;
+  }
+  /* .restButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  
+  } */
 }
 
 html,

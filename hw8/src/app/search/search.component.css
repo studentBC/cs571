@@ -1,19 +1,26 @@
 #moreInfoBuy:hover {
-    color: #95BDFF !important;
+  color: #95BDFF !important;
 }
 
 .spotifyAlbumItems {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
+
+.searchResult {
+  padding-bottom: 0px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
 .spotifyCarousel {
-    margin-left: 2%;
-    margin-right: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
 }
 
 
 #APIresultTable table,
 th,
 td {
-    color: white;
+  color: white;
 }

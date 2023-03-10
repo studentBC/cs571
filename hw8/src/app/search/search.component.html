@@ -68,15 +68,14 @@
 </div>
 
 <div id="searchResult">
-    <div class="searchResult" style="padding-bottom: 0px; border-top-left-radius: 10px; border-top-right-radius: 10px">
+    <div class="searchResult">
         <button type="button" style="padding: 0px;" class="btn" id="previousPage" (click)="goBack()"><span
                 class="bi bi-chevron-left">Back</span></button>
 
         <div class="restButton">
             <!-- use either (click)="openModal() or data-bs-target="#reserveModal" here" -->
             <button style="display:none;" id="realOpen" data-bs-toggle="modal" data-bs-target="#reserveModal"></button>
-            <p id="moreInfoHeader"
-                style="text-align: center; color: #DDDDDD; margin-bottom: 1em; display: inline-block; margin-top: 1em; margin-right: 5px; font-size: x-large;">
+            <p id="moreInfoHeader">
             </p>
             <div style="display: inline-block;" (click)="addFavorite()">
                 <button class="like-button" onclick="addFavorite()">
@@ -93,8 +92,7 @@
     </div>
 
 
-    <div id="main_wrapper" class="searchResult"
-        style="padding-right: 0px;padding-left: 0px; border-radius: 0px; padding-top: 0px;">
+    <div id="main_wrapper" class="searchResult">
         <ul class="nav" id="nav-tabs" style="background-color: #1F8A70;">
             <li id="businessTabb" class="nav-item" role="presentation">
                 <a class="nav-link" (click)="putMeUp('businessTab')" style="color: white;">Events detail</a>
@@ -186,12 +184,13 @@
                                 </div>
                                 <div class="spotifyItems">
                                     <h4 style="color: rgb(157, 241, 223);">Popularity</h4>
-                                    <mat-progress-spinner mode="determinate" value={{sa[2]}} color="white"
-                                        diameter="40">
-                                        <span class="mat-progress-spinner-content">
-                                            {{sa[2]}}
-                                        </span>
-                                    </mat-progress-spinner>
+                                    <div class="progress-ring" style="display: flex; align-items: center; justify-content: center; margin-top: 20px;">
+                                        <mat-progress-spinner mode="determinate" value={{sa[2]}} style="position: absolute;" color="white"
+                                            diameter="40">
+                                        </mat-progress-spinner>
+                                        <div style="color:white; position: absolute;">{{sa[2]}}</div> 
+                                    </div>
+                                    
                                 </div>
                                 <div class="spotifyItems">
                                     <h4 style="color: rgb(157, 241, 223);">Followers</h4>
@@ -303,7 +302,7 @@
                 <!--Google map-->
                 <!-- <div class="container-fluid">
                 <div class="map-responsive"> -->
-                <google-map height="400px" width="100%" [zoom]="17" [center]="gcenter" #gmap>
+                <google-map height="400px" width="100%" [zoom]="14" [center]="gcenter" #gmap>
                     <map-marker [position]="gcenter"></map-marker>
                 </google-map>
                 <!-- </div>
