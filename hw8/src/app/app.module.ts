@@ -12,6 +12,7 @@ import { SearchComponent } from './search/search.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
+import { MatTabsModule } from '@angular/material/tabs'; 
 // import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
@@ -25,6 +26,7 @@ import { MatInputModule } from '@angular/material/input';
     AppRoutingModule,
     FormsModule,
     MatAutocompleteModule,
+    MatTabsModule,
     MatInputModule,
     HttpClientModule,
     GoogleMapsModule,

@@ -92,7 +92,7 @@
     </div>
 
 
-    <div id="main_wrapper" class="searchResult">
+    <!-- <div id="main_wrapper" class="searchResult">
         <ul class="nav" id="nav-tabs" style="background-color: #1F8A70;">
             <li id="businessTabb" class="nav-item" role="presentation">
                 <a class="nav-link" (click)="putMeUp('businessTab')" style="color: white;">Events detail</a>
@@ -107,9 +107,12 @@
                 <span></span>
             </li>
         </ul>
-    </div>
-    <div class="searchResult"
-        style="padding-top: 20px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px">
+    </div> -->
+    
+
+    <div id="main_wrapper" class="searchResult">
+     <mat-tab-group mat-align-tabs="center" backgroundColor="primary">
+       <mat-tab label="Events detail">
         <section id="businessTab">
             <div style="display: flex; flex-direction: column; width: 100%; margin-left: auto; margin-right: auto;">
                 <div class="srb">
@@ -162,8 +165,9 @@
                 </div>
             </div>
         </section>
-
-        <section id="spotifyArtist" style="display: none;">
+       </mat-tab>
+       <mat-tab label="Artist/Teams">
+        <section id="spotifyArtist" style="display: block;">
             <div id="noArtist">
                 <h3 style="color: red; text-align: center; padding-left: 10px; padding-right: 10px;">No music related
                     artist
@@ -231,8 +235,9 @@
                 </a>
             </div>
         </section>
-
-        <section id="venuesDetails" style="display: none;">
+       </mat-tab>
+       <mat-tab label="Venue">
+        <section id="venuesDetails" style="display: block;">
             <div style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
                 <div id="VenueDetails">
                     <div id="vdLeft" style="text-align: center;">
@@ -288,7 +293,14 @@
                     Google map</button>
             </div>
         </section>
+       </mat-tab>
+     </mat-tab-group>
     </div>
+
+
+
+
+
 </div>
 
 <!-- Modal -->

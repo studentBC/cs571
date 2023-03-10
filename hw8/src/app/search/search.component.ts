@@ -975,7 +975,7 @@ export class SearchComponent implements OnInit {
     }
     async showVenue() {
         console.log('=== enter showVenue ===')
-        document.getElementById("vdRight")!.style.display="flex";
+        // document.getElementById("vdRight")!.style.display="flex";
         let eid = '&keyword=' + globalThis.idMapping.get(selectedName)![2].replace(/\s+/g, '%20');
         eid += globalThis.latlng;
         //Z7r9jZ1AdbxAM
