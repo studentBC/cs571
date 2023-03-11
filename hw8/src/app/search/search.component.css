@@ -19,6 +19,27 @@
 }
 
 
+.mat-tab-header {
+  background-color: #1F8A70;
+  font-size: 16px;
+  color: white;
+}
+.mat-tab-group {
+  background-color: #1F8A70;
+}
+
+
+.mat-tab-label{
+  background-color: #1F8A70;
+  color: white;
+  font-size: 20px;
+}
+.mat-tab-group.mat-primary .mat-ink-bar{
+  background: blue;
+  height: 5px;
+} 
+
+
 #APIresultTable table,
 th,
 td {
