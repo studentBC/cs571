@@ -59,6 +59,26 @@ export class SearchComponent implements OnInit {
     gcenter: google.maps.LatLngLiteral = { lat: 34.1027421, lng: -118.3403834 }; // default center
     gposition: google.maps.LatLngLiteral = { lat: 34.1027421, lng: -118.3403834 }; // default position
     spotifyArtists: any[] = [];
+    vdaddr: string = "";
+    vdHeader: string="";
+    vdphone: string="";
+    vdoh: string="";
+    vdgr: string="";
+    vdcr: string="";
+    moreInfoDate: string="";
+    moreInfoHeader: string="";
+    moreInfoVenue: string="";
+    moreInfoGen: string="";
+    moreInfoRange: string="";
+    ticketStatius: string="";
+    ticketstatus: string=""
+    moreInfoBuy: string="";
+    moreInfoIMG: string="";
+    moreInfoATT: string="";
+    twitterIcon:string="";
+    fbIcon:string="";
+    moreInfoAT: any="";
+    dmValue: number = 10;
     //for auto complete
     isLoading = true;
     keywords = new Subject<string>();
@@ -229,7 +249,7 @@ export class SearchComponent implements OnInit {
         console.log("ola enter addfavorite")
         //alert("Event added to Favorites!")
         const heartPath = document.querySelector('.heart > path') as HTMLElement;
-        let key = document.getElementById("moreInfoHeader")!.innerHTML + document.getElementById("moreInfoDate")!.innerHTML
+        let key = this.moreInfoHeader + this.moreInfoDate;
         if (favoriteList.has(key)) {
             console.log("yes we have key " + key)
             favoriteList.delete(key)
@@ -243,11 +263,11 @@ export class SearchComponent implements OnInit {
         heartPath!.style.fill = 'red';
         //date, event name, category, venue
         let tmp: string[] = []
-        let date = document.getElementById("moreInfoDate")!.innerHTML.substring(0,10)
+        let date = this.moreInfoDate.substring(0,10)
         tmp.push(date)
-        tmp.push(document.getElementById("moreInfoHeader")!.innerHTML)
-        tmp.push(document.getElementById("moreInfoGen")!.innerHTML)
-        tmp.push(document.getElementById("vdHeader")!.innerHTML)
+        tmp.push(this.moreInfoHeader)
+        tmp.push(this.moreInfoGen)
+        tmp.push(this.vdHeader)
         console.log("go set up key")
         favoriteList.set(key,tmp);
         
@@ -339,7 +359,7 @@ export class SearchComponent implements OnInit {
         loc = form.value.location || "";
         selfLocate = form.value.autoDetect || false;
         fc = form.value.fc || "default";
-        dist = form.value.dm || 10;
+        dist = this.dmValue;
         let dd = ''; let lat = ""; let lng = "";
         if (dist) dd = '&radius=' + dist + '&unit=miles'
         console.log(loc);
@@ -701,53 +721,47 @@ export class SearchComponent implements OnInit {
             const ee = elems[i] as HTMLElement;
             ee.style.display = 'block';
         }
-        document.getElementById("moreInfoHeader")!.textContent = name;
-        document.getElementById("moreInfoDate")!.textContent = day.replace('undefined', '');
+        this.moreInfoHeader = name;
+        this.moreInfoDate = day.replace('undefined', '');
         // if (idMapping.get(name)[1] != 'lol') {
         //     document.getElementById("moreInfoAT").textContent = idMapping.get(name)[1];
         // }
-        document.getElementById("moreInfoVenue")!.textContent = globalThis.idMapping.get(name)![2];
-        document.getElementById("moreInfoGen")!.textContent = globalThis.idMapping.get(name)![3]
+        this.moreInfoVenue = globalThis.idMapping.get(name)![2];
+        this.moreInfoGen = globalThis.idMapping.get(name)![3]
         console.log("######" + globalThis.idMapping.get(name)![4] + "######")
         for (let j = 0; j < globalThis.idMapping.get(name)!.length; j++) {
             console.log(globalThis.idMapping.get(name)![j])
         }
+        this.moreInfoRange="";
         if (globalThis.idMapping.get(name)![4] != "???") {
-            document.getElementById("prangeTitle")!.innerHTML = "Price Ranges"
-            document.getElementById("moreInfoRange")!.textContent = globalThis.idMapping.get(name)![4]
+            this.moreInfoRange = globalThis.idMapping.get(name)![4]
         }
-        let ticketStatius = idMapping.get(name)![5];
-        document.getElementById("moreInfoSta")!.removeAttribute('class');;
-        document.getElementById("moreInfoSta")!.innerHTML = "";
-        if (ticketStatius === 'onsale') {
-            document.getElementById("moreInfoSta")!.classList.add('onSale');
-            document.getElementById("moreInfoSta")!.innerHTML = 'On Sale';
-        } else if (ticketStatius === 'offsale') {
-            document.getElementById("moreInfoSta")!.classList.add('offSale');
-            document.getElementById("moreInfoSta")!.innerHTML = 'Off Sale';
-        } else if (ticketStatius === 'canceled') {
-            document.getElementById("moreInfoSta")!.classList.add('canceled');
-            document.getElementById("moreInfoSta")!.innerHTML = 'Canceled';
-        } else if (ticketStatius === 'postponed') {
-            document.getElementById("moreInfoSta")!.classList.add('rescheduled');
-            document.getElementById("moreInfoSta")!.innerHTML = 'Postponed';
+        this.ticketStatius = idMapping.get(name)![5];
+        // document.getElementById("moreInfoSta")!.removeAttribute('class');;
+        // document.getElementById("moreInfoSta")!.innerHTML = "";
+        if (this.ticketStatius === 'onsale') {
+            this.ticketstatus = 'On Sale';
+        } else if (this.ticketStatius === 'offsale') {
+            this.ticketstatus = 'Off Sale';
+        } else if (this.ticketStatius === 'canceled') {
+            this.ticketstatus = 'Canceled';
+        } else if (this.ticketStatius === 'postponed') {
+            this.ticketstatus = 'Postponed';
         } else {
-            document.getElementById("moreInfoSta")!.classList.add('rescheduled');
-            document.getElementById("moreInfoSta")!.innerHTML = 'Rescheduled';
+            this.ticketstatus = 'Rescheduled';
         }
 
-        const mtag = document.getElementById("moreInfoBuy") as HTMLAnchorElement;
-        mtag.href = globalThis.idMapping.get(name)![6];
+        this.moreInfoBuy = globalThis.idMapping.get(name)![6];
         console.log(globalThis.idMapping.get(name)![7]);
         //for fb and twitter icon button
         let nn = name.replace(/\s+/g, '%20');
-        const twurl = "https://twitter.com/intent/tweet?url=Check%20"+ nn +"%20on%20Ticketmaster%20."+ mtag.href;
-        (<HTMLAnchorElement>document.getElementById('twitterIcon')).href = twurl;
-        (<HTMLElement>document.getElementById('fbIcon')).setAttribute('href', 'https://www.facebook.com/sharer/sharer.php?u='+mtag.href);
+        const twurl = "https://twitter.com/intent/tweet?url=Check%20"+ nn +"%20on%20Ticketmaster%20."+ this.moreInfoBuy;
+        this.twitterIcon = twurl;
+        this.fbIcon = 'https://www.facebook.com/sharer/sharer.php?u='+this.moreInfoBuy;
         
         //change heart color
         const heartPath = document.querySelector('.heart > path') as HTMLElement;
-        let key = document.getElementById("moreInfoHeader")!.innerHTML + document.getElementById("moreInfoDate")!.innerHTML
+        let key = this.moreInfoHeader + this.moreInfoDate
         if (favoriteList.has(key)) {
             heartPath!.style.fill = 'red';
         } else {
@@ -755,7 +769,7 @@ export class SearchComponent implements OnInit {
         }
 
         //error occur
-        (document.getElementById("moreInfoIMG") as HTMLImageElement).src = globalThis.idMapping.get(name)![7];
+        this.moreInfoIMG = globalThis.idMapping.get(name)![7];
         //go search for venue
         let Url = 'https://app.ticketmaster.com/discovery/v2/venues?apikey=' + tmKey + '&keyword=' + globalThis.idMapping.get(name)![2];
         //let logoIMG = await searchVenue(Url);
@@ -785,25 +799,16 @@ export class SearchComponent implements OnInit {
         let artistList = []
         //this property might not have data in it ... do this!
         if (jobj._embedded?.attractions) {
-            let mtag = document.getElementById("moreInfoAT") as HTMLAnchorElement
-            mtag.href = jobj._embedded.attractions[0]?.url;
-            document.getElementById("moreInfoATT")!.innerHTML = "Artist/Team"
+            this.moreInfoATT = "Artist/Team"
             //Genre
             let stop = jobj._embedded.attractions.length - 1;
-            (document.getElementById("moreInfoAT") as HTMLElement).innerHTML = ""
+            this.moreInfoAT = ""
             for (let a = 0; a < jobj._embedded.attractions.length; a++) {
-                let mat = document.createElement("a");
-                mat.href = jobj._embedded.attractions[a]?.url
-                artistList.push(jobj._embedded.attractions[a].name)
-                if (a == 0) mat.innerHTML = jobj._embedded.attractions[a].name + "&ensp;"
-                else mat.innerHTML = "&ensp;" + jobj._embedded.attractions[a].name + "&ensp;"
-                mat.style.color = "white";
-                mat.style.textDecoration = "none";
-                mat.target = "_blank";
-                (document.getElementById("moreInfoAT") as HTMLElement).appendChild(mat);
+                this.moreInfoAT+= jobj._embedded.attractions[a].name 
                 if (a < stop) {
-                    (document.getElementById("moreInfoAT") as HTMLElement).innerHTML += " | ";
+                    this.moreInfoAT += " | ";
                 }
+                artistList.push(jobj._embedded.attractions[a].name)
             }
         }
         let tc = ""
@@ -830,7 +835,7 @@ export class SearchComponent implements OnInit {
         }
 
         tc = tc.replace('undefined','');
-        document.getElementById("moreInfoGen")!.textContent = tc
+        this.moreInfoGen = tc
 
         //venue logo the venue id may be not match to 
 
@@ -847,21 +852,25 @@ export class SearchComponent implements OnInit {
         }
         globalThis.selectedName = name;
         console.log('showing our artists man!!!')
+        this.vdaddr = this.vdHeader = this.vdphone = this.vdoh = this.vdgr = this.vdcr ="";
         this.showVenue()
         this.spotifyArtists = []
-        if (tc.includes('Music'))
-        for (let i = 0; i < artistList.length; i++) {
-            console.log(artistList[i]);
-            await this.showSpotify(artistList[i])
+        console.log('segment we got are: ', tc);
+        if (tc.includes('Music')) {
+            for (let i = 0; i < artistList.length; i++) {
+                console.log(artistList[i]);
+                await this.showSpotify(artistList[i])
+            }
         }
-        if (this.spotifyArtists.length === 0) {
-            document.getElementById('noArtist')!.style.display = "block";
-            document.getElementById('carouselExampleControls')!.style.display = "none";
-        } else if (this.spotifyArtists.length === 1) {
-            //hide prev and back
-            document.getElementById('carouselNext')!.style.display = "none";
-            document.getElementById('carouselBack')!.style.display = "none";
-        }
+        // if (this.spotifyArtists.length === 0) {
+        //     console.log('no artist !!!');
+        //     document.getElementById('noArtist')!.style.display = "block";
+        //     document.getElementById('carouselExampleControls')!.style.display = "none";
+        // } else if (this.spotifyArtists.length === 1) {
+        //     //hide prev and back
+        //     document.getElementById('carouselNext')!.style.display = "none";
+        //     document.getElementById('carouselBack')!.style.display = "none";
+        // }
     }
     // handle modal 
     //https://stackoverflow.com/questions/59590391/bootstrap-modal-is-not-shown-on-angular-8-on-click
@@ -878,6 +887,7 @@ export class SearchComponent implements OnInit {
     }
     cc() {
         (<HTMLFormElement>document.getElementById("partOne")).reset();
+        this.dmValue = 10;
         document.getElementById("APIresult")!.innerHTML = '';
         document.getElementById('notfound')!.style.display = 'none';
         document.getElementById("inputLoc")!.style.display = 'block';
@@ -961,21 +971,26 @@ export class SearchComponent implements OnInit {
         if (temp.length > 0) this.spotifyArtists.push(temp);
     }
     openModan() {
-        this.gposition.lat = this.gcenter.lat = globalThis.lat
-        this.gposition.lng = this.gcenter.lng = globalThis.long
+        // this.gposition.lat = this.gcenter.lat = globalThis.lat
+        // this.gposition.lng = this.gcenter.lng = globalThis.long
         // this.gmap.panTo(this.gposition);
+        this.gcenter = { lat: globalThis.lat, lng: globalThis.long };
+        this.gposition = { lat: globalThis.lat, lng: globalThis.long };
         this.gmap.panTo(this.gcenter);
+        
+        
         // this.gposition.lat = 34.0611387
         // this.gposition.lng = -118.3084775
         // this.gposition = { lat: globalThis.lat, lng: globalThis.long }; 
         // this.gcenter = { lat: globalThis.lat, lng: globalThis.long }; 
-        console.log("===== update gpos ===")
-        console.log(this.gposition)
-        console.log(this.gcenter)
+        // console.log("===== update gpos ===")
+        // console.log(this.gposition)
+        // console.log(this.gcenter)
+        // console.log(JSON.stringify(this.gmap.getCenter()));
     }
     async showVenue() {
         console.log('=== enter showVenue ===')
-        document.getElementById("vdRight")!.style.display="flex";
+        // document.getElementById("vdRight")!.style.display="flex";
         let eid = '&keyword=' + globalThis.idMapping.get(selectedName)![2].replace(/\s+/g, '%20');
         eid += globalThis.latlng;
         //Z7r9jZ1AdbxAM
@@ -1000,10 +1015,10 @@ export class SearchComponent implements OnInit {
         // let add = 'Address: ';
         if (jobj._embedded?.venues[0]?.address.line1) {
             // add+=jobj.address.line1 +"<br>";
-            (document.getElementById('vdaddr') as HTMLElement).innerHTML = jobj._embedded?.venues[0]?.address.line1 +", "
+            this.vdaddr = jobj._embedded?.venues[0]?.address.line1 +", "
                 jobj._embedded?.venues[0]?.city.name + ", " + jobj._embedded?.venues[0]?.state.name
         } else {
-            (document.getElementById('vdaddr') as HTMLElement).innerHTML = jobj._embedded?.venues[0]?.city.name + ", " + jobj._embedded?.venues[0]?.state.name
+            this.vdaddr = jobj._embedded?.venues[0]?.city.name + ", " + jobj._embedded?.venues[0]?.state.name
         }
 
         //for google map URL
@@ -1013,42 +1028,25 @@ export class SearchComponent implements OnInit {
         kw = kw.replace(/\s/g, '+');
   
 
-        document.getElementById("vdHeader")!.innerHTML = jobj._embedded?.venues[0]?.name;
+        this.vdHeader = jobj._embedded?.venues[0]?.name;
 
-        document.getElementById("vdphone")!.innerHTML = jobj._embedded?.venues[0]?.boxOfficeInfo?.phoneNumberDetail;
+        this.vdphone  = jobj._embedded?.venues[0]?.boxOfficeInfo?.phoneNumberDetail;
         let hasSomething = false
         //open hour
         if (jobj._embedded?.venues[0]?.boxOfficeInfo?.openHoursDetail) {
-            document.getElementById("vdoh")!.innerHTML = jobj._embedded?.venues[0]?.boxOfficeInfo?.openHoursDetail;
-            document.getElementById("openhour")!.style.display="block"
-            hasSomething = true
-        } else {
-            document.getElementById("openhour")!.style.display="none"
-        }
+            this.vdoh = jobj._embedded?.venues[0]?.boxOfficeInfo?.openHoursDetail;
+        } 
         //general rule
         if (jobj._embedded?.venues[0]?.generalInfo?.generalRule) {
-            document.getElementById("vdgr")!.innerHTML = jobj._embedded?.venues[0]?.generalInfo?.generalRule;
-            document.getElementById("generalRule")!.style.display="block";
-            hasSomething = true
-        } else {
-            document.getElementById("generalRule")!.style.display="none"
+            this.vdgr  = jobj._embedded?.venues[0]?.generalInfo?.generalRule;
         }
         //children rule
         if (jobj._embedded?.venues[0]?.generalInfo?.childRule) {
-            document.getElementById("vdcr")!.innerHTML = jobj._embedded?.venues[0]?.generalInfo?.childRule;
-            document.getElementById("childRule")!.style.display="block";
-            hasSomething = true
-        } else {
-            document.getElementById("childRule")!.style.display="none"
-        }
-        if (!hasSomething) {
-            document.getElementById("vdRight")!.style.display="none";
+            this.vdcr = jobj._embedded?.venues[0]?.generalInfo?.childRule;
         }
         //deal with google map tab
 
-
-        const elem = document.getElementById("VenueDetails")!.style.display = 'flex';
-        let location = document.getElementById('vdaddr')?.innerHTML.replace(/\s+/g, '+');
+        let location = this.vdaddr.replace(/\s+/g, '+');
         console.log('the location we got is ', location);
         let gkey = 'AIzaSyBdSh29p_B93XTLF7qB0XtnfnjxQudHCA8';
         let gr = this.httpGet('https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + gkey);
