@@ -78,6 +78,7 @@ export class SearchComponent implements OnInit {
     twitterIcon:string="";
     fbIcon:string="";
     moreInfoAT: any="";
+    dmValue: number = 10;
     //for auto complete
     isLoading = true;
     keywords = new Subject<string>();
@@ -358,7 +359,7 @@ export class SearchComponent implements OnInit {
         loc = form.value.location || "";
         selfLocate = form.value.autoDetect || false;
         fc = form.value.fc || "default";
-        dist = form.value.dm || 10;
+        dist = this.dmValue;
         let dd = ''; let lat = ""; let lng = "";
         if (dist) dd = '&radius=' + dist + '&unit=miles'
         console.log(loc);
@@ -803,24 +804,11 @@ export class SearchComponent implements OnInit {
             let stop = jobj._embedded.attractions.length - 1;
             this.moreInfoAT = ""
             for (let a = 0; a < jobj._embedded.attractions.length; a++) {
-                this.moreInfoAT+='<a target = "_blank" color = "white" href="'+jobj._embedded.attractions[a]?.url+'"'
-                if (a == 0) mat.innerHTML = jobj._embedded.attractions[a].name + "&ensp;"
-                else mat.innerHTML = "&ensp;" + jobj._embedded.attractions[a].name + "&ensp;"
-
-
-
-                let mat = document.createElement("a");
-                mat.href = jobj._embedded.attractions[a]?.url
-                artistList.push(jobj._embedded.attractions[a].name)
-                if (a == 0) mat.innerHTML = jobj._embedded.attractions[a].name + "&ensp;"
-                else mat.innerHTML = "&ensp;" + jobj._embedded.attractions[a].name + "&ensp;"
-                mat.style.color = "white";
-                mat.style.textDecoration = "none";
-                mat.target = "_blank";
-                (document.getElementById("moreInfoAT") as HTMLElement).appendChild(mat);
+                this.moreInfoAT+= jobj._embedded.attractions[a].name 
                 if (a < stop) {
-                    (document.getElementById("moreInfoAT") as HTMLElement).innerHTML += " | ";
+                    this.moreInfoAT += " | ";
                 }
+                artistList.push(jobj._embedded.attractions[a].name)
             }
         }
         let tc = ""
@@ -899,6 +887,7 @@ export class SearchComponent implements OnInit {
     }
     cc() {
         (<HTMLFormElement>document.getElementById("partOne")).reset();
+        this.dmValue = 10;
         document.getElementById("APIresult")!.innerHTML = '';
         document.getElementById('notfound')!.style.display = 'none';
         document.getElementById("inputLoc")!.style.display = 'block';
@@ -982,17 +971,22 @@ export class SearchComponent implements OnInit {
         if (temp.length > 0) this.spotifyArtists.push(temp);
     }
     openModan() {
-        this.gposition.lat = this.gcenter.lat = globalThis.lat
-        this.gposition.lng = this.gcenter.lng = globalThis.long
+        // this.gposition.lat = this.gcenter.lat = globalThis.lat
+        // this.gposition.lng = this.gcenter.lng = globalThis.long
         // this.gmap.panTo(this.gposition);
+        this.gcenter = { lat: globalThis.lat, lng: globalThis.long };
+        this.gposition = { lat: globalThis.lat, lng: globalThis.long };
         this.gmap.panTo(this.gcenter);
+        
+        
         // this.gposition.lat = 34.0611387
         // this.gposition.lng = -118.3084775
         // this.gposition = { lat: globalThis.lat, lng: globalThis.long }; 
         // this.gcenter = { lat: globalThis.lat, lng: globalThis.long }; 
-        console.log("===== update gpos ===")
-        console.log(this.gposition)
-        console.log(this.gcenter)
+        // console.log("===== update gpos ===")
+        // console.log(this.gposition)
+        // console.log(this.gcenter)
+        // console.log(JSON.stringify(this.gmap.getCenter()));
     }
     async showVenue() {
         console.log('=== enter showVenue ===')

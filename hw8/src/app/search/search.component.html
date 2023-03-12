@@ -24,7 +24,7 @@
                 <div class="lc">
                     <label>Distance(miles)</label>
                     <br>
-                    <input class="userInput" type="number" name="dm" value=10 style="color: gray; width: 100%;" ngModel
+                    <input class="userInput" type="number" [(ngModel)]="dmValue" value=10 style="color: black; width: 100%;" ngModel
                         name="dm">
                 </div>
                 <div class="fc">
@@ -105,7 +105,7 @@
                                     <p id="moreInfoDate" style="color: white;">{{moreInfoDate}}</p>
                                     <h3 *ngIf="moreInfoATT!=''" id="moreInfoATT"
                                         style="color: #9DF1DF; margin-bottom: 0px;">Artist/Team</h3>
-                                    <div id="moreInfoAT" [innerHTML]="moreInfoAT"></div>
+                                    <p id="moreInfoAT">{{moreInfoAT}}</p>
                                     <h3 style="color: #9DF1DF; margin-bottom: 0px;">Venue</h3>
                                     <p id="moreInfoVenue" style="color: white;">{{moreInfoVenue}}</p>
                                     <h3 style="color: #9DF1DF; margin-bottom: 0px;">Genres</h3>
@@ -121,8 +121,7 @@
                                     </div>
                                     <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Buy Ticket At:
                                     </h3>
-                                    <a href={{moreInfoBuy}} id="moreInfoBuy" target="_blank"
-                                        style="color: #B4E4FF; text-decoration: none;">Ticketmaster</a>
+                                    <a href={{moreInfoBuy}} id="moreInfoBuy" target="_blank">Ticketmaster</a>
                                 </div>
                                 <div class="srright">
                                     <img id="moreInfoIMG" src='{{moreInfoIMG}}' alt="">
