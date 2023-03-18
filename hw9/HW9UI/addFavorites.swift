@@ -9,20 +9,31 @@ import Foundation
 
 class addFavorites: ObservableObject {
     @Published var favoriteTable: [Event] = []
-
+    var isAdded: [String: Bool] = [:]
     init() {
         
     }
-    func addFavorite(event: Event) {
-        favoriteTable.append(event)
-    }
-    func removeFavorite(event: Event) {
-        for (index, eve) in favoriteTable.enumerated() {
-            if (eve.date == event.date && eve.time == event.time && eve.name == event.name) {
-                favoriteTable.remove(at: index)
-                break
+    //change isAdded and favoriteTable at the same time
+    func addFavorite(event: Event)->Bool {
+        let key = event.name+event.date
+        if isAdded.contains(where: { $0.key == key }) {
+            // "someKey" exists in the dictionary
+            isAdded[key] = !isAdded[key]!
+        } else {
+            isAdded[key] = true
+        }
+        if isAdded[key]! {
+            favoriteTable.append(event)
+        } else {
+            for (index, eve) in favoriteTable.enumerated() {
+                if (eve.date == event.date && eve.time == event.time && eve.name == event.name) {
+                    favoriteTable.remove(at: index)
+                    break
+                }
             }
         }
+        print("now our table count is ", favoriteTable.count)
+        return isAdded[key]!
     }
 
 }

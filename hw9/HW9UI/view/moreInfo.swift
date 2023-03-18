@@ -6,18 +6,104 @@
 //
 
 import SwiftUI
+import UIKit
+import MapKit
 //struct moreInfoPreviews: PreviewProvider {
 //    static var previews: some View {
 //        moreInfo(event: <#T##Event#>)
 //    }
 //}
-
+class ViewController: UIViewController {
+    
+    
+}
+class MapViewController: UIViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let mapView = MKMapView(frame: view.bounds)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(mapView)
+        
+        let coordinate = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
+        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        let region = MKCoordinateRegion(center: coordinate, span: span)
+        mapView.setRegion(region, animated: true)
+        
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        mapView.addAnnotation(annotation)
+    }
+}
+struct CarouselItemView: View {
+    let artist: spotifyArtist
+    
+    var body: some View {
+        VStack {
+            Text(artist.name)
+            AsyncImage(url: URL(string: artist.asICON),
+                       content: {
+                image in image.resizable().aspectRatio(contentMode: .fit)
+            },placeholder: {
+                ProgressView()
+            }).frame(width: 80, height: 80)
+                .clipShape(Circle())
+//                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+//                .shadow(radius: 3)
+            Text("Popularity")
+            Text(String(artist.aspop))
+            Text("Followers")
+            Text(String(artist.astotal))
+            Text("Spotify Link")
+            Button(action: {
+                guard let url = URL(string: artist.asurl) else { return }
+                UIApplication.shared.open(url)
+            }){
+                Image("spotify-icon")
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                    .padding(.bottom, 20)
+            }
+            
+            Text("Album featuring Grouplove")
+            if !artist.album0.isEmpty {
+                AsyncImage(url: URL(string: artist.album0),
+                           content: {
+                    image in image.resizable().aspectRatio(contentMode: .fit)
+                }, placeholder: {
+                    ProgressView()
+                })
+            }
+//            if !artist.album1.isEmpty {
+//                AsyncImage(url: URL(string: artist.album1),
+//                           content: {
+//                    image in image.resizable().aspectRatio(contentMode: .fit)
+//                }, placeholder: {
+//                    ProgressView()
+//                })
+//            }
+//            if !artist.album2.isEmpty {
+//                AsyncImage(url: URL(string: artist.album2),
+//                           content: {
+//                    image in image.resizable().aspectRatio(contentMode: .fit)
+//                }, placeholder: {
+//                    ProgressView()
+//                })
+//            }
+        }.frame(maxWidth: .infinity)
+//        .frame(width: 150)
+    }
+}
 struct moreInfo: View {
     let event : Event
-    //    @ObservedObject private var getVenue = apiSearchVenue()
-    @State private var getVenue = apiSearchVenue()
-    @State private var getSpotify = apiSearchSpotify()
+    var getVenue = apiSearchVenue()
+    var getSpotify = apiSearchSpotify()
+    var getFavorite = addFavorites()
+    @State var spotifyArtists: [spotifyArtist]?
+    @State var venueDetail: getVenueDetails?
     @State private var selectedTab = 0
+    @State var isFilled = false
     var body: some View {
         // 1
         TabView(selection: $selectedTab) { // 2
@@ -72,9 +158,9 @@ struct moreInfo: View {
                         Text("Share on:")
                         Button(action: {
                             // Open Twitter app or website to share the message
-                            let twitterUrl = "https://twitter.com/intent/tweet?url=Check%20P!NK:%20Summer%20Carnival%202023%20on%20Ticketmaster%20.https://www.ticketmaster.com/pnk-summer-carnival-2023-inglewood-california-10-05-2023/event/0A005D68C2D2346F"
+                            let fbUrl = "https://www.facebook.com/sharer/sharer.php?u=\(event.buyTicketURL)"
                             //let twitterUrl = "https://twitter.com/intent/tweet?text=\(tweetText)&url=\(tweetUrl)"
-                            guard let url = URL(string: twitterUrl) else { return }
+                            guard let url = URL(string: fbUrl) else { return }
                             UIApplication.shared.open(url)
                         }){
                             Image("fb-icon")
@@ -84,7 +170,8 @@ struct moreInfo: View {
                         }
                         Button(action: {
                             // Open Twitter app or website to share the message
-                            let twitterUrl = "https://twitter.com/intent/tweet?url=Check%20P!NK:%20Summer%20Carnival%202023%20on%20Ticketmaster%20.https://www.ticketmaster.com/pnk-summer-carnival-2023-inglewood-california-10-05-2023/event/0A005D68C2D2346F"
+                            var twitterUrl = "https://twitter.com/intent/tweet?url=Check%20\(event.name) %20on%20Ticketmaster%20.\(event.buyTicketURL)"
+                            twitterUrl = twitterUrl.replacingOccurrences(of: " ", with: "%20")
                             //let twitterUrl = "https://twitter.com/intent/tweet?text=\(tweetText)&url=\(tweetUrl)"
                             guard let url = URL(string: twitterUrl) else { return }
                             UIApplication.shared.open(url)
@@ -96,27 +183,38 @@ struct moreInfo: View {
                         }
                     }
                     //shared on button
-                    
+                    let key = event.name+event.date
+                    Button(action: {
+                        isFilled = getFavorite.addFavorite(event: event)
+                    }) {
+                        Image(systemName: isFilled ? "heart.fill" : "heart")
+                            .foregroundColor(isFilled ? .red : .gray).font(.system(size: 50))
+                    }
                     //colliquium
                 }.scaledToFit().task(lol)
             }.tag(0)
             // 3
-            .tabItem {
-                //            Image("descending-airplane")
-                //              .resizable()
-                Text("Event Details")
-            }
+                .tabItem {
+                    //            Image("descending-airplane")
+                    //              .resizable()
+                    Text("Event Details")
+                }
             
             //spotify artists
             ZStack {
-                Text(getSpotify.spotifyArtists?[0].asid ?? "lol")
-                Text(String( getSpotify.spotifyArtists?[0].aspop ?? 0))
-                Text(getSpotify.spotifyArtists?[0].asurl ?? "lol")
-                Text(String( getSpotify.spotifyArtists?[0].astotal ?? 0))
-                Text(getSpotify.spotifyArtists?[0].asICON ?? "lol")
-                Text(getSpotify.spotifyArtists?[0].album0 ?? "lol")
-                Text(getSpotify.spotifyArtists?[0].album1 ?? "lol")
-                Text(getSpotify.spotifyArtists?[0].album2 ?? "lol")
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 20) {
+                        if spotifyArtists?.count ?? -1 > 0 {
+                            ForEach(spotifyArtists!.indices, id: \.self) { index in
+                                CarouselItemView(artist: spotifyArtists![index])
+                            }
+//                            ForEach(spotifyArtists, id: \.id) { artist in
+//                                CarouselItemView(artist: artist)
+//                            }
+                        }
+                    }
+                    .padding()
+                }
                 
             }
             .tabItem {
@@ -128,31 +226,34 @@ struct moreInfo: View {
                 HStack {
                     VStack {
                         Text("Name").aspectRatio(contentMode: .fit)
-                        Text(getVenue.venueDetail?.vname ?? "lol").multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
+                        Text(venueDetail?.vname ?? "lol").multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
                         Text("Address").padding(.top, 5)
-                        Text(getVenue.venueDetail?.vdaddr ?? "lol").multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
-                        if ((getVenue.venueDetail?.vdphone) != nil) {
+                        Text(venueDetail?.vdaddr ?? "lol").multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
+                        if ((venueDetail?.vdphone) != nil) {
                             Text("Phone Number").padding(.top, 5)
-                            Text(getVenue.venueDetail?.vdphone ?? "lol").aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
+                            Text(venueDetail?.vdphone ?? "lol").aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
                         }
                         
                     }
                     VStack {
-                        if ((getVenue.venueDetail?.vdoh) != nil) {
+                        if ((venueDetail?.vdoh) != nil) {
                             Text("Open Hours").padding(.top, 5)
-                            Text(getVenue.venueDetail!.vdoh).aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
+                            Text(venueDetail!.vdoh).aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
                         }
-                        if ((getVenue.venueDetail?.vdgr) != nil){
+                        if ((venueDetail?.vdgr) != nil){
                             Text("General Rule").padding(.top, 5)
-                            Text(getVenue.venueDetail?.vdgr ?? "lol").aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
+                            Text(venueDetail?.vdgr ?? "lol").aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
                         }
-                        if ((getVenue.venueDetail?.vdcr) != nil) {
+                        if ((venueDetail?.vdcr) != nil) {
                             Text("Child Rule").padding(.top, 5)
-                            Text(getVenue.venueDetail?.vdcr ?? "lol").aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
+                            Text(venueDetail?.vdcr ?? "lol").aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
                         }
-                        
                     }
                 }
+                Button("Show Map") {
+                    showMap()
+                }
+                
             }
             .tabItem {
                 //            Image("ascending-airplane")
@@ -160,12 +261,34 @@ struct moreInfo: View {
             }.tag(2)
         }
     }
+    func showMap() {
+        let mapViewController = MapViewController()
+        mapViewController.modalPresentationStyle = .fullScreen
+        //present(mapViewController, animated: true, completion: nil)
+    }
     func lol() async {
-        print("=== enter  \(event.name) ===")
-        await getVenue.goSearch(eve: event)
-        await getSpotify.goSearch(eve: event)
+//        print("=== enter  \(event.name) ===")
+        let key = event.name+event.date
+        if getFavorite.isAdded.contains(where: { $0.key == key }) {
+            isFilled = getFavorite.isAdded[key]!
+        } else {
+            isFilled = false
+        }
+        do {
+            venueDetail = try await getVenue.goSearch(eve: event)
+        } catch {
+            print("Error searching Spotify for artists: \(error)")
+        }
+        do {
+            spotifyArtists = try await getSpotify.goSearch(eve: event)
+        } catch {
+            print("Error searching Spotify for artists: \(error)")
+        }
+        
         //print(getVenue.venueDetail?.name)
-        print("------------------------")
+//        print("$$$$$$$$$$$$$$$$$$$$$$$$")
+//        print(spotifyArtists)
+//        print("$$$$$$$$$$$$$$$$$$$$$$$$$")
     }
     func shareFacebookEvent() {
         guard let url = URL(string: "https://www.facebook.com/events/1234567890") else {

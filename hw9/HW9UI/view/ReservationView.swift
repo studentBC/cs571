@@ -8,19 +8,20 @@
 import SwiftUI
 
 struct ReservationView: View {
-    @ObservedObject private var favorites = addFavorites()
+    @ObservedObject var favorites = addFavorites()
     var body: some View {
         VStack {
             Label("List of your favorite events", systemImage: "").foregroundColor(.blue)
                 .frame(alignment: .top)
                 .padding()
+            Text(String( favorites.favoriteTable.count))
             List(favorites.favoriteTable, id: \.name) { eve in
                 HStack {
-                    Text((eve.date ?? "")).aspectRatio(contentMode: .fit)
+                    Text((eve.date )).aspectRatio(contentMode: .fit)
                     Text(eve.name).aspectRatio(contentMode: .fit)
                     Text(eve.genre).aspectRatio(contentMode: .fit)
                     //that is weird here we should debug for it ... maybe json obj error
-                    Text((eve.venue) ?? "none").aspectRatio(contentMode: .fit)
+                    Text((eve.venue) ).aspectRatio(contentMode: .fit)
                 }
             }
         }

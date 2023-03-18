@@ -45,7 +45,7 @@ class apiSearchModel: ObservableObject {
         return ans
     }
     func goSearch(suc: submitContent) async {
-        print(suc.loc, suc.dist, suc.kw, suc.Category)
+//        print(suc.loc, suc.dist, suc.kw, suc.Category)
         var sid = ""
         var location=""
         var keyword: String = suc.kw
@@ -84,8 +84,6 @@ class apiSearchModel: ObservableObject {
         }
         keyword = suc.kw.replacingOccurrences(of: " ", with: "%20")
         let urlString = "keyword=" + keyword + "&segmentId=" + sid + "&size=200&unit=miles&radius=" + dd + "&geoPoint="+location;
-        print("enter to getEventResults")
-        print(urlString)
         
         
         var components = URLComponents()
@@ -110,7 +108,7 @@ class apiSearchModel: ObservableObject {
                 //print(response)
                 var eves = try! JSONSerialization.jsonObject(with: data, options: []) as? [[String]]
                     // try to read out a string array
-                print(eves)
+//                print(eves)
                 //let eves = try JSONSerialization.jsonObject(with: data, options: []) as! [[String]]
                 //print("===== go gog man ====")
                 //let eves = try JSONDecoder().decode(getevents.self, from: data)

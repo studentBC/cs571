@@ -8,44 +8,41 @@
 import Foundation
 
 class apiSearchVenue: ObservableObject {
-    @Published var venueDetail: getVenueDetails?
     init() {
         
     }
-    func goSearch(eve: Event) async  {
-        
+    func goSearch(eve: Event) async throws->getVenueDetails  {
+        var venueDetail: getVenueDetails = getVenueDetails(vdaddr:"", vname:"", vdphone:"", vdoh:"", vdgr:"", vdcr:"");
         var vid = eve.venueID ?? "KovZpZAIF7aA"
-        print("----------------------")
-        print(vid)
+//        print("----------------------")
+//        print(vid)
         var eid = "&keyword=" + eve.venue;
         if eid.hasSuffix("|") {
             eid = String(eid.dropLast())
         }
         eid = eid.replacingOccurrences(of: " ", with: "%20")
         //eid+="&geoPoint="+
-        print("enter to getEventResults")
         let urlString = "https://app.ticketmaster.com/discovery/v2/venues?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ"+eid
-        print(urlString)
         
         var components = URLComponents()
         components.queryItems = [
             URLQueryItem(name: "url", value: urlString)
         ]
-        print("component string is ")
-        print(components.string)
+//        print("component string is ")
+//        print(components.string)
         //https://yukichat-ios13.wl.r.appspot.com
         if let url = URL(string: "http://localhost:8080/getVenuesDetails"+components.string!) {
             do {
-                print("=== before decoding ===")
-                print(url)
+//                print("=== before decoding ===")
+//                print(url)
                 let (data, response) = try await URLSession.shared.data(from: url)
-                let eves = try JSONDecoder().decode(getVenueDetails.self, from: data)
-                venueDetail = eves
-                print("------------- we got venueDetails ola  ----------")
-                print(eves)
+                venueDetail = try JSONDecoder().decode(getVenueDetails.self, from: data)
+//                print("------------- we got venueDetails ola  ----------")
+//                print(venueDetail)
             } catch {
                 print("Error decoding JSON in api Search Venue: \(error)")
             }
         }
+        return venueDetail
     }
 }

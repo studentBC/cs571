@@ -82,7 +82,6 @@ struct ContentView: View {
                                 selfLocate = false;
                                 searchAPI.searchResultTable.removeAll();
                                 showSR = false
-                                print("lol")
                             }) {
                                 Text("Clear")
                             }.buttonStyle(.bordered)
@@ -94,17 +93,6 @@ struct ContentView: View {
                     //https://developer.apple.com/documentation/swiftui/table
                     //let no = 1
                     //https://www.appcoda.com/swiftui-first-look/
-                    //            UITableView tv;
-                    //            HStack {
-                    //                Table(searchResultTable) {
-                    //                    //TableColumn("No", no)
-                    //                    TableColumn("Image", value: \.imageURL)
-                    //                    TableColumn("Business Name", value: \.name)
-                    //                    TableColumn("Rating", value: \.rating)
-                    //                    TableColumn("Distance", value: \.distance)
-                    //                    //no+=1
-                    //                }
-                    //            }
                     if (showSR) {
                         if (searchAPI.searchResultTable.count == 0) {
                             Text("No Records found").padding().backgroundStyle(.white).foregroundColor(.red)
