@@ -80,15 +80,15 @@ async function callAPI(url) {
 
 //search for events
 app.get('/getEvents', async function (request, response) {
-  console.log('getEvents was called ...');
-  console.log('node JS was called ...');
+  // console.log('getEvents was called ...');
+  // console.log('node JS was called ...');
   let url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey=' + apikey + '&';
-  console.log("-----------------------");
-  console.log(request.query.url);
-  console.log("-----------------------");
+  // console.log("-----------------------");
+  // console.log(request.query.url);
+  // console.log("-----------------------");
   url += request.query.url;
-  console.log(url);
-  console.log('the url we are going to send is ' + url);
+  // console.log(url);
+  // console.log('the url we are going to send is ' + url);
   let jbody = await callAPI(url);
   //console.log(jbody);
   //we only need to send necessary property of event object
@@ -142,12 +142,12 @@ app.get('/getEvents', async function (request, response) {
     //console.log(tmp);
     //for artist name connect by comma
     let artistName = ""
-    console.log(jbody._embedded.events[i])
+    // console.log(jbody._embedded.events[i])
     for (let a = 0; a < jbody._embedded.events[i]?._embedded.attractions.length; a++) {
       artistName+= jbody._embedded.events[i]?._embedded.attractions[a].name 
       artistName+=","
     }
-    console.log(artistName)
+    // console.log(artistName)
     tmp.push(artistName);
     responseData.push(tmp);
   }
@@ -158,12 +158,12 @@ app.get('/getEvents', async function (request, response) {
 })
 //get event detail
 app.get('/getEventsDetails', async function (request, response) {
-  console.log('getEventsDetails was called ...');
+  // console.log('getEventsDetails was called ...');
   //let url = 'https://app.ticketmaster.com/discovery/v2/events/'+ +'?apikey='+apikey+'&';
   let url = request.query.url;
-  console.log(url);
+  // console.log(url);
   let jobj = await callAPI(url);
-  console.log(jobj);
+  // console.log(jobj);
   //we only need to send necessary property of event object
   const responseData = new Map();
   //let tmp = new Map();
@@ -188,11 +188,11 @@ app.get('/getEventsDetails', async function (request, response) {
 })
 //get Venues for venue LOGO
 app.get('/getVenues', async function (request, response) {
-  console.log('getVenues was called ...');
+  // console.log('getVenues was called ...');
   let url = request.query.url;
-  console.log(url);
+  // console.log(url);
   let jbody = await callAPI(url);
-  console.log(jbody);
+  // console.log(jbody);
   //we only need to send necessary property of event object
   const responseData = [];
   for (let i = 0; i < jbody._embedded.venues.length; i++) {
@@ -207,11 +207,11 @@ app.get('/getVenues', async function (request, response) {
 //get venue details
 //https://stackoverflow.com/questions/46634449/json-stringify-of-object-of-map-return-empty?fbclid=IwAR1BahqjZ-DGi3_e82hSFsHDrgjPysHrGf-G_QLG3SSP1mGQ4Pqe8UiWGDc
 app.get('/getVenuesDetails', async function (request, response) {
-  console.log('getVenues was called ...');
+  // console.log('getVenues was called ...');
   let url = request.query.url;
-  console.log(url);
+  // console.log(url);
   let jobj = await callAPI(url);
-  console.log(jobj);
+  // console.log(jobj);
   //we only need to send necessary property of event object
   // const outter = [];
   const responseData = new Map();
@@ -221,7 +221,7 @@ app.get('/getVenuesDetails', async function (request, response) {
     responseData.set("vdaddr", String(jobj._embedded?.venues[0]?.address.line1 +", "
     + jobj._embedded?.venues[0]?.city.name + ", " + jobj._embedded?.venues[0]?.state.name))
   } else {
-    console.log('enter man!!!');
+    // console.log('enter man!!!');
     responseData.set("vdaddr", String( jobj._embedded?.venues[0]?.city.name + ", " + jobj._embedded?.venues[0]?.state.name))
   }
   if (jobj._embedded?.venues[0]?.name) responseData.set("vname", jobj._embedded?.venues[0]?.name);
@@ -246,18 +246,15 @@ app.get('/getVenuesDetails', async function (request, response) {
   // console.log(responseData);
   // response.send(responseData);
   const jsonContent = Object.fromEntries(responseData);
-  console.log('------------------------#########----------------------')
-  console.log(jsonContent);
+  // console.log('------------------------#########----------------------')
+  // console.log(jsonContent);
   response.send(jsonContent);
 })
 
 // for dealing with 
 app.get('/getTicketMasterSearch', async function (request, response) {
-  console.log('node JS was called ...');
   let url = request.query.url;
-  console.log(url);
   let jbody = await callAPI(url);
-  console.log(jbody);
   response.send(jbody);
 })
 
@@ -267,8 +264,8 @@ async function getAlbums(aid){
   let jobj;
   await spotifyApi.clientCredentialsGrant().then(
     function(data) {
-      console.log('The access token expires in ' + data.body['expires_in']);
-      console.log('The access token is ' + data.body['access_token']);
+      // console.log('The access token expires in ' + data.body['expires_in']);
+      // console.log('The access token is ' + data.body['access_token']);
 
       // Save the access token so that it's used in future calls
       spotifyApi.setAccessToken(data.body['access_token']);
@@ -282,7 +279,7 @@ async function getAlbums(aid){
   .getArtistAlbums(aid, { limit: 3, offset: 5 })
   .then(
     function(data) {
-      console.log('Album information', data.body);
+      // console.log('Album information', data.body);
       jobj = data.body;
     },
     function(err) {
@@ -299,16 +296,16 @@ async function getAlbums(aid){
   // response.send(jsonContent);
 // })
 app.get('/getMobileSpotifyArtist', async function (request, response) {
-  console.log('node JS was called ...');
+  // console.log('node JS was called ...');
   let artist = request.query.artist;
-  console.log('artist is ' + artist)
+  // console.log('artist is ' + artist)
   // credentials are optional
   
   // Retrieve an access token.
   await spotifyApi.clientCredentialsGrant().then(
     function(data) {
-      console.log('The access token expires in ' + data.body['expires_in']);
-      console.log('The access token is ' + data.body['access_token']);
+      // console.log('The access token expires in ' + data.body['expires_in']);
+      // console.log('The access token is ' + data.body['access_token']);
 
       // Save the access token so that it's used in future calls
       spotifyApi.setAccessToken(data.body['access_token']);
@@ -321,13 +318,14 @@ app.get('/getMobileSpotifyArtist', async function (request, response) {
   // for plugin
   await spotifyApi.searchArtists(artist)
   .then(function(data) {
-    console.log('Search artists: ' + artist, data.body);
+    // console.log('Search artists: ' + artist, data.body);
     jbody = data.body
   }, function(err) {
     console.error(err);
   });
   const responseData = new Map();
-  console.log('we got ', jbody)
+  responseData.set('name', artist)
+  // console.log('we got ', jbody)
   for (let i = 0; i < jbody.artists.items.length; i++) {
     let temp = []
     //artist id, Followers, Popularity, Spotify Link, artist icon
@@ -356,10 +354,11 @@ app.get('/getMobileSpotifyArtist', async function (request, response) {
     
     break;
   }
-  console.log("---------  the response data is ----------")
-  console.log(responseData)
+  console.log("---------  for IOS we are going to send ----------")
+  // console.log(responseData)
   const jsonContent = Object.fromEntries(responseData);
-  //console.log(jsonContent);
+  console.log(jsonContent);
+  console.log('------------------------------------');
   response.send(jsonContent);
   
 
@@ -367,16 +366,16 @@ app.get('/getMobileSpotifyArtist', async function (request, response) {
 
 
 app.get('/getSpotifyArtist', async function (request, response) {
-  console.log('node JS was called ...');
+  // console.log('node JS was called ...');
   let artist = request.query.artist;
-  console.log('artist is ' + artist)
+  // console.log('artist is ' + artist)
   // credentials are optional
   
   // Retrieve an access token.
   await spotifyApi.clientCredentialsGrant().then(
     function(data) {
-      console.log('The access token expires in ' + data.body['expires_in']);
-      console.log('The access token is ' + data.body['access_token']);
+      // console.log('The access token expires in ' + data.body['expires_in']);
+      // console.log('The access token is ' + data.body['access_token']);
 
       // Save the access token so that it's used in future calls
       spotifyApi.setAccessToken(data.body['access_token']);
@@ -389,7 +388,7 @@ app.get('/getSpotifyArtist', async function (request, response) {
   // for plugin
   await spotifyApi.searchArtists(artist)
   .then(function(data) {
-    console.log('Search artists: ' + artist, data.body);
+    // console.log('Search artists: ' + artist, data.body);
     jbody = data.body
   }, function(err) {
     console.error(err);
@@ -411,8 +410,8 @@ app.get('/getSpotifyArtist', async function (request, response) {
     }
     responseData.set(jbody.artists.items[i].name, temp)
   }
-  console.log("---------  the response data is ----------")
-  console.log(responseData)
+  // console.log("---------  the response data is ----------")
+  // console.log(responseData)
   const jsonContent = Object.fromEntries(responseData);
   //console.log(jsonContent);
   response.send(jsonContent);
@@ -435,12 +434,12 @@ app.get('/getSpotifyArtist', async function (request, response) {
 })
 
 app.get('/', (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   res.send('<h1> Hola !</h1>');
 })
 
 app.get('/lol', (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   res.send('<h1> Hola !</h1>');
 })
 
