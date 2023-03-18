@@ -8,8 +8,22 @@
 import SwiftUI
 
 struct ReservationView: View {
+    @ObservedObject private var favorites = addFavorites()
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Label("List of your favorite events", systemImage: "").foregroundColor(.blue)
+                .frame(alignment: .top)
+                .padding()
+            List(favorites.favoriteTable, id: \.name) { eve in
+                HStack {
+                    Text((eve.date ?? "")).aspectRatio(contentMode: .fit)
+                    Text(eve.name).aspectRatio(contentMode: .fit)
+                    Text(eve.genre).aspectRatio(contentMode: .fit)
+                    //that is weird here we should debug for it ... maybe json obj error
+                    Text((eve.venue) ?? "none").aspectRatio(contentMode: .fit)
+                }
+            }
+        }
     }
 }
 

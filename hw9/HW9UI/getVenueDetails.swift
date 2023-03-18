@@ -7,5 +7,5 @@
 
 import Foundation
 struct getVenueDetails: Codable {
-    let vdaddr, vname: String
+    let vdaddr, vname, vdphone, vdoh, vdgr, vdcr: String
 }

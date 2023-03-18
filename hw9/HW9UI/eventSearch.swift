@@ -21,4 +21,5 @@ struct Event: Codable {
     let pMax: String
     let currency: String
     let venueID: String
+    let artistName: String //split by ,
 }

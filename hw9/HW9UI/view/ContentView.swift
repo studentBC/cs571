@@ -13,7 +13,7 @@ struct submitContent {
     var loc: String
     var selfLocate: Bool
     var Category: String
-
+    
 }
 
 
@@ -31,78 +31,88 @@ struct ContentView: View {
     var body: some View {
         // A cell that, when selected, adds a new folder.
         // reserve seat logo
-        VStack {
-            HStack {
-                Spacer().frame(maxWidth:.infinity)
-                Button(action: reserve) { //maybe this one is navigation link on 12
-                    Label("", systemImage: "calendar.badge.plus")
-                }
-            }
-            NavigationView {
-                Form {
-                    TextField("Key Word:", text: $kw)
-                    TextField("Distance:", text: $dist)
-                    Picker("Category", selection: $selection) {
-                        ForEach(categories, id: \.self) {
-                            Text($0)
+        NavigationView {
+            ZStack {
+                 // Set the background color of the screen
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack {
+                        Spacer().frame(maxWidth:.infinity)
+                        Button(action: reserve) {
+                            NavigationLink(destination: ReservationView()) {
+                                Label("", systemImage: "calendar.badge.plus")
+                            }
                         }
                     }
-                    .pickerStyle(.menu)
-                    if (!selfLocate) {
-                        TextField("Location", text: $loc)
-                    }
-                    Toggle("auto detect my location", isOn: $selfLocate)
-                    HStack {
-                        Button(action: {
-                            Task {
-                                let sbc = submitContent(kw: kw, dist: dist, loc: loc, selfLocate: selfLocate, Category: selection)
-                                await searchAPI.goSearch(suc: sbc)
-                                showSR = true
+                    Text("Events Search")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(.leading, 16)
+                        .padding(.bottom, 0)
+                    
+                    Form {
+                        TextField("Key Word:", text: $kw)
+                        TextField("Distance:", text: $dist)
+                        Picker("Category", selection: $selection) {
+                            ForEach(categories, id: \.self) {
+                                Text($0)
                             }
-                        }) {
-                            Text("Submit")
-                        }.buttonStyle(.bordered)
-                            .tint(.blue)
-                        Button(action: {
-                            // Closure will be called once user taps your button
-                            kw = "";
-                            selection = "Default";
-                            dist = "";
-                            loc = "";
-                            selfLocate = false;
-                            searchAPI.searchResultTable.removeAll();
-                            showSR = false
-                            print("lol")
-                        }) {
-                            Text("Clear")
-                        }.buttonStyle(.bordered)
-                            .tint(.red)
-                    }
-                }.navigationBarTitle("Events Search", displayMode: .automatic)
-            }
-            //https://www.ralfebert.com/ios-examples/uikit/uitableviewcontroller/
-            //https://developer.apple.com/documentation/swiftui/table
-            //let no = 1
-            //https://www.appcoda.com/swiftui-first-look/
-//            UITableView tv;
-//            HStack {
-//                Table(searchResultTable) {
-//                    //TableColumn("No", no)
-//                    TableColumn("Image", value: \.imageURL)
-//                    TableColumn("Business Name", value: \.name)
-//                    TableColumn("Rating", value: \.rating)
-//                    TableColumn("Distance", value: \.distance)
-//                    //no+=1
-//                }
-//            }
-            NavigationView {
-                if (showSR) {
-                    if (searchAPI.searchResultTable.count == 0) {
-                        Text("No Records found").padding().backgroundStyle(.white).foregroundColor(.red)
-                    } else {
-                        List(searchAPI.searchResultTable, id: \.name) { eve in
-                            NavigationLink(destination: moreInfo(event: eve)) {
-                                searchTableCell(es: eve)
+                        }
+                        .pickerStyle(.menu)
+                        if (!selfLocate) {
+                            TextField("Location", text: $loc)
+                        }
+                        Toggle("auto detect my location", isOn: $selfLocate)
+                        HStack {
+                            Button(action: {
+                                Task {
+                                    let sbc = submitContent(kw: kw, dist: dist, loc: loc, selfLocate: selfLocate, Category: selection)
+                                    await searchAPI.goSearch(suc: sbc)
+                                    showSR = true
+                                }
+                            }) {
+                                Text("Submit")
+                            }.buttonStyle(.bordered)
+                                .tint(.blue)
+                            Button(action: {
+                                // Closure will be called once user taps your button
+                                kw = "";
+                                selection = "Default";
+                                dist = "";
+                                loc = "";
+                                selfLocate = false;
+                                searchAPI.searchResultTable.removeAll();
+                                showSR = false
+                                print("lol")
+                            }) {
+                                Text("Clear")
+                            }.buttonStyle(.bordered)
+                                .tint(.red)
+                        }
+                    }//.navigationTitle("Events Search")
+                    
+                    //https://www.ralfebert.com/ios-examples/uikit/uitableviewcontroller/
+                    //https://developer.apple.com/documentation/swiftui/table
+                    //let no = 1
+                    //https://www.appcoda.com/swiftui-first-look/
+                    //            UITableView tv;
+                    //            HStack {
+                    //                Table(searchResultTable) {
+                    //                    //TableColumn("No", no)
+                    //                    TableColumn("Image", value: \.imageURL)
+                    //                    TableColumn("Business Name", value: \.name)
+                    //                    TableColumn("Rating", value: \.rating)
+                    //                    TableColumn("Distance", value: \.distance)
+                    //                    //no+=1
+                    //                }
+                    //            }
+                    if (showSR) {
+                        if (searchAPI.searchResultTable.count == 0) {
+                            Text("No Records found").padding().backgroundStyle(.white).foregroundColor(.red)
+                        } else {
+                            List(searchAPI.searchResultTable, id: \.name) { eve in
+                                NavigationLink(destination: moreInfo(event: eve)) {
+                                    searchTableCell(es: eve)
+                                }
                             }
                         }
                     }
@@ -121,7 +131,7 @@ struct searchTableCell: View {
                 image in image.resizable().aspectRatio(contentMode: .fit)
             },
                        placeholder: {
-                           ProgressView()
+                ProgressView()
             })
             Text(es.name).aspectRatio(contentMode: .fit)
             Text(es.genre).aspectRatio(contentMode: .fit)

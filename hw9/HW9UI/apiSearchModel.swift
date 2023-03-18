@@ -101,7 +101,7 @@ class apiSearchModel: ObservableObject {
         print("component string is ")
         print(components.string)
         
-        if let url = URL(string: "https://yukichat-ios13.wl.r.appspot.com/getEvents"+components.string!) {
+        if let url = URL(string: "http://localhost:8080/getEvents"+components.string!) {
             do {
                 print("=== before decoding ===")
                 print(url)
@@ -116,7 +116,7 @@ class apiSearchModel: ObservableObject {
                 //let eves = try JSONDecoder().decode(getevents.self, from: data)
                 for(index, eve) in eves!.enumerated() {
                     DispatchQueue.main.async {
-                        let temp = Event(name: eve[3], date: eve[0], time: eve[1], eventID: eve[6], genre: eve[4], imgUrl: eve[2], venue: eve[5], seatmap: eve[7], ticketStatus: eve[8], buyTicketURL: eve[9], pMin: eve[10], pMax: eve[11], currency: eve[12], venueID: eve[13])
+                        let temp = Event(name: eve[3], date: eve[0], time: eve[1], eventID: eve[6], genre: eve[4], imgUrl: eve[2], venue: eve[5], seatmap: eve[7], ticketStatus: eve[8], buyTicketURL: eve[9], pMin: eve[10], pMax: eve[11], currency: eve[12], venueID: eve[13], artistName:eve[14])
                         self.searchResultTable.append((temp))
                     }
                 }

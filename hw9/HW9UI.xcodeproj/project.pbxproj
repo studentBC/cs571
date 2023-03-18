@@ -14,6 +14,10 @@
 		AF79686C2992BB8B00D5A41C /* getVenues.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF79686B2992BB8B00D5A41C /* getVenues.swift */; };
 		AF79686E2992BBBA00D5A41C /* getVenueDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF79686D2992BBBA00D5A41C /* getVenueDetails.swift */; };
 		AF7968702992C08300D5A41C /* urlRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF79686F2992C08300D5A41C /* urlRequest.swift */; };
+		AF81110B29C4C96A00C03662 /* ReservationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF81110A29C4C96A00C03662 /* ReservationView.swift */; };
+		AF81110D29C4D20100C03662 /* addFavorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF81110C29C4D20100C03662 /* addFavorites.swift */; };
+		AF81110F29C5635300C03662 /* spotifyArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF81110E29C5635300C03662 /* spotifyArtist.swift */; };
+		AF81111129C5660D00C03662 /* apiSearchSpotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF81111029C5660D00C03662 /* apiSearchSpotify.swift */; };
 		AF882AF8297DC134004E7099 /* HW9UIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF882AF7297DC134004E7099 /* HW9UIApp.swift */; };
 		AF882AFA297DC134004E7099 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF882AF9297DC134004E7099 /* ContentView.swift */; };
 		AF882AFC297DC134004E7099 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF882AFB297DC134004E7099 /* Assets.xcassets */; };
@@ -54,6 +58,10 @@
 		AF79686B2992BB8B00D5A41C /* getVenues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = getVenues.swift; sourceTree = "<group>"; };
 		AF79686D2992BBBA00D5A41C /* getVenueDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = getVenueDetails.swift; sourceTree = "<group>"; };
 		AF79686F2992C08300D5A41C /* urlRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = urlRequest.swift; sourceTree = "<group>"; };
+		AF81110A29C4C96A00C03662 /* ReservationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservationView.swift; sourceTree = "<group>"; };
+		AF81110C29C4D20100C03662 /* addFavorites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addFavorites.swift; sourceTree = "<group>"; };
+		AF81110E29C5635300C03662 /* spotifyArtist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = spotifyArtist.swift; sourceTree = "<group>"; };
+		AF81111029C5660D00C03662 /* apiSearchSpotify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = apiSearchSpotify.swift; sourceTree = "<group>"; };
 		AF882AF4297DC134004E7099 /* HW9UI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HW9UI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF882AF7297DC134004E7099 /* HW9UIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HW9UIApp.swift; sourceTree = "<group>"; };
 		AF882AF9297DC134004E7099 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -159,6 +167,7 @@
 			children = (
 				AF882AF9297DC134004E7099 /* ContentView.swift */,
 				AFCA872F298983710057BC7B /* moreInfo.swift */,
+				AF81110A29C4C96A00C03662 /* ReservationView.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -178,6 +187,9 @@
 				AF79686F2992C08300D5A41C /* urlRequest.swift */,
 				AF3113F029956E2900323BB3 /* GeoHasg.swift */,
 				AF3113F22995732A00323BB3 /* googleGeo.swift */,
+				AF81110C29C4D20100C03662 /* addFavorites.swift */,
+				AF81110E29C5635300C03662 /* spotifyArtist.swift */,
+				AF81111029C5660D00C03662 /* apiSearchSpotify.swift */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -313,6 +325,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF79686A2992BB1200D5A41C /* getEventDetails.swift in Sources */,
+				AF81110F29C5635300C03662 /* spotifyArtist.swift in Sources */,
 				AF882AFA297DC134004E7099 /* ContentView.swift in Sources */,
 				AF3113F129956E2900323BB3 /* GeoHasg.swift in Sources */,
 				AF3113F32995732A00323BB3 /* googleGeo.swift in Sources */,
@@ -325,8 +338,11 @@
 				AFED0D19298747750007AE51 /* VenueS.swift in Sources */,
 				AFCA8730298983710057BC7B /* moreInfo.swift in Sources */,
 				AFED0D13298727EE0007AE51 /* apiSearchModel.swift in Sources */,
+				AF81111129C5660D00C03662 /* apiSearchSpotify.swift in Sources */,
+				AF81110B29C4C96A00C03662 /* ReservationView.swift in Sources */,
 				AF79686C2992BB8B00D5A41C /* getVenues.swift in Sources */,
 				AF7968682992BA8F00D5A41C /* getevents.swift in Sources */,
+				AF81110D29C4D20100C03662 /* addFavorites.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
