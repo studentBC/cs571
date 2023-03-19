@@ -8,34 +8,46 @@
 import SwiftUI
 import UIKit
 import MapKit
+//import GoogleMaps
 //struct moreInfoPreviews: PreviewProvider {
 //    static var previews: some View {
 //        moreInfo(event: <#T##Event#>)
 //    }
 //}
-class ViewController: UIViewController {
-    
-    
-}
-class MapViewController: UIViewController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let mapView = MKMapView(frame: view.bounds)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(mapView)
-        
-        let coordinate = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
-        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-        let region = MKCoordinateRegion(center: coordinate, span: span)
-        mapView.setRegion(region, animated: true)
-        
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        mapView.addAnnotation(annotation)
+//struct MapViewControllerBridge: UIViewControllerRepresentable {
+//
+//    func makeUIViewController(context: Context) -> MapViewController {
+//        return MapViewController()
+//    }
+//
+//    func updateUIViewController(_ uiViewController: MapViewController, context: Context) {
+//    }
+//}
+////for Google map modal view
+struct ModalView: View {
+    var body: some View {
+        Text("This is a modal view")
+            .font(.title)
+            .padding()
+//        GeometryReader { geometry in
+//          ZStack(alignment: .top) {
+//            // Map
+//            MapViewControllerBridge()
+//
+//            // Cities List
+//            CitiesList(markers: $markers) { (marker) in
+//              guard self.selectedMarker != marker else { return }
+//              self.selectedMarker = marker
+//              self.zoomInCenter = false
+//              self.expandList = false
+//            }  handleAction: {
+//              self.expandList.toggle()
+//            } // ...
+//          }
+//        }
     }
 }
+
 struct CarouselItemView: View {
     let artist: spotifyArtist
     
@@ -49,8 +61,8 @@ struct CarouselItemView: View {
                 ProgressView()
             }).frame(width: 80, height: 80)
                 .clipShape(Circle())
-//                .overlay(Circle().stroke(Color.white, lineWidth: 2))
-//                .shadow(radius: 3)
+            //                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+            //                .shadow(radius: 3)
             Text("Popularity")
             Text(String(artist.aspop))
             Text("Followers")
@@ -75,24 +87,24 @@ struct CarouselItemView: View {
                     ProgressView()
                 })
             }
-//            if !artist.album1.isEmpty {
-//                AsyncImage(url: URL(string: artist.album1),
-//                           content: {
-//                    image in image.resizable().aspectRatio(contentMode: .fit)
-//                }, placeholder: {
-//                    ProgressView()
-//                })
-//            }
-//            if !artist.album2.isEmpty {
-//                AsyncImage(url: URL(string: artist.album2),
-//                           content: {
-//                    image in image.resizable().aspectRatio(contentMode: .fit)
-//                }, placeholder: {
-//                    ProgressView()
-//                })
-//            }
+            //            if !artist.album1.isEmpty {
+            //                AsyncImage(url: URL(string: artist.album1),
+            //                           content: {
+            //                    image in image.resizable().aspectRatio(contentMode: .fit)
+            //                }, placeholder: {
+            //                    ProgressView()
+            //                })
+            //            }
+            //            if !artist.album2.isEmpty {
+            //                AsyncImage(url: URL(string: artist.album2),
+            //                           content: {
+            //                    image in image.resizable().aspectRatio(contentMode: .fit)
+            //                }, placeholder: {
+            //                    ProgressView()
+            //                })
+            //            }
         }.frame(maxWidth: .infinity)
-//        .frame(width: 150)
+        //        .frame(width: 150)
     }
 }
 struct moreInfo: View {
@@ -104,6 +116,7 @@ struct moreInfo: View {
     @State var venueDetail: getVenueDetails?
     @State private var selectedTab = 0
     @State var isFilled = false
+    @State private var showModal = false
     var body: some View {
         // 1
         TabView(selection: $selectedTab) { // 2
@@ -208,9 +221,9 @@ struct moreInfo: View {
                             ForEach(spotifyArtists!.indices, id: \.self) { index in
                                 CarouselItemView(artist: spotifyArtists![index])
                             }
-//                            ForEach(spotifyArtists, id: \.id) { artist in
-//                                CarouselItemView(artist: artist)
-//                            }
+                            //                            ForEach(spotifyArtists, id: \.id) { artist in
+                            //                                CarouselItemView(artist: artist)
+                            //                            }
                         }
                     }
                     .padding()
@@ -222,7 +235,7 @@ struct moreInfo: View {
                 //              .resizable()
                 Text("Artists/Team")
             }.tag(1)
-            ZStack {
+            VStack {
                 HStack {
                     VStack {
                         Text("Name").aspectRatio(contentMode: .fit)
@@ -251,9 +264,11 @@ struct moreInfo: View {
                     }
                 }
                 Button("Show Map") {
-                    showMap()
+                    showModal = true
                 }
                 
+            }.sheet(isPresented: $showModal) {
+                ModalView()
             }
             .tabItem {
                 //            Image("ascending-airplane")
@@ -261,16 +276,12 @@ struct moreInfo: View {
             }.tag(2)
         }
     }
-    func showMap() {
-        let mapViewController = MapViewController()
-        mapViewController.modalPresentationStyle = .fullScreen
-        //present(mapViewController, animated: true, completion: nil)
-    }
+
     func lol() async {
-//        print("=== enter  \(event.name) ===")
+        //        print("=== enter  \(event.name) ===")
         let key = event.name+event.date
-        if getFavorite.isAdded.contains(where: { $0.key == key }) {
-            isFilled = getFavorite.isAdded[key]!
+        if addFavorites.isAdded.contains(where: { $0.key == key }) {
+            isFilled = addFavorites.isAdded[key]!
         } else {
             isFilled = false
         }
@@ -284,11 +295,6 @@ struct moreInfo: View {
         } catch {
             print("Error searching Spotify for artists: \(error)")
         }
-        
-        //print(getVenue.venueDetail?.name)
-//        print("$$$$$$$$$$$$$$$$$$$$$$$$")
-//        print(spotifyArtists)
-//        print("$$$$$$$$$$$$$$$$$$$$$$$$$")
     }
     func shareFacebookEvent() {
         guard let url = URL(string: "https://www.facebook.com/events/1234567890") else {

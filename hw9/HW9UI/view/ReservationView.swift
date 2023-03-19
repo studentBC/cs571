@@ -8,14 +8,12 @@
 import SwiftUI
 
 struct ReservationView: View {
-    @ObservedObject var favorites = addFavorites()
     var body: some View {
         VStack {
             Label("List of your favorite events", systemImage: "").foregroundColor(.blue)
                 .frame(alignment: .top)
                 .padding()
-            Text(String( favorites.favoriteTable.count))
-            List(favorites.favoriteTable, id: \.name) { eve in
+            List(addFavorites.favoriteTable, id: \.name) { eve in
                 HStack {
                     Text((eve.date )).aspectRatio(contentMode: .fit)
                     Text(eve.name).aspectRatio(contentMode: .fit)

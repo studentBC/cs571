@@ -8,32 +8,36 @@
 import Foundation
 
 class addFavorites: ObservableObject {
-    @Published var favoriteTable: [Event] = []
-    var isAdded: [String: Bool] = [:]
+    static var favoriteTable: [Event] = []
+    static var isAdded: [String: Bool] = [:]
     init() {
         
     }
     //change isAdded and favoriteTable at the same time
     func addFavorite(event: Event)->Bool {
         let key = event.name+event.date
-        if isAdded.contains(where: { $0.key == key }) {
+        if addFavorites.isAdded.contains(where: { $0.key == key }) {
             // "someKey" exists in the dictionary
-            isAdded[key] = !isAdded[key]!
+            addFavorites.isAdded[key] = !addFavorites.isAdded[key]!
         } else {
-            isAdded[key] = true
+            addFavorites.isAdded[key] = true
         }
-        if isAdded[key]! {
-            favoriteTable.append(event)
+        if addFavorites.isAdded[key]! {
+            addFavorites.favoriteTable.append(event)
         } else {
-            for (index, eve) in favoriteTable.enumerated() {
+            for (index, eve) in addFavorites.favoriteTable.enumerated() {
                 if (eve.date == event.date && eve.time == event.time && eve.name == event.name) {
-                    favoriteTable.remove(at: index)
+                    addFavorites.favoriteTable.remove(at: index)
                     break
                 }
             }
         }
-        print("now our table count is ", favoriteTable.count)
-        return isAdded[key]!
+        print("now our table count is ", addFavorites.favoriteTable.count)
+        for event in addFavorites.favoriteTable {
+            // Do something with each event
+            print(event.name)
+        }
+        return addFavorites.isAdded[key]!
     }
 
 }
