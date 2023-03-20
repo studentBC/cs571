@@ -99,7 +99,7 @@ class apiSearchModel: ObservableObject {
         print("component string is ")
         print(components.string)
         
-        if let url = URL(string: "http://localhost:8080/getEvents"+components.string!) {
+        if let url = URL(string: "https://yukichat-ios13.wl.r.appspot.com/getEvents"+components.string!) {
             do {
                 print("=== before decoding ===")
                 print(url)

@@ -6,7 +6,7 @@
 import Foundation
 
 // MARK: - Event
-struct Event: Codable {
+struct Event: Codable, Equatable {
     let name: String
     let date: String
     let time: String
@@ -22,4 +22,10 @@ struct Event: Codable {
     let currency: String
     let venueID: String
     let artistName: String //split by ,
+    static func ==(lhs: Event, rhs: Event) -> Bool {
+        return lhs.name == rhs.name &&
+               lhs.date == rhs.date &&
+               lhs.genre == rhs.genre &&
+               lhs.venue == rhs.venue
+    }
 }

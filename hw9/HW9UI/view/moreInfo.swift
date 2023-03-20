@@ -29,28 +29,27 @@ struct ModalView: View {
         Text("This is a modal view")
             .font(.title)
             .padding()
-//        GeometryReader { geometry in
-//          ZStack(alignment: .top) {
-//            // Map
-//            MapViewControllerBridge()
-//
-//            // Cities List
-//            CitiesList(markers: $markers) { (marker) in
-//              guard self.selectedMarker != marker else { return }
-//              self.selectedMarker = marker
-//              self.zoomInCenter = false
-//              self.expandList = false
-//            }  handleAction: {
-//              self.expandList.toggle()
-//            } // ...
-//          }
-//        }
+        //        GeometryReader { geometry in
+        //          ZStack(alignment: .top) {
+        //            // Map
+        //            MapViewControllerBridge()
+        //
+        //            // Cities List
+        //            CitiesList(markers: $markers) { (marker) in
+        //              guard self.selectedMarker != marker else { return }
+        //              self.selectedMarker = marker
+        //              self.zoomInCenter = false
+        //              self.expandList = false
+        //            }  handleAction: {
+        //              self.expandList.toggle()
+        //            } // ...
+        //          }
+        //        }
     }
 }
 
 struct CarouselItemView: View {
     let artist: spotifyArtist
-    
     var body: some View {
         VStack {
             Text(artist.name)
@@ -117,6 +116,9 @@ struct moreInfo: View {
     @State private var selectedTab = 0
     @State var isFilled = false
     @State private var showModal = false
+    @State private var isVdohExpanded = false
+    @State private var isVdgrExpanded = false
+    @State private var isVdcrExpanded = false
     var body: some View {
         // 1
         TabView(selection: $selectedTab) { // 2
@@ -250,16 +252,69 @@ struct moreInfo: View {
                     }
                     VStack {
                         if ((venueDetail?.vdoh) != nil) {
-                            Text("Open Hours").padding(.top, 5)
-                            Text(venueDetail!.vdoh).aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
+                            
+                            VStack(alignment: .leading) {
+                                Text("Open Hours").padding(.top, 5)
+                                if isVdohExpanded {
+                                    Text(venueDetail!.vdoh).padding(.top, 5).font(.subheadline)
+                                } else {
+                                    Text(venueDetail!.vdoh).padding(.top, 5)
+                                        .font(.subheadline)
+                                        .lineLimit(3)
+                                }
+                                Button(action: {
+                                    isVdohExpanded.toggle()
+                                }) {
+                                    if isVdohExpanded {
+                                        Text("Read less")
+                                    } else {
+                                        Text("Read more")
+                                    }
+                                }
+                            }
+                            .padding()
                         }
                         if ((venueDetail?.vdgr) != nil){
-                            Text("General Rule").padding(.top, 5)
-                            Text(venueDetail?.vdgr ?? "lol").aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
+                            VStack {
+                                Text("General Rule").padding(.top, 5)
+                                if isVdgrExpanded {
+                                    Text(venueDetail!.vdgr).padding(.top, 5).font(.subheadline)
+                                } else {
+                                    Text(venueDetail!.vdgr).padding(.top, 5)
+                                        .font(.subheadline)
+                                        .lineLimit(3)
+                                }
+                                Button(action: {
+                                    isVdgrExpanded.toggle()
+                                }) {
+                                    if isVdgrExpanded {
+                                        Text("Read less")
+                                    } else {
+                                        Text("Read more")
+                                    }
+                                }
+                            }
                         }
                         if ((venueDetail?.vdcr) != nil) {
-                            Text("Child Rule").padding(.top, 5)
-                            Text(venueDetail?.vdcr ?? "lol").aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
+                            VStack {
+                                Text("Child Rule").padding(.top, 5)
+                                if isVdcrExpanded {
+                                    Text(venueDetail!.vdcr).font(.subheadline).padding(.top, 5)
+                                } else {
+                                    Text(venueDetail!.vdcr).padding(.top, 5)
+                                        .font(.subheadline)
+                                        .lineLimit(3)
+                                }
+                                Button(action: {
+                                    isVdcrExpanded.toggle()
+                                }) {
+                                    if isVdcrExpanded {
+                                        Text("Read less")
+                                    } else {
+                                        Text("Read more")
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -276,7 +331,7 @@ struct moreInfo: View {
             }.tag(2)
         }
     }
-
+    
     func lol() async {
         //        print("=== enter  \(event.name) ===")
         let key = event.name+event.date

@@ -28,7 +28,7 @@ class apiSearchSpotify: ObservableObject {
 //            print(components.string)
             
             
-            if let url = URL(string: "http://localhost:8080/getMobileSpotifyArtist"+components.string!) {
+            if let url = URL(string: "https://yukichat-ios13.wl.r.appspot.com/getMobileSpotifyArtist"+components.string!) {
                 do {
 //                    print("=== before spotify decoding ===")
 //                    print(url)

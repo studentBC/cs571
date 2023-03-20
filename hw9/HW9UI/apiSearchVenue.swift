@@ -31,7 +31,7 @@ class apiSearchVenue: ObservableObject {
 //        print("component string is ")
 //        print(components.string)
         //https://yukichat-ios13.wl.r.appspot.com
-        if let url = URL(string: "http://localhost:8080/getVenuesDetails"+components.string!) {
+        if let url = URL(string: "https://yukichat-ios13.wl.r.appspot.com/getVenuesDetails"+components.string!) {
             do {
 //                print("=== before decoding ===")
 //                print(url)

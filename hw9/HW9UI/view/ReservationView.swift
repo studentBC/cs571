@@ -13,19 +13,42 @@ struct ReservationView: View {
             Label("List of your favorite events", systemImage: "").foregroundColor(.blue)
                 .frame(alignment: .top)
                 .padding()
-            List(addFavorites.favoriteTable, id: \.name) { eve in
-                HStack {
-                    Text((eve.date )).aspectRatio(contentMode: .fit)
-                    Text(eve.name).aspectRatio(contentMode: .fit)
-                    Text(eve.genre).aspectRatio(contentMode: .fit)
-                    //that is weird here we should debug for it ... maybe json obj error
-                    Text((eve.venue) ).aspectRatio(contentMode: .fit)
-                }
+            List{
+                ForEach(addFavorites.favoriteTable, id: \.name) { eve in
+                    HStack {
+                        Text((eve.date )).aspectRatio(contentMode: .fit)
+                        Text(eve.name).aspectRatio(contentMode: .fit)
+                        Text(eve.genre).aspectRatio(contentMode: .fit)
+                        //that is weird here we should debug for it ... maybe json obj error
+                        Text((eve.venue) ).aspectRatio(contentMode: .fit)
+//                        Spacer()
+//                        Button(action: {
+//                            if let index = addFavorites.favoriteTable.firstIndex(of: eve) {
+//                                addFavorites.favoriteTable.remove(at: index)
+//                            }
+//                        }) {
+////                            Image(systemName: "trash")
+//                        }
+                    }
+                }.onDelete(perform: deleteFavorites)
             }
         }
     }
+    func deleteFavorites(at offsets: IndexSet) {
+        offsets.forEach { (i) in
+            let key = addFavorites.favoriteTable[i].name+addFavorites.favoriteTable[i].date
+            addFavorites.isAdded[key] = false
+        }
+        addFavorites.favoriteTable.remove(atOffsets: offsets)
+        
+//        print("-------- after delete we have ------")
+//        for event in addFavorites.favoriteTable {
+//            // Do something with each event
+//            print(event.name)
+//        }
+    }
 }
-
+    
 struct ReservationView_Previews: PreviewProvider {
     static var previews: some View {
         ReservationView()
