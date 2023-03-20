@@ -10,6 +10,7 @@ import Foundation
 class addFavorites: ObservableObject {
     static var favoriteTable: [Event] = []
     static var isAdded: [String: Bool] = [:]
+    static var chooseEvent: Event? = nil
     init() {
         
     }

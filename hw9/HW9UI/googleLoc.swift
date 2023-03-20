@@ -6,3 +6,6 @@
 //
 
 import Foundation
+struct googleLoc: Codable {
+    let lat, lng: Double
+}

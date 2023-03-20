@@ -8,43 +8,64 @@
 import SwiftUI
 import UIKit
 import MapKit
-//import GoogleMaps
-//struct moreInfoPreviews: PreviewProvider {
-//    static var previews: some View {
-//        moreInfo(event: <#T##Event#>)
+import GoogleMaps
+public var glat: Double = -33.86
+public var glng: Double = 151.20
+
+struct GoogleMapView: UIViewRepresentable {
+    @State var lat: Double = -33.86
+    @State var lng: Double = 151.20
+//    init(glat: Double, glng: Double) {
+//        lat = glat
+//        lng = glng
+//        print("2. we got lat lng", lat, lng)
 //    }
-//}
-//struct MapViewControllerBridge: UIViewControllerRepresentable {
-//
-//    func makeUIViewController(context: Context) -> MapViewController {
-//        return MapViewController()
-//    }
-//
-//    func updateUIViewController(_ uiViewController: MapViewController, context: Context) {
-//    }
-//}
+
+    func makeUIView(context: Context) -> GMSMapView {
+        GMSServices.provideAPIKey("AIzaSyC90QZRvrLzZiCA6-t8jwRrexVM1zdgmJo")
+        // Create a GMSCameraPosition that tells the map to display the
+        // coordinate -33.86,151.20 at zoom level 6.
+        let camera = GMSCameraPosition.camera(withLatitude: lat, longitude: lng, zoom: 13.0)
+        let mapView = GMSMapView.map(withFrame: .zero, camera: camera)
+        
+        // Creates a marker in the center of the map.
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+//        marker.title = "Sydney"
+//        marker.snippet = "Australia"
+        marker.map = mapView
+        
+        return mapView
+    }
+    func updateUIView(_ mapView: GMSMapView, context: Context) {
+        // Update the view if needed
+        GMSCameraPosition.camera(withLatitude: lat, longitude: lng, zoom: 13)
+    }
+}
 ////for Google map modal view
 struct ModalView: View {
     var body: some View {
-        Text("This is a modal view")
-            .font(.title)
-            .padding()
-        //        GeometryReader { geometry in
-        //          ZStack(alignment: .top) {
-        //            // Map
-        //            MapViewControllerBridge()
-        //
-        //            // Cities List
-        //            CitiesList(markers: $markers) { (marker) in
-        //              guard self.selectedMarker != marker else { return }
-        //              self.selectedMarker = marker
-        //              self.zoomInCenter = false
-        //              self.expandList = false
-        //            }  handleAction: {
-        //              self.expandList.toggle()
-        //            } // ...
-        //          }
-        //        }
+        VStack {
+            Text("This is a modal view")
+                .font(.title)
+                .padding()
+            //print("1. we got glat glng", glat, glng)
+            GoogleMapView()
+                .frame(height: 300)
+        }.task(getGL)
+    }
+    func getGL() async {
+        var loc: googleLoc
+        var getVenue = apiSearchVenue()
+        do {
+            loc = try await getVenue.getGoogleLoc(eve : addFavorites.chooseEvent!)
+            print("we got lat lng ", loc.lat, loc.lng)
+            GoogleMapView().lat = loc.lat
+            GoogleMapView().lng = loc.lng
+            
+        } catch {
+            print("Error searching Spotify for artists: \(error)")
+        }
     }
 }
 
@@ -335,6 +356,7 @@ struct moreInfo: View {
     func lol() async {
         //        print("=== enter  \(event.name) ===")
         let key = event.name+event.date
+        addFavorites.chooseEvent = event
         if addFavorites.isAdded.contains(where: { $0.key == key }) {
             isFilled = addFavorites.isAdded[key]!
         } else {
