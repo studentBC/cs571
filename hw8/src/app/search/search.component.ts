@@ -81,13 +81,11 @@ export class SearchComponent implements OnInit {
     dmValue: number = 10;
     //for auto complete
     isLoading = true;
-    keywords = new Subject<string>();
     kw:any = "";
 
     searchEventCtrl = new FormControl();
     filteredEvents: any[] = [];
     errorMsg!: string;
-    minLengthTerm = 3;
     selectedEvent: any = "";
   
     constructor(
@@ -130,10 +128,10 @@ export class SearchComponent implements OnInit {
         this.searchEventCtrl.valueChanges
         .pipe(
             filter(res => {
-            return res !== null && res.length >= this.minLengthTerm
+            return res !== null && res.length > 0
             }),
             distinctUntilChanged(),
-            debounceTime(1000),
+            debounceTime(200),
             tap(() => {
             this.errorMsg = "";
             this.filteredEvents = [];
@@ -330,9 +328,11 @@ export class SearchComponent implements OnInit {
         console.log(jojo.total);
         console.log('######################');
         console.log(jsonObjArray.length);
+        console.log(jojo.page.totalElements);
         console.log('######################');
         console.log()
-        if (jojo.page?.totalElements && jojo.page.totalElements === 0) {
+        if (jojo.page.totalElements == 0) {
+            console.log("enter not found man !!!")
             document.getElementById('notfound')!.style.display = 'block';
             console.log(jsonObjArray[0]);
             console.log('######################');

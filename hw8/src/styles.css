@@ -992,6 +992,9 @@ input[name="kw"] {
     font-size: 0.8em;
     font-family: system-ui;
   }
+  .customBUT {
+    padding: 10px 20px;
+  }
 }
 
 html,
