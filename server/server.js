@@ -433,6 +433,34 @@ app.get('/getSpotifyArtist', async function (request, response) {
   // });
 })
 
+app.get('/getGoogleMap', async function (request, response) {
+  console.log('getGoogleMap was called ...');
+  let url = request.query.url;
+  console.log(url);
+  let jobj = await callAPI(url);
+  // console.log(jobj);
+  //we only need to send necessary property of event object
+  // const outter = [];
+  const responseData = new Map();
+
+  if (jobj.results[0]?.geometry.location.lat) {
+    responseData.set("lat", jobj.results[0]?.geometry.location.lat)
+  } else {
+    responseData.set("lat", 34.0223519)
+  }
+  
+  if (jobj.results[0]?.geometry.location.lng) {
+    responseData.set("lng", jobj.results[0]?.geometry.location.lng)
+  } else {
+    responseData.set("lng", -118.285117)
+  }
+  const jsonContent = Object.fromEntries(responseData);
+  // console.log('------------------------#########----------------------')
+  // console.log(jsonContent);
+  response.send(jsonContent);
+})
+
+
 app.get('/', (req, res) => {
   // console.log(req.body);
   res.send('<h1> Hola !</h1>');
