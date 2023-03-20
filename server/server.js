@@ -461,6 +461,26 @@ app.get('/getGoogleMap', async function (request, response) {
 })
 
 
+app.get('/getSuggestion', async function (request, response) {
+  let url = request.query.url;
+
+  let jbody = await callAPI(url);
+  //console.log(jbody);
+  //we only need to send necessary property of event object
+  const responseData = new Map();
+  var tmp = []
+  for (let i = 0; i < 5 && i < jbody._embedded.attractions.length; i++) {
+    console.log(jbody._embedded.attractions[i].name);
+    tmp.push(jbody._embedded.attractions[i].name)
+  }
+  responseData.set("sgs",tmp);
+  const jsonContent = Object.fromEntries(responseData);
+  //const jsonContent = JSON.stringify(responseData);
+  //console.log(jsonContent);
+  response.send(jsonContent);
+})
+
+
 app.get('/', (req, res) => {
   // console.log(req.body);
   res.send('<h1> Hola !</h1>');

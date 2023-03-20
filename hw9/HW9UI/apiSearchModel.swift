@@ -113,6 +113,9 @@ class apiSearchModel: ObservableObject {
                 //print("===== go gog man ====")
                 //let eves = try JSONDecoder().decode(getevents.self, from: data)
                 for(index, eve) in eves!.enumerated() {
+                    if index > 19 {
+                        break;
+                    }
                     DispatchQueue.main.async {
                         let temp = Event(name: eve[3], date: eve[0], time: eve[1], eventID: eve[6], genre: eve[4], imgUrl: eve[2], venue: eve[5], seatmap: eve[7], ticketStatus: eve[8], buyTicketURL: eve[9], pMin: eve[10], pMax: eve[11], currency: eve[12], venueID: eve[13], artistName:eve[14])
                         self.searchResultTable.append((temp))
@@ -140,5 +143,31 @@ class apiSearchModel: ObservableObject {
                 completion(nil);
             }
         }.resume();
+    }
+    
+    func getSuggestion(kw: String) async throws->suggestion  {
+        var eid = "&keyword=" + kw;
+        eid = eid.replacingOccurrences(of: " ", with: "%20")
+        let urlString = "https://app.ticketmaster.com/discovery/v2/suggest/?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ"+eid
+        
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "url", value: urlString)
+        ]
+        var sgs = suggestion(sgs: [])
+        //https://yukichat-ios13.wl.r.appspot.com
+        if let url = URL(string: "http://localhost:8080/getSuggestion"+components.string!) {
+            do {
+//                print("=== before decoding ===")
+//                print(url)
+                let (data, response) = try await URLSession.shared.data(from: url)
+                sgs = try JSONDecoder().decode(suggestion.self, from: data)
+//                print("------------- we got venueDetails ola  ----------")
+//                print(venueDetail)
+            } catch {
+                print("Error decoding JSON in api Search Venue: \(error)")
+            }
+        }
+        return sgs
     }
 }

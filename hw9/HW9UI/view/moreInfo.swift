@@ -13,58 +13,63 @@ public var glat: Double = -33.86
 public var glng: Double = 151.20
 
 struct GoogleMapView: UIViewRepresentable {
-    @State var lat: Double = -33.86
-    @State var lng: Double = 151.20
-//    init(glat: Double, glng: Double) {
-//        lat = glat
-//        lng = glng
-//        print("2. we got lat lng", lat, lng)
-//    }
-
+    var loc: googleLoc
+    //    init(glat: Double, glng: Double) {
+    //        lat = glat
+    //        lng = glng
+    //        print("2. we got lat lng", lat, lng)
+    //    }
+    
     func makeUIView(context: Context) -> GMSMapView {
         GMSServices.provideAPIKey("AIzaSyC90QZRvrLzZiCA6-t8jwRrexVM1zdgmJo")
         // Create a GMSCameraPosition that tells the map to display the
         // coordinate -33.86,151.20 at zoom level 6.
-        let camera = GMSCameraPosition.camera(withLatitude: lat, longitude: lng, zoom: 13.0)
+        let camera = GMSCameraPosition.camera(withLatitude: loc.lat, longitude: loc.lng, zoom: 13.0)
         let mapView = GMSMapView.map(withFrame: .zero, camera: camera)
         
         // Creates a marker in the center of the map.
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: lat, longitude: lng)
-//        marker.title = "Sydney"
-//        marker.snippet = "Australia"
+        marker.position = CLLocationCoordinate2D(latitude: loc.lat, longitude: loc.lng)
+        //        marker.title = "Sydney"
+        //        marker.snippet = "Australia"
         marker.map = mapView
         
         return mapView
     }
     func updateUIView(_ mapView: GMSMapView, context: Context) {
         // Update the view if needed
-        GMSCameraPosition.camera(withLatitude: lat, longitude: lng, zoom: 13)
+        GMSCameraPosition.camera(withLatitude: loc.lat, longitude: loc.lng, zoom: 13)
+        //mapView.animate(to: camera)
     }
 }
 ////for Google map modal view
 struct ModalView: View {
+    @State var loc: googleLoc?
     var body: some View {
         VStack {
             Text("This is a modal view")
                 .font(.title)
                 .padding()
-            //print("1. we got glat glng", glat, glng)
-            GoogleMapView()
-                .frame(height: 300)
-        }.task(getGL)
+            if let loc = loc {
+                GoogleMapView(loc: loc)
+                    .frame(height: 300)
+            } else {
+                ProgressView()
+            }
+        }
+        .onAppear {
+            getGL()
+        }
     }
-    func getGL() async {
-        var loc: googleLoc
-        var getVenue = apiSearchVenue()
-        do {
-            loc = try await getVenue.getGoogleLoc(eve : addFavorites.chooseEvent!)
-            print("we got lat lng ", loc.lat, loc.lng)
-            GoogleMapView().lat = loc.lat
-            GoogleMapView().lng = loc.lng
-            
-        } catch {
-            print("Error searching Spotify for artists: \(error)")
+    func getGL() {
+        Task {
+            do {
+                let getVenue = apiSearchVenue()
+                let loc = try await getVenue.getGoogleLoc(eve: addFavorites.chooseEvent!)
+                self.loc = loc
+            } catch {
+                print("Error searching venue: \(error)")
+            }
         }
     }
 }

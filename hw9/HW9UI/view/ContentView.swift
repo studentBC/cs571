@@ -67,6 +67,18 @@ struct ContentView: View {
                                 Task {
                                     let sbc = submitContent(kw: kw, dist: dist, loc: loc, selfLocate: selfLocate, Category: selection)
                                     await searchAPI.goSearch(suc: sbc)
+                                    
+//                                    do {
+//                                        let lol = try await searchAPI.getSuggestion(kw: kw)
+//                                        print("$$$$$$$$$$$$$$$$$$$$$$$")
+//                                        for s in lol.sgs {
+//                                            print(s)
+//                                        }
+//                                        print(lol)
+//                                    } catch {
+//                                        print("Error searching Spotify for artists: \(error)")
+//                                    }
+                                    
                                     showSR = true
                                 }
                             }) {
