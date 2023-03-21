@@ -237,10 +237,10 @@
                             <div id="vdLeft" style="text-align: center;">
                                 <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Name:</h3>
                                 <p id="vdHeader" style="color: white;">{{ vdHeader }}</p>
-                                <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Address:</h3>
-                                <p *ngIf="vdaddr !== ''" id="vdaddr" style="color: white;">{{vdaddr }}</p>
-                                <h3 style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Phone Number:</h3>
-                                <p *ngIf="vdphone !== ''" id="vdphone" style="color: white;">{{vdphone}}</p>
+                                <h3 *ngIf="vdaddr !== ''" style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Address:</h3>
+                                <p id="vdaddr" style="color: white;">{{vdaddr }}</p>
+                                <h3 *ngIf="vdphone !== ''" style="color: #9DF1DF; margin-bottom: 0px; margin-top: 16px;">Phone Number:</h3>
+                                <p id="vdphone" style="color: white;">{{vdphone}}</p>
                             </div>
                             <div *ngIf="vdoh !== '' || vdgr !== '' || vdcr !== ''" id="vdRight">
                                 <div *ngIf="vdoh !== ''" id="openhour">

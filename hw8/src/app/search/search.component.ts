@@ -245,10 +245,10 @@ export class SearchComponent implements OnInit {
     }
     addFavorite() {
         console.log("ola enter addfavorite")
-        //alert("Event added to Favorites!")
         const heartPath = document.querySelector('.heart > path') as HTMLElement;
         let key = this.moreInfoHeader + this.moreInfoDate;
         if (favoriteList.has(key)) {
+            alert("Event Removed from Favorites!");
             console.log("yes we have key " + key)
             favoriteList.delete(key)
             heartPath!.style.fill = 'transparent';
@@ -256,7 +256,7 @@ export class SearchComponent implements OnInit {
             // const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
             // localStorage.setItem("favoriteList", myMapJSON);
             return
-        }
+        } else alert("Event added to Favorites!");
         // change the fill property
         heartPath!.style.fill = 'red';
         //date, event name, category, venue
@@ -722,7 +722,7 @@ export class SearchComponent implements OnInit {
             ee.style.display = 'block';
         }
         this.moreInfoHeader = name;
-        this.moreInfoDate = day.replace('undefined', '');
+        this.moreInfoDate = day.replace('undefined', '').substring(0,10);
         // if (idMapping.get(name)[1] != 'lol') {
         //     document.getElementById("moreInfoAT").textContent = idMapping.get(name)[1];
         // }
@@ -1011,12 +1011,16 @@ export class SearchComponent implements OnInit {
         let jobj = JSON.parse(globalThis.jsonText);
         if (!jobj._embedded?.venues[0]) return;
         //we will start from here
-
+        console.log("vaddr: ", jobj._embedded?.venues[0])
         // let add = 'Address: ';
         if (jobj._embedded?.venues[0]?.address.line1) {
             // add+=jobj.address.line1 +"<br>";
-            this.vdaddr = jobj._embedded?.venues[0]?.address.line1 +", "
+            console.log(jobj._embedded?.venues[0]?.city.name);
+            console.log(jobj._embedded?.venues[0]?.state.name);
+
+            this.vdaddr = jobj._embedded?.venues[0]?.address.line1 +", " +
                 jobj._embedded?.venues[0]?.city.name + ", " + jobj._embedded?.venues[0]?.state.name
+            console.log("this.vdaddr: ", this.vdaddr)
         } else {
             this.vdaddr = jobj._embedded?.venues[0]?.city.name + ", " + jobj._embedded?.venues[0]?.state.name
         }
@@ -1029,8 +1033,11 @@ export class SearchComponent implements OnInit {
   
 
         this.vdHeader = jobj._embedded?.venues[0]?.name;
-
-        this.vdphone  = jobj._embedded?.venues[0]?.boxOfficeInfo?.phoneNumberDetail;
+        if (jobj._embedded?.venues[0]?.boxOfficeInfo?.phoneNumberDetail) {
+            this.vdphone  = jobj._embedded?.venues[0]?.boxOfficeInfo?.phoneNumberDetail;
+            console.log('phone number: ', this.vdphone);
+        }
+        
         let hasSomething = false
         //open hour
         if (jobj._embedded?.venues[0]?.boxOfficeInfo?.openHoursDetail) {
