@@ -26,11 +26,14 @@
 		AF882B13297DC134004E7099 /* HW9UIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF882B12297DC134004E7099 /* HW9UIUITests.swift */; };
 		AF882B15297DC134004E7099 /* HW9UIUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF882B14297DC134004E7099 /* HW9UIUITestsLaunchTests.swift */; };
 		AF95031B298ADEB200CE48A8 /* ipInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF95031A298ADEB200CE48A8 /* ipInfo.swift */; };
+		AFA7776129C8BD16008D7ED0 /* googleLoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA7776029C8BD16008D7ED0 /* googleLoc.swift */; };
+		AFA7776329C90B59008D7ED0 /* suggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA7776229C90B59008D7ED0 /* suggestion.swift */; };
 		AFCA8730298983710057BC7B /* moreInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA872F298983710057BC7B /* moreInfo.swift */; };
 		AFCA87322989871E0057BC7B /* apiSearchVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA87312989871E0057BC7B /* apiSearchVenue.swift */; };
 		AFED0D13298727EE0007AE51 /* apiSearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED0D12298727EE0007AE51 /* apiSearchModel.swift */; };
 		AFED0D17298740B70007AE51 /* eventSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED0D16298740B70007AE51 /* eventSearch.swift */; };
 		AFED0D19298747750007AE51 /* VenueS.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED0D18298747750007AE51 /* VenueS.swift */; };
+		CF017E8B9D16F4EE845005CE /* libPods-HW9UI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB416FB4EB00DAC2EB9602B0 /* libPods-HW9UI.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +54,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7580584D64F443C415F2BB35 /* Pods-HW9UI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HW9UI.release.xcconfig"; path = "Target Support Files/Pods-HW9UI/Pods-HW9UI.release.xcconfig"; sourceTree = "<group>"; };
+		83C6CE76D25F1D024B0AD3EF /* Pods-HW9UI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HW9UI.debug.xcconfig"; path = "Target Support Files/Pods-HW9UI/Pods-HW9UI.debug.xcconfig"; sourceTree = "<group>"; };
 		AF3113F029956E2900323BB3 /* GeoHasg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoHasg.swift; sourceTree = "<group>"; };
 		AF3113F22995732A00323BB3 /* googleGeo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = googleGeo.swift; sourceTree = "<group>"; };
 		AF7968672992BA8F00D5A41C /* getevents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = getevents.swift; sourceTree = "<group>"; };
@@ -73,11 +78,14 @@
 		AF882B12297DC134004E7099 /* HW9UIUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HW9UIUITests.swift; sourceTree = "<group>"; };
 		AF882B14297DC134004E7099 /* HW9UIUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HW9UIUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		AF95031A298ADEB200CE48A8 /* ipInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ipInfo.swift; sourceTree = "<group>"; };
+		AFA7776029C8BD16008D7ED0 /* googleLoc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = googleLoc.swift; sourceTree = "<group>"; };
+		AFA7776229C90B59008D7ED0 /* suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = suggestion.swift; sourceTree = "<group>"; };
 		AFCA872F298983710057BC7B /* moreInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moreInfo.swift; sourceTree = "<group>"; };
 		AFCA87312989871E0057BC7B /* apiSearchVenue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = apiSearchVenue.swift; sourceTree = "<group>"; };
 		AFED0D12298727EE0007AE51 /* apiSearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = apiSearchModel.swift; sourceTree = "<group>"; };
 		AFED0D16298740B70007AE51 /* eventSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = eventSearch.swift; sourceTree = "<group>"; };
 		AFED0D18298747750007AE51 /* VenueS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueS.swift; sourceTree = "<group>"; };
+		EB416FB4EB00DAC2EB9602B0 /* libPods-HW9UI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HW9UI.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF017E8B9D16F4EE845005CE /* libPods-HW9UI.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +114,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9F521C2F188BA24C3A959B5C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EB416FB4EB00DAC2EB9602B0 /* libPods-HW9UI.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AF882AEB297DC134004E7099 = {
 			isa = PBXGroup;
 			children = (
@@ -112,6 +129,8 @@
 				AF882B07297DC134004E7099 /* HW9UITests */,
 				AF882B11297DC134004E7099 /* HW9UIUITests */,
 				AF882AF5297DC134004E7099 /* Products */,
+				E32BB5522FCCEAB161DDE9FF /* Pods */,
+				9F521C2F188BA24C3A959B5C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -190,8 +209,19 @@
 				AF81110C29C4D20100C03662 /* addFavorites.swift */,
 				AF81110E29C5635300C03662 /* spotifyArtist.swift */,
 				AF81111029C5660D00C03662 /* apiSearchSpotify.swift */,
+				AFA7776029C8BD16008D7ED0 /* googleLoc.swift */,
+				AFA7776229C90B59008D7ED0 /* suggestion.swift */,
 			);
 			name = model;
+			sourceTree = "<group>";
+		};
+		E32BB5522FCCEAB161DDE9FF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				83C6CE76D25F1D024B0AD3EF /* Pods-HW9UI.debug.xcconfig */,
+				7580584D64F443C415F2BB35 /* Pods-HW9UI.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,9 +231,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AF882B18297DC134004E7099 /* Build configuration list for PBXNativeTarget "HW9UI" */;
 			buildPhases = (
+				513FDED5EBF123214DC52F67 /* [CP] Check Pods Manifest.lock */,
 				AF882AF0297DC134004E7099 /* Sources */,
 				AF882AF1297DC134004E7099 /* Frameworks */,
 				AF882AF2297DC134004E7099 /* Resources */,
+				EDB562DC5C49099092C8CB91 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -319,12 +351,55 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		513FDED5EBF123214DC52F67 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HW9UI-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EDB562DC5C49099092C8CB91 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HW9UI/Pods-HW9UI-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HW9UI/Pods-HW9UI-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HW9UI/Pods-HW9UI-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		AF882AF0297DC134004E7099 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				AF79686A2992BB1200D5A41C /* getEventDetails.swift in Sources */,
+				AFA7776129C8BD16008D7ED0 /* googleLoc.swift in Sources */,
 				AF81110F29C5635300C03662 /* spotifyArtist.swift in Sources */,
 				AF882AFA297DC134004E7099 /* ContentView.swift in Sources */,
 				AF3113F129956E2900323BB3 /* GeoHasg.swift in Sources */,
@@ -332,6 +407,7 @@
 				AFCA87322989871E0057BC7B /* apiSearchVenue.swift in Sources */,
 				AFED0D17298740B70007AE51 /* eventSearch.swift in Sources */,
 				AF882AF8297DC134004E7099 /* HW9UIApp.swift in Sources */,
+				AFA7776329C90B59008D7ED0 /* suggestion.swift in Sources */,
 				AF7968702992C08300D5A41C /* urlRequest.swift in Sources */,
 				AF79686E2992BBBA00D5A41C /* getVenueDetails.swift in Sources */,
 				AF95031B298ADEB200CE48A8 /* ipInfo.swift in Sources */,
@@ -495,6 +571,7 @@
 		};
 		AF882B19297DC134004E7099 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 83C6CE76D25F1D024B0AD3EF /* Pods-HW9UI.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -523,6 +600,7 @@
 		};
 		AF882B1A297DC134004E7099 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7580584D64F443C415F2BB35 /* Pods-HW9UI.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

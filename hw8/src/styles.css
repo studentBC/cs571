@@ -595,6 +595,8 @@ input[name="kw"] {
   background-color: #1F8A70;
 } */
 .mat-mdc-tab-labels{
+  padding-left: 6em;
+  padding-right: 6em;
   background-color: #1F8A70;
 }
 .mat-mdc-tab-group.mat-tabs-with-background > .mat-mdc-tab-header .mdc-tab-indicator__content--underline {
@@ -991,6 +993,11 @@ input[name="kw"] {
     border-width: 3px;
     font-size: 0.8em;
     font-family: system-ui;
+  }
+  .mat-mdc-tab-labels{
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    background-color: #1F8A70;
   }
   .customBUT {
     padding: 10px 20px;
