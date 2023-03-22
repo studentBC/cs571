@@ -324,14 +324,14 @@ export class SearchComponent implements OnInit {
 
         console.log('---- come out ----');
         let jojo = JSON.parse(globalThis.jsonText);
-        console.log(typeof (jojo));
+        console.log(jojo);
         console.log(jojo.total);
         console.log('######################');
         console.log(jsonObjArray.length);
-        console.log(jojo.page.totalElements);
+        //console.log(jojo.page.totalElements);
         console.log('######################');
         console.log()
-        if (jojo.page.totalElements == 0) {
+        if (!jojo.page || jojo.page.totalElements === 0) {
             console.log("enter not found man !!!")
             document.getElementById('notfound')!.style.display = 'block';
             console.log(jsonObjArray[0]);
@@ -356,8 +356,8 @@ export class SearchComponent implements OnInit {
             dist = 10;
         console.log(form.value);
         console.log('we got kw ', this.kw);
-        loc = form.value.location || "";
-        selfLocate = form.value.autoDetect || false;
+        loc = form.value.location;
+        selfLocate = form.value.autoDetect;
         fc = form.value.fc || "default";
         dist = this.dmValue;
         let dd = ''; let lat = ""; let lng = "";
@@ -367,7 +367,8 @@ export class SearchComponent implements OnInit {
         console.log(selfLocate);
         console.log(fc);
         console.log(dist);
-        if (!selfLocate && loc != "") {
+        let url = "";
+        if (!selfLocate) {
             //use google geoapi to get lat lng
             let location = loc.replace(/\s+/g, '+');
             let gkey = 'AIzaSyBdSh29p_B93XTLF7qB0XtnfnjxQudHCA8';
@@ -386,9 +387,7 @@ export class SearchComponent implements OnInit {
                 });
             // let gr = httpGet('https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + gkey);
             if (lat === "") return;
-        }
-        let url = "";
-        if (loc === "" && selfLocate) {
+        } else {
             console.log("enter here man");
             await fetch('https://ipinfo.io', {
                 method: 'GET',
