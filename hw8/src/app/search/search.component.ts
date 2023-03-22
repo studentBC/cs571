@@ -207,6 +207,17 @@ export class SearchComponent implements OnInit {
             
         }
     }
+    isLineOver2(str: string): boolean {
+        // const pElement = document.querySelector('p');
+        // const pStyles = window.getComputedStyle(pElement!);
+        // const lineHeight = parseInt(pStyles.getPropertyValue('line-height'));
+
+        const element = document.getElementById(str);
+        const lineHeight = parseFloat(window.getComputedStyle(element!).lineHeight);
+        const height = element!.offsetHeight;
+        const numLines = height / lineHeight;
+        return numLines > 2;
+    }
     putMeUp(id: string) {
         console.log('we call tab ');
         console.log(id);
@@ -280,6 +291,12 @@ export class SearchComponent implements OnInit {
         if (globalThis.ishow.get(tid)) {
             document.getElementById(tid)?.classList.remove('more-text');
             document.getElementById(tid)?.classList.add('hidden-text');
+            //get line height
+            // const pElement = document.querySelector('p');
+            // const pStyles = window.getComputedStyle(pElement!);
+            // const lineHeight = parseInt(pStyles.getPropertyValue('line-height'));
+            // document.getElementById(tid)!.style.height = (2*lineHeight).toString() + ' px' ;
+            // console.log("line height is " ,lineHeight);
             document.getElementById(tid+'a')!.innerHTML="show more<i class=\"bi bi-chevron-down\"></i>"
         } else {
             document.getElementById(tid)?.classList.remove('hidden-text');

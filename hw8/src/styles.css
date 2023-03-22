@@ -251,7 +251,6 @@ input[name="kw"] {
 
 .aarow:hover {
   background-color: #D1D1D1;
-  ;
 }
 
 .no {
@@ -805,14 +804,14 @@ input[name="kw"] {
 
 
 .hidden-text {
-  height: 52px;
+  height: 40px;
   overflow: hidden;
-  font-size: 16px;
+  /* font-size: 16px; */
 }
 
 .more-text {
   height: auto;
-  font-size: 16px;
+  /* font-size: 16px; */
 }
 
 .vdrm {
@@ -912,7 +911,7 @@ input[name="kw"] {
   }
 
   .icon {
-    width: 100%;
+    width: 20%;
   }
 
   .artistPhoto {
@@ -986,7 +985,6 @@ input[name="kw"] {
   #moreInfoHeader {
     margin-bottom: 10px;
   }
-  
   #main_wrapper {
     padding-top: 10px;
   }
@@ -1003,6 +1001,9 @@ input[name="kw"] {
   }
   .customBUT {
     padding: 10px 20px;
+  }
+  .spotifyAlbumItems {
+    align-items: center;
   }
 }
 
