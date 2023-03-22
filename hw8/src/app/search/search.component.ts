@@ -925,7 +925,7 @@ export class SearchComponent implements OnInit {
 
     async showSpotify(artist: string) {
 
-        await fetch('http://localhost:8080/getSpotifyArtist?' + new URLSearchParams({
+        await fetch('https://yukichat-ios13.wl.r.appspot.com/getSpotifyArtist?' + new URLSearchParams({
             "artist": artist
         }))
         .then(response => response.json())
@@ -937,9 +937,6 @@ export class SearchComponent implements OnInit {
         })
         let artists = JSON.parse(globalThis.jsonText);
         let count = 0
-        console.log('-------- lets go ---------')
-        console.log(artists)
-        console.log('--------- go over ---------')
         let temp: any = []
         for (const name in artists) {
             // if (!name.includes(artist)) continue;
