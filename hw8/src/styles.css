@@ -842,9 +842,9 @@ input[name="kw"] {
 #nav-tabs .nav-item {
   position: relative;
 }
-.modal-backdrop {
+/* .modal-backdrop {
   top: auto;
-}
+} */
 #nav-tabs .nav-item::after {
   position: absolute;
   bottom: 0;
