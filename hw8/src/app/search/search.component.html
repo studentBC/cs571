@@ -201,7 +201,7 @@
                                     <br>
                                     <div class="spotifyRow">
                                         <div class="spotifyAlbumItems">
-                                            <h4 style="color: rgb(157, 241, 223);">Album featuring {{sa[5]}}
+                                            <h4 *ngIf="sa.length > 6" style="color: rgb(157, 241, 223);">Album featuring {{sa[5]}}
                                             </h4>
                                             <div>
                                                 <div class="albumIMG">
@@ -297,15 +297,10 @@
             </mat-tab>
         </mat-tab-group>
     </div>
-
-
-
-
-
 </div>
 
 <!-- Modal -->
-<div class="modal fade" role="dialog" id="reserveModal" tabindex="-1">
+<div class="modal fade" role="dialog" id="reserveModal">
     <div class="modal-dialog modal-dialog-centered modal-dialog-margin-y-sm-up">
         <div class="modal-content">
             <div class="modal-header" style="margin-bottom: 0px;">

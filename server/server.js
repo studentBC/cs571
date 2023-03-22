@@ -409,28 +409,13 @@ app.get('/getSpotifyArtist', async function (request, response) {
       temp.push(tmp[j]);
     }
     responseData.set(jbody.artists.items[i].name, temp)
+    break;
   }
   // console.log("---------  the response data is ----------")
   // console.log(responseData)
   const jsonContent = Object.fromEntries(responseData);
   //console.log(jsonContent);
   response.send(jsonContent);
-  
-  // let token = await getSpotifyToken();
-  // https://developer.spotify.com/documentation/general/guides/authorization/client-credentials/
-  // await fetch('', {
-  //   method: 'GET',
-  //   headers: {
-  //     'Authorization': 'Bearer ' + token
-  //   }
-  // })
-  // .then(response => response.json())
-  // .then(response => {
-  //   res = response;
-  //   console.log(response);
-  //   console.log(JSON.stringify(response));
-  //   return response;
-  // });
 })
 
 app.get('/getGoogleMap', async function (request, response) {
