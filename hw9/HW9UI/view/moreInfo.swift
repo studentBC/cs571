@@ -104,30 +104,32 @@ struct CarouselItemView: View {
             }
             
             Text("Album featuring Grouplove")
-            if !artist.album0.isEmpty {
-                AsyncImage(url: URL(string: artist.album0),
-                           content: {
-                    image in image.resizable().aspectRatio(contentMode: .fit)
-                }, placeholder: {
-                    ProgressView()
-                })
+            Group {
+                if !artist.album0.isEmpty {
+                    AsyncImage(url: URL(string: artist.album0),
+                               content: {
+                        image in image.resizable().aspectRatio(contentMode: .fit)
+                    }, placeholder: {
+                        ProgressView()
+                    })
+                }
+                if !artist.album1.isEmpty {
+                    AsyncImage(url: URL(string: artist.album1),
+                               content: {
+                        image in image.resizable().aspectRatio(contentMode: .fit)
+                    }, placeholder: {
+                        ProgressView()
+                    })
+                }
+                if !artist.album2.isEmpty {
+                    AsyncImage(url: URL(string: artist.album2),
+                               content: {
+                        image in image.resizable().aspectRatio(contentMode: .fit)
+                    }, placeholder: {
+                        ProgressView()
+                    })
+                }
             }
-            //            if !artist.album1.isEmpty {
-            //                AsyncImage(url: URL(string: artist.album1),
-            //                           content: {
-            //                    image in image.resizable().aspectRatio(contentMode: .fit)
-            //                }, placeholder: {
-            //                    ProgressView()
-            //                })
-            //            }
-            //            if !artist.album2.isEmpty {
-            //                AsyncImage(url: URL(string: artist.album2),
-            //                           content: {
-            //                    image in image.resizable().aspectRatio(contentMode: .fit)
-            //                }, placeholder: {
-            //                    ProgressView()
-            //                })
-            //            }
         }.frame(maxWidth: .infinity)
         //        .frame(width: 150)
     }
