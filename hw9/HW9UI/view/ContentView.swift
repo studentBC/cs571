@@ -25,6 +25,10 @@ struct ContentView: View {
     @State private var selfLocate: Bool = false
     @State private var searchResultTable: [Event] = []
     @State private var showSR = false
+    @State private var suggestions: [String] = []
+    @State private var showSuggestions = false
+    @State private var selectedSuggestion = ""
+    
     @ObservedObject private var searchAPI = apiSearchModel()
     
     let categories = ["Default", "Music", "Sports", "Arts & Theatre", "Film","Miscellaneous"]
@@ -51,6 +55,33 @@ struct ContentView: View {
                     
                     Form {
                         TextField("Key Word:", text: $kw)
+                        .onChange(of: kw) { _ in
+                            getSuggestions()
+                            showSuggestions = true
+                        }
+                        //VStack {
+                            ForEach(Array(suggestions.prefix(5)), id: \.self) { suggestion in
+                                Button(action: {
+                                    selectedSuggestion = suggestion
+                                    kw = suggestion
+                                    showSuggestions = false
+                                    suggestions=[]
+                                }) {
+                                    Text(suggestion)
+                                        .foregroundColor(.primary)
+                                        .padding(.vertical, 8)
+                                        .padding(.horizontal)
+                                }
+                            }
+//                            .background(Color.secondary)
+//                            .cornerRadius(8)
+//                            .shadow(radius: 4)
+                        //}.background(Color.secondary)
+//                        VStack {
+//                            List(suggestions, id: \.self) { suggestion in
+//                                Text(suggestion)
+//                            }
+//                        }
                         TextField("Distance:", text: $dist)
                         Picker("Category", selection: $selection) {
                             ForEach(categories, id: \.self) {
@@ -120,6 +151,69 @@ struct ContentView: View {
             }
         }
     }
+    func getSuggestions() {
+        // Call getSuggestion() function with the current keyword
+        suggestions = [];
+        if (!showSuggestions) {
+            return;
+        }
+        var eid = "&keyword=" + kw;
+        eid = eid.replacingOccurrences(of: " ", with: "%20")
+        let urlString = "https://app.ticketmaster.com/discovery/v2/suggest/?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ"+eid
+        
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "url", value: urlString)
+        ]
+        var sgs = suggestion(sgs: [])
+        
+        let url = URL(string: "https://yukichat-ios13.wl.r.appspot.com/getSuggestion"+components.string!)!
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("error when fetching suggestion \(error)")
+            } else if let data = data {
+                let decoder = JSONDecoder()
+                do {
+                    sgs = try decoder.decode(suggestion.self, from: data)
+                    for string in sgs.sgs {
+                        self.suggestions.append(string);
+                    }
+                } catch {
+                    print("error when fetching suggestion \(error)")
+                }
+            }
+        }.resume()
+    }
+    
+//    func getSuggestion(keyword: String, completion: @escaping (Result<[String], Error>) -> Void) {
+//        var eid = "&keyword=" + keyword;
+//        eid = eid.replacingOccurrences(of: " ", with: "%20")
+//        let urlString = "https://app.ticketmaster.com/discovery/v2/suggest/?apikey=uAFLpjEgT9FAAj213SNDEUVZKB9lw0WJ"+eid
+//
+//        var components = URLComponents()
+//        components.queryItems = [
+//            URLQueryItem(name: "url", value: urlString)
+//        ]
+//        var sgs = suggestion(sgs: [])
+//
+//        let url = URL(string: "https://yukichat-ios13.wl.r.appspot.com/getSuggestion"+components.string!)!
+//        URLSession.shared.dataTask(with: url) { data, response, error in
+//            if let error = error {
+//                completion(.failure(error))
+//            } else if let data = data {
+//                let decoder = JSONDecoder()
+//                do {
+//                    sgs = try decoder.decode(suggestion.self, from: data)
+//                    for string in sgs.sgs {
+//                        self.suggestions.append(string);
+//                    }
+//                    completion(.success(suggestions))
+//                } catch {
+//                    completion(.failure(error))
+//                }
+//            }
+//        }.resume()
+//    }
 }
 struct searchTableCell: View {
     let es: Event
