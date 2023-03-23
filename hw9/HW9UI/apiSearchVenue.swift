@@ -25,7 +25,7 @@ class apiSearchVenue: ObservableObject {
             URLQueryItem(name: "url", value: uri)
         ]
 
-        if let url = URL(string: "http://localhost:8080/getGoogleMap/"+components.string!) {
+        if let url = URL(string: "https://yukichat-ios13.wl.r.appspot.com/getGoogleMap/"+components.string!) {
             do {
 //                print("=== before decoding ===")
 //                print(url)

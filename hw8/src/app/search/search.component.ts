@@ -550,22 +550,32 @@ export class SearchComponent implements OnInit {
 
         var text1 = document.createElement('p');
         text1.classList.add("headerCell");
-        text1.innerHTML = 'Date';
+        text1.style.marginBottom = "2px";
+        text1.style.marginTop = "2px";
+        text1.innerHTML = 'Date/Time';
 
         var text2 = document.createElement('p');
         text2.classList.add("headerCell");
+        text2.style.marginBottom = "2px";
+        text2.style.marginTop = "2px";
         text2.innerHTML = 'Icon';
 
         var text3 = document.createElement('p');
         text3.classList.add("headerCell");
+        text3.style.marginBottom = "2px";
+        text3.style.marginTop = "2px";
         text3.innerHTML = 'Event';
 
         var text4 = document.createElement('p');
         text4.classList.add("headerCell");
+        text4.style.marginBottom = "2px";
+        text4.style.marginTop = "2px";
         text4.innerHTML = 'Genre';
 
         var text5 = document.createElement('p');
         text5.classList.add("headerCell");
+        text5.style.marginBottom = "2px";
+        text5.style.marginTop = "2px";
         text5.innerHTML = 'Venue';
 
 

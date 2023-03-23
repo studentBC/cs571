@@ -191,9 +191,10 @@ input[name="kw"] {
 }
 
 .headerCell {
-  margin-top: 1em;
-  margin-bottom: 1em;
+  /* margin-top: 1em;
+  margin-bottom: 1em; */
   font-weight: bold;
+  margin-bottom: 0px;
 }
 
 #moreInfoIMG {
