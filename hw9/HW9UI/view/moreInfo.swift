@@ -77,7 +77,7 @@ struct ModalView: View {
 struct CarouselItemView: View {
     let artist: spotifyArtist
     var body: some View {
-        VStack {
+        VStack(spacing: 10) {
             Text(artist.name)
             AsyncImage(url: URL(string: artist.asICON),
                        content: {
@@ -152,14 +152,14 @@ struct moreInfo: View {
         TabView(selection: $selectedTab) { // 2
             ZStack {
                 Color.white // Set the background color of the screen
-                VStack {
-                    Text((event.venue ?? "lol"))
+                VStack(spacing: 10) {
+                    Text((event.venue ?? "lol").replacingOccurrences(of: "|", with: ""))
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding(.top, 50) // Adjust the top padding to your liking
                     
                     HStack {
-                        VStack(alignment: .leading, spacing: 2) {
+                        VStack(alignment: .leading, spacing: 10) {
                             Text("Date").aspectRatio(contentMode: .fit)
                             Text(event.date ?? "?"+" " + (event.time ?? "")).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
                             Text("Artist/Team").padding(.top, 5)
@@ -240,7 +240,7 @@ struct moreInfo: View {
                 .tabItem {
                     //            Image("descending-airplane")
                     //              .resizable()
-                    Text("Event Details")
+                    Text("Events")
                 }
             
             //spotify artists
@@ -266,8 +266,8 @@ struct moreInfo: View {
                 Text("Artists/Team")
             }.tag(1)
             VStack {
-                HStack {
-                    VStack {
+                VStack {
+                    VStack(spacing: 10) {
                         Text("Name").aspectRatio(contentMode: .fit)
                         Text(venueDetail?.vname ?? "lol").multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
                         Text("Address").padding(.top, 5)
@@ -279,7 +279,7 @@ struct moreInfo: View {
                         
                     }
                     VStack {
-                        if ((venueDetail?.vdoh) != nil) {
+                        if ((venueDetail?.vdoh) != nil && (venueDetail?.vdoh) != "") {
                             
                             VStack(alignment: .leading) {
                                 Text("Open Hours").padding(.top, 5)
@@ -302,7 +302,7 @@ struct moreInfo: View {
                             }
                             .padding()
                         }
-                        if ((venueDetail?.vdgr) != nil){
+                        if ((venueDetail?.vdgr) != nil && (venueDetail?.vdgr) != ""){
                             VStack {
                                 Text("General Rule").padding(.top, 5)
                                 if isVdgrExpanded {
@@ -323,7 +323,7 @@ struct moreInfo: View {
                                 }
                             }
                         }
-                        if ((venueDetail?.vdcr) != nil) {
+                        if ((venueDetail?.vdcr) != nil && (venueDetail?.vdcr) != "") {
                             VStack {
                                 Text("Child Rule").padding(.top, 5)
                                 if isVdcrExpanded {
@@ -346,9 +346,14 @@ struct moreInfo: View {
                         }
                     }
                 }
-                Button("Show Map") {
+                Spacer().frame(height: 10)
+                Button("Show venue on Google Maps") {
                     showModal = true
-                }
+                }.foregroundColor(.white)
+                 .padding(.vertical, 10)
+                    .padding(.horizontal, 20)
+                    .background(Color.red)
+                    .cornerRadius(10)
                 
             }.sheet(isPresented: $showModal) {
                 ModalView()
