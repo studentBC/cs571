@@ -226,6 +226,7 @@ input[name="kw"] {
   /* Then we define how is distributed the remaining space */
   /* justify-content: space-around; */
   list-style: none;
+  padding-bottom: 15px;
 }
 
 /* API search table related style */
@@ -403,6 +404,7 @@ input[name="kw"] {
   padding-left: 0px;
   border-radius: 0px;
   padding-top: 10px;
+  padding-bottom: 20px;
 }
 #vdme:hover {
   color: #A084DC;
@@ -982,12 +984,12 @@ input[name="kw"] {
   .modal-body {
     height: 400px;
   }
-
   #moreInfoHeader {
     margin-bottom: 10px;
   }
   #main_wrapper {
     padding-top: 10px;
+    padding-bottom: 20px;
   }
   .mat-mdc-tab-group.mat-tabs-with-background>.mat-mdc-tab-header .mdc-tab-indicator__content--underline, .mat-mdc-tab-group.mat-tabs-with-background>.mat-mdc-tab-header .mat-mdc-tab-header-pagination-chevron, .mat-mdc-tab-group.mat-tabs-with-background>.mat-mdc-tab-header .mat-mdc-focus-indicator {
     border-color: #3E54AC;
