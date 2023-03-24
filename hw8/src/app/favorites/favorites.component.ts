@@ -162,10 +162,14 @@ export class FavoritesComponent implements AfterViewInit {
     delReserv(key: string, eventName: string, targetDate: string) {
         alert("Event Removed from Favorites!");
         console.log('enter to del key: ' + key);
-        if (favoriteList.has(key)) favoriteList.delete(key);
+        if (favoriteList.has(key)) {
+            favoriteList.delete(key);
+            const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
+            localStorage.setItem("favoriteList", myMapJSON);
+        }
         let table = document.getElementById("reserveTable") as HTMLTableElement;
         if (!table) {
-            favoriteList.delete(key);
+            // favoriteList.delete(key);
             // Store
             // const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
             // localStorage.setItem("favoriteList", myMapJSON);

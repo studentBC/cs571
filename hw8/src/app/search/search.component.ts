@@ -264,8 +264,8 @@ export class SearchComponent implements OnInit {
             favoriteList.delete(key)
             heartPath!.style.fill = 'transparent';
             // Store
-            // const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
-            // localStorage.setItem("favoriteList", myMapJSON);
+            const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
+            localStorage.setItem("favoriteList", myMapJSON);
             return
         } else alert("Event added to Favorites!");
         // change the fill property
@@ -281,8 +281,8 @@ export class SearchComponent implements OnInit {
         favoriteList.set(key,tmp);
         
         // Store
-        // const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
-        // localStorage.setItem("favoriteList", myMapJSON);
+        const myMapJSON = JSON.stringify(Array.from(favoriteList.entries()));
+        localStorage.setItem("favoriteList", myMapJSON);
     }
     readMore(tid: string) {
         console.log("call read more man !!!");
@@ -964,8 +964,8 @@ export class SearchComponent implements OnInit {
         let artists = JSON.parse(globalThis.jsonText);
         let count = 0
         let temp: any = []
+        
         for (const name in artists) {
-            // if (!name.includes(artist)) continue;
             temp.push(artists[name][4]);
             temp.push(name);
             temp.push(artists[name][2]);
