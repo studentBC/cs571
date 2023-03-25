@@ -21,8 +21,8 @@ td {
     min-width: 500px;
 }
 
-@media screen and (max-width: 425px) {
+/* @media screen and (max-width: 425px) {
     #favoriteTable {
       min-width: 500px;
     }
-}
+} */

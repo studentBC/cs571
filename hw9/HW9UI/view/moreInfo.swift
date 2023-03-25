@@ -147,6 +147,7 @@ struct moreInfo: View {
     @State private var isVdohExpanded = false
     @State private var isVdgrExpanded = false
     @State private var isVdcrExpanded = false
+    @State private var selection = 0
     var body: some View {
         // 1
         TabView(selection: $selectedTab) { // 2
@@ -157,6 +158,7 @@ struct moreInfo: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding(.top, 50) // Adjust the top padding to your liking
+                    
                     
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
@@ -244,20 +246,56 @@ struct moreInfo: View {
                 }
             
             //spotify artists
-            ZStack {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 20) {
+            HStack {
+                Button(action: {
+                    if selection > 0 {
+                        selection -= 1
+                    }
+                }, label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title)
+                        .foregroundColor(.black)
+                }).padding(.leading, 5)
+                VStack {
+                    TabView(selection: $selection) {
                         if spotifyArtists?.count ?? -1 > 0 {
                             ForEach(spotifyArtists!.indices, id: \.self) { index in
                                 CarouselItemView(artist: spotifyArtists![index])
                             }
-                            //                            ForEach(spotifyArtists, id: \.id) { artist in
-                            //                                CarouselItemView(artist: artist)
-                            //                            }
                         }
                     }
-                    .padding()
                 }
+//                    .tabViewStyle(PageTabViewStyle())
+//                    .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+                    
+//                    HStack {
+//                        Button(action: {
+//                            if selection > 0 {
+//                                selection -= 1
+//                            }
+//                        }, label: {
+//                            Image(systemName: "chevron.left")
+//                                .font(.title)
+//                                .foregroundColor(.black)
+//                        })
+                        
+                        //Spacer()
+                        
+                        Button(action: {
+                            if selection < spotifyArtists!.count - 1 {
+                                selection += 1
+                            }
+                        }, label: {
+                            Image(systemName: "chevron.right")
+                                .font(.title)
+                                .foregroundColor(.black)
+                        }).padding(.trailing, 10)
+//                    }
+//                    .padding(.horizontal, 20)
+//                    .padding(.top, 10)
+                    
+                    
+                    
                 
             }
             .tabItem {
@@ -265,6 +303,8 @@ struct moreInfo: View {
                 //              .resizable()
                 Text("Artists/Team")
             }.tag(1)
+            
+            
             VStack {
                 VStack {
                     VStack(spacing: 10) {
