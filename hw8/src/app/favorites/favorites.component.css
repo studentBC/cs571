@@ -18,12 +18,11 @@ td {
     margin-left: auto;
     margin-right: auto;
     width: 85%;
+    min-width: 500px;
 }
 
 @media screen and (max-width: 425px) {
     #favoriteTable {
-      margin-left: auto;
-      margin-right: auto;
-      width: 500px;
+      min-width: 500px;
     }
 }

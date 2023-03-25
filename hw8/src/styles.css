@@ -97,6 +97,7 @@ select {
   margin-right: auto;
   width: 85%;
   color: white;
+  min-width: 500px;
 }
 
 #favoriteTable {
@@ -868,6 +869,11 @@ input[name="kw"] {
 }
 
 
+.carousel-control-next,
+.carousel-control-prev /*, .carousel-indicators */ {
+    filter: invert(100%);
+}
+
 @media screen and (min-width: 900px) {
   .fc {
     margin-left: 5em;
@@ -899,15 +905,15 @@ input[name="kw"] {
   #APIresultTable {
     margin-left: auto;
     margin-right: auto;
-    width: 500px;
+    /* width: 500px; */
     color: white;
   }
 
-  #favoriteTable {
+  /* #favoriteTable {
     margin-left: auto;
     margin-right: auto;
     width: 500px;
-  }
+  } */
 
   #reserveTable {
     width: 100%;

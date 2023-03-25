@@ -443,10 +443,11 @@ export class SearchComponent implements OnInit {
         for (let i = 0; i < elems.length; i++) {
             (elems[i] as HTMLElement).style.display = "none";
         }
-        const elem = document.getElementsByClassName("APIresult");
-        for (let i = 0; i < elem.length; i++) {
-            (elem[i] as HTMLElement).style.display = "block";
-        }
+        const elem = document.getElementById("APIresult") as HTMLElement;
+        elem.style.display = "block";
+        // for (let i = 0; i < elem.length; i++) {
+        //     (elem[i] as HTMLElement).style.display = "block";
+        // }
     }
     createAPIresultTable() {
         console.log('enter to createAPIresultTable');
@@ -456,12 +457,13 @@ export class SearchComponent implements OnInit {
         console.log(len);
         let data: any[] = [];
         console.log('enter to creat !!!');
-        const elems = document.getElementsByClassName("APIresult");
+        //const elems = document.getElementsByClassName("APIresult");
         document.getElementById("APIresult")!.innerHTML = "";
-        for (let i = 0; i < elems.length; i++) {
-            const ee = elems[i] as HTMLElement;
-            ee.style.display = 'block';
-        }
+        document.getElementById("APIresult")!.style.display = "block";
+        // for (let i = 0; i < elems.length; i++) {
+        //     const ee = elems[i] as HTMLElement;
+        //     ee.style.display = 'block';
+        // }
         let index = 1;
         console.log('------  here ------');
         for (let j = 0; j < len; j++) {
@@ -872,10 +874,11 @@ export class SearchComponent implements OnInit {
         for (let i = 0; i < elems.length; i++) {
             (ele[i] as HTMLElement).style.display = "block";
         }
-        const elem = document.getElementsByClassName("APIresult");
-        for (let i = 0; i < elem.length; i++) {
-            (elem[i] as HTMLElement).style.display = "none";
-        }
+        const elem = document.getElementById("APIresult") as HTMLElement;
+        elem.style.display = "none";
+        // for (let i = 0; i < elem.length; i++) {
+        //     (elem[i] as HTMLElement).style.display = "none";
+        // }
         globalThis.selectedName = name;
         console.log('showing our artists man!!!')
         this.vdaddr = this.vdHeader = this.vdphone = this.vdoh = this.vdgr = this.vdcr ="";
