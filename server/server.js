@@ -276,7 +276,7 @@ async function getAlbums(aid){
   );
 
   await spotifyApi
-  .getArtistAlbums(aid, { limit: 3, offset: 5 })
+  .getArtistAlbums(aid, { limit: 3})
   .then(
     function(data) {
       // console.log('Album information', data.body);
