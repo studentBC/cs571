@@ -799,16 +799,16 @@ export class SearchComponent implements OnInit {
         //error occur
         this.moreInfoIMG = globalThis.idMapping.get(name)![7];
         //go search for venue
-        let Url = 'https://app.ticketmaster.com/discovery/v2/venues?apikey=' + tmKey + '&keyword=' + globalThis.idMapping.get(name)![2];
-        //let logoIMG = await searchVenue(Url);
-        console.log('enter searchVenue')
-        await fetch('https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?' + new URLSearchParams({
-            "url": Url
-        }))
-            .then(response => response.json())
-            .then(response => {
-                console.log('we got venue length ' + response._embedded?.venues?.length);
-            })
+        // let Url = 'https://app.ticketmaster.com/discovery/v2/venues?apikey=' + tmKey + '&keyword=' + globalThis.idMapping.get(name)![2];
+        // //let logoIMG = await searchVenue(Url);
+        // console.log('enter searchVenue')
+        // await fetch('https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?' + new URLSearchParams({
+        //     "url": Url
+        // }))
+        //     .then(response => response.json())
+        //     .then(response => {
+        //         console.log('we got venue length ' + response._embedded?.venues?.length);
+        //     })
 
         //under discovery/v2/events/{id}
         console.log('### going to check event ID:  ' + globalThis.idMapping.get(name)![8] + ' ###');
@@ -836,7 +836,17 @@ export class SearchComponent implements OnInit {
                 if (a < stop) {
                     this.moreInfoAT += " | ";
                 }
-                artistList.push(jobj._embedded.attractions[a].name)
+                for (let b = 0; b < jobj._embedded.attractions[a].classifications.length; b++) {
+                    if (jobj._embedded.attractions[a].classifications[b].genre.name == "Music" ||
+                        jobj._embedded.attractions[a].classifications[b].segment.name == "Music" ||
+                        jobj._embedded.attractions[a].classifications[b].subGenre.name == "Music" ||
+                        jobj._embedded.attractions[a].classifications[b].subType.name == "Music" ||
+                        jobj._embedded.attractions[a].classifications[b].type.name == "Music"
+                        ) {
+                            artistList.push(jobj._embedded.attractions[a].name)
+                            break;
+                        }
+                }
             }
         }
         let tc = ""
@@ -953,7 +963,6 @@ export class SearchComponent implements OnInit {
     }
 
     async showSpotify(artist: string) {
-
         await fetch('https://yukichat-ios13.wl.r.appspot.com/getSpotifyArtist?' + new URLSearchParams({
             "artist": artist
         }))
