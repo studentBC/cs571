@@ -892,7 +892,7 @@ export class SearchComponent implements OnInit {
         globalThis.selectedName = name;
         console.log('showing our artists man!!!')
         this.vdaddr = this.vdHeader = this.vdphone = this.vdoh = this.vdgr = this.vdcr ="";
-        this.showVenue()
+        await this.showVenue()
         this.spotifyArtists = []
         console.log('segment we got are: ', tc);
         if (tc.includes('Music')) {
