@@ -17,7 +17,9 @@
   margin-left: 2%;
   margin-right: 2%;
 }
-
+input[disabled] {
+  background-color: #fff;
+}
 
 ::ng-deep.mat-tab-header {
   background-color: #1F8A70;

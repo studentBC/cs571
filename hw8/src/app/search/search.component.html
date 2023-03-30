@@ -44,7 +44,7 @@
             <label>Location</label><label style="color:red;">*&nbsp;&nbsp;</label>
             <br>
             <input class="userInput" type=" text" name="location" ngModel name="location" id="inputLoc"
-                style="width: 100%;" required="">
+                style="width: 100%;" required [disabled]="isDisabled">
             <br>
             <br>
             <input type="checkbox" id="cbox" ngModel name="autoDetect" (click)="hideLocInput()">

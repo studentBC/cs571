@@ -82,6 +82,7 @@ export class SearchComponent implements OnInit {
     //for auto complete
     isLoading = true;
     kw:any = "";
+    isDisabled:boolean=false;
 
     searchEventCtrl = new FormControl();
     filteredEvents: any[] = [];
@@ -924,10 +925,15 @@ export class SearchComponent implements OnInit {
     }
     hideLocInput() {
         let cb = document.getElementById('cbox') as HTMLInputElement;
+        
         if (cb.checked == true) {
             (<HTMLInputElement>document.getElementById('inputLoc')).required = false;
             (<HTMLInputElement>document.getElementById('inputLoc')).value="";
-        } else (<HTMLInputElement>document.getElementById('inputLoc')).required = true;
+            this.isDisabled = true;
+        } else {
+            (<HTMLInputElement>document.getElementById('inputLoc')).required = true;
+            this.isDisabled = false;
+        }
     }
     cc() {
         (<HTMLFormElement>document.getElementById("partOne")).reset();
@@ -942,6 +948,7 @@ export class SearchComponent implements OnInit {
         for (let i = 0; i < elems.length; i++) {
             (elems[i] as HTMLElement).style.display = "none";
         }
+        this.isDisabled = false;
     }
 
     //create carousel img
