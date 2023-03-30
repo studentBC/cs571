@@ -10,7 +10,7 @@
             <input matInput style="width: 100%;" class="userInput" type="text" [(ngModel)]="kw" [matAutocomplete]="auto"
                 [formControl]="searchEventCtrl" required>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)='onSelected()'>
-                <mat-option *ngIf="isLoading" class="is-loading readonly">
+                <mat-option *ngIf="isLoading && kw.length > 0" class="is-loading readonly">
                     <mat-spinner diameter="20"></mat-spinner>
                 </mat-option>
                 <ng-container *ngIf="!isLoading">

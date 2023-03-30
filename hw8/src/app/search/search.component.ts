@@ -128,14 +128,15 @@ export class SearchComponent implements OnInit {
         this.searchEventCtrl.valueChanges
         .pipe(
             filter(res => {
-            return res !== null && res.length > 0
+                this.isLoading = true;
+                return res !== null && res.length > 0
             }),
             distinctUntilChanged(),
             debounceTime(200),
             tap(() => {
-            this.errorMsg = "";
-            this.filteredEvents = [];
-            this.isLoading = true;
+                this.errorMsg = "";
+                this.filteredEvents = [];
+                this.isLoading = true;
             }),
             //https://yukichat-ios13.wl.r.appspot.com/getTicketMasterSearch?
             switchMap(value => 
@@ -145,13 +146,12 @@ export class SearchComponent implements OnInit {
                 }))
                 .pipe(
                     finalize(() => {
-                    this.isLoading = false
+                        this.isLoading = false
                     }),
-            )
+                )
             )
         )
         .subscribe((data: any) => {
-            console.log('we got kw data is')
             console.log(data);
             if (!data._embedded) {
             this.errorMsg = 'Error';
@@ -851,24 +851,29 @@ export class SearchComponent implements OnInit {
         }
         let tc = ""
         if (jobj.classifications !== null) {
-            if (jobj.classifications[0].subGenre?.name && jobj.classifications[0]?.subGenre?.name != 'Undefined') {
-                tc+=jobj.classifications[0].subGenre?.name
+            if (jobj.classifications[0].segment?.name && jobj.classifications[0]?.segment?.name != 'Undefined') {
+                tc+=jobj.classifications[0].segment?.name
+                // console.log('segment: ' , jobj.classifications[0].segment?.name)
             }
             if (jobj.classifications[0]?.genre?.name && jobj.classifications[0]?.genre?.name != 'Undefined') {
                 if (tc!="") tc+=" | "
                 tc+=jobj.classifications[0]?.genre?.name
+                // console.log('genre: ' , jobj.classifications[0].genre?.name)
             }
-            if (jobj.classifications[0]?.segment?.name && jobj.classifications[0]?.segment?.name != 'Undefined') {
+            if (jobj.classifications[0]?.subGenre?.name && jobj.classifications[0]?.subGenre?.name != 'Undefined') {
                 if (tc!="") tc+=" | "
-                tc+=jobj.classifications[0]?.segment?.name
+                tc+=jobj.classifications[0]?.subGenre?.name
+                // console.log('subGenre: ' , jobj.classifications[0].subGenre?.name)
             } 
-            if (jobj.classifications[0].subType?.name && jobj.classifications[0]?.subType?.name != 'Undefined') {
-                if (tc!="") tc+=" | "
-                tc+=jobj.classifications[0].subType?.name
-            }
             if (jobj.classifications[0].type?.name && jobj.classifications[0]?.type?.name != 'Undefined') {
                 if (tc!="") tc+=" | "
                 tc+=jobj.classifications[0].type?.name
+                // console.log('type: ' , jobj.classifications[0].type?.name)
+            }
+            if (jobj.classifications[0].subType?.name && jobj.classifications[0]?.subType?.name != 'Undefined') {
+                if (tc!="") tc+=" | "
+                tc+=jobj.classifications[0].subType?.name
+                // console.log('subType: ' , jobj.classifications[0].subType?.name)
             }
         }
 
