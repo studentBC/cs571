@@ -43,7 +43,7 @@ struct ContentView: View {
                         Spacer().frame(maxWidth:.infinity)
                         Button(action: reserve) {
                             NavigationLink(destination: ReservationView()) {
-                                Label("", systemImage: "calendar.badge.plus")
+                                Label("", systemImage: "heart.circle").font(.system(size: 25))
                             }
                         }
                     }
@@ -54,35 +54,34 @@ struct ContentView: View {
                         .padding(.bottom, 0)
                     
                     Form {
-                        TextField("Key Word:", text: $kw)
-                        .onChange(of: kw) { _ in
-                            getSuggestions()
-                            showSuggestions = true
-                        }
-                        //VStack {
-                            ForEach(Array(suggestions.prefix(5)), id: \.self) { suggestion in
-                                Button(action: {
-                                    selectedSuggestion = suggestion
-                                    kw = suggestion
-                                    showSuggestions = false
-                                    suggestions=[]
-                                }) {
-                                    Text(suggestion)
-                                        .foregroundColor(.primary)
-                                        .padding(.vertical, 8)
-                                        .padding(.horizontal)
+                        HStack {
+                            Text("Keyword: ")
+                            TextField("Required", text: $kw)
+                                .onChange(of: kw) { _ in
+                                getSuggestions()
+                                showSuggestions = true
+                            }
+                            .sheet(isPresented: $showSuggestions) {
+                                ForEach(Array(suggestions.prefix(5)), id: \.self) { suggestion in
+                                    Button(action: {
+                                        selectedSuggestion = suggestion
+                                        kw = suggestion
+                                        showSuggestions = false
+                                        suggestions=[]
+                                    }) {
+                                        Text(suggestion)
+                                            .foregroundColor(.primary)
+                                            .padding(.vertical, 8)
+                                            .padding(.horizontal)
+                                    }
                                 }
                             }
-//                            .background(Color.secondary)
-//                            .cornerRadius(8)
-//                            .shadow(radius: 4)
-                        //}.background(Color.secondary)
-//                        VStack {
-//                            List(suggestions, id: \.self) { suggestion in
-//                                Text(suggestion)
-//                            }
-//                        }
-                        TextField("Distance:", text: $dist)
+                        }
+                        HStack {
+                            Text("Distance: ")
+                            TextField("10", text: $dist)
+                        }
+                        
                         Picker("Category", selection: $selection) {
                             ForEach(categories, id: \.self) {
                                 Text($0)
@@ -90,32 +89,25 @@ struct ContentView: View {
                         }
                         .pickerStyle(.menu)
                         if (!selfLocate) {
-                            TextField("Location", text: $loc)
+                            HStack {
+                                Text("Location: ")
+                                TextField("Required", text: $loc)
+                            }
+                            //TextField("Location", text: $loc)
                         }
-                        Toggle("auto detect my location", isOn: $selfLocate)
+                        Toggle("Auto-detect my location", isOn: $selfLocate)
                         HStack {
                             Button(action: {
                                 Task {
                                     let sbc = submitContent(kw: kw, dist: dist, loc: loc, selfLocate: selfLocate, Category: selection)
                                     await searchAPI.goSearch(suc: sbc)
-                                    
-//                                    do {
-//                                        let lol = try await searchAPI.getSuggestion(kw: kw)
-//                                        print("$$$$$$$$$$$$$$$$$$$$$$$")
-//                                        for s in lol.sgs {
-//                                            print(s)
-//                                        }
-//                                        print(lol)
-//                                    } catch {
-//                                        print("Error searching Spotify for artists: \(error)")
-//                                    }
-                                    
                                     showSR = true
                                 }
                             }) {
-                                Text("Submit")
-                            }.buttonStyle(.bordered)
-                                .tint(.blue)
+                                Text("Submit").foregroundColor(.white)
+                            }.background(Color.gray).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
+                                .frame(width: 180, height: 50)
+                                //.tint(.gray)
                             Button(action: {
                                 // Closure will be called once user taps your button
                                 kw = "";
@@ -126,9 +118,9 @@ struct ContentView: View {
                                 searchAPI.searchResultTable.removeAll();
                                 showSR = false
                             }) {
-                                Text("Clear")
-                            }.buttonStyle(.bordered)
-                                .tint(.red)
+                                Text("Clear").foregroundColor(.white)
+                            }.background(Color.blue).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
+                                //.frame(width: 200, height: 50)
                         }
                     }//.navigationTitle("Events Search")
                     
@@ -243,3 +235,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
