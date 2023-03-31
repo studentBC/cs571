@@ -77,34 +77,45 @@ struct ModalView: View {
 struct CarouselItemView: View {
     let artist: spotifyArtist
     var body: some View {
-        VStack(spacing: 10) {
-            Text(artist.name)
+        HStack(spacing: 10) {
             AsyncImage(url: URL(string: artist.asICON),
-                       content: {
-                image in image.resizable().aspectRatio(contentMode: .fit)
-            },placeholder: {
-                ProgressView()
-            }).frame(width: 80, height: 80)
-                .clipShape(Circle())
-            //                .overlay(Circle().stroke(Color.white, lineWidth: 2))
-            //                .shadow(radius: 3)
-            Text("Popularity")
-            Text(String(artist.aspop))
-            Text("Followers")
-            Text(String(artist.astotal))
-            Text("Spotify Link")
-            Button(action: {
-                guard let url = URL(string: artist.asurl) else { return }
-                UIApplication.shared.open(url)
-            }){
-                Image("spotify-icon")
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                    .padding(.bottom, 20)
+                   content: { image in
+                       image
+                           .resizable()
+                           .aspectRatio(contentMode: .fit)
+                           .clipShape(RoundedRectangle(cornerRadius: 10))
+                   },
+                   placeholder: {
+                       ProgressView()
+                   })
+            .frame(width: 80, height: 80)
+            VStack {
+                Text(artist.name).foregroundColor(.white)
+                HStack {
+                    Text(String(artist.astotal)).foregroundColor(.white)
+                    Text("Followers").foregroundColor(.white)
+                }
+                HStack {
+                    Button(action: {
+                        guard let url = URL(string: artist.asurl) else { return }
+                        UIApplication.shared.open(url)
+                    }){
+                        Image("spotify-icon")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .padding(.bottom, 20)
+                    }
+                    Text("Spotify")
+                }
             }
-            
-            Text("Album featuring Grouplove")
-            Group {
+            VStack {
+                Text("Popularity")
+                Text(String(artist.aspop)) //to do
+            }
+        }
+        HStack {
+            Text("Album featuring Grouplove").foregroundColor(.white)
+            HStack {
                 if !artist.album0.isEmpty {
                     AsyncImage(url: URL(string: artist.album0),
                                content: {
@@ -130,8 +141,7 @@ struct CarouselItemView: View {
                     })
                 }
             }
-        }.frame(maxWidth: .infinity)
-        //        .frame(width: 150)
+        }
     }
 }
 struct moreInfo: View {
@@ -272,57 +282,20 @@ struct moreInfo: View {
                 }
             
             //spotify artists
-            HStack {
-                Button(action: {
-                    if selection > 0 {
-                        selection -= 1
-                    }
-                }, label: {
-                    Image(systemName: "chevron.left")
-                        .font(.title)
-                        .foregroundColor(.black)
-                }).padding(.leading, 5)
-                VStack {
-                    TabView(selection: $selection) {
-                        if spotifyArtists?.count ?? -1 > 0 {
+            VStack {
+                ScrollView {
+                    if spotifyArtists?.count ?? -1 > 0 {
+                        HStack {
                             ForEach(spotifyArtists!.indices, id: \.self) { index in
                                 CarouselItemView(artist: spotifyArtists![index])
+                                
+                                
+                                
+                                
                             }
                         }
                     }
                 }
-                //                    .tabViewStyle(PageTabViewStyle())
-                //                    .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-                
-                //                    HStack {
-                //                        Button(action: {
-                //                            if selection > 0 {
-                //                                selection -= 1
-                //                            }
-                //                        }, label: {
-                //                            Image(systemName: "chevron.left")
-                //                                .font(.title)
-                //                                .foregroundColor(.black)
-                //                        })
-                
-                //Spacer()
-                
-                Button(action: {
-                    if selection < spotifyArtists!.count - 1 {
-                        selection += 1
-                    }
-                }, label: {
-                    Image(systemName: "chevron.right")
-                        .font(.title)
-                        .foregroundColor(.black)
-                }).padding(.trailing, 10)
-                //                    }
-                //                    .padding(.horizontal, 20)
-                //                    .padding(.top, 10)
-                
-                
-                
-                
             }
             .tabItem {
                 Image(systemName: "guitars.fill")
