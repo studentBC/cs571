@@ -73,75 +73,136 @@ struct ModalView: View {
         }
     }
 }
+struct CircularProgressView: View {
+    var progress: Double
+    var color: Color
+
+    var body: some View {
+//        var notchColor: Color =  Color.orange.opacity(0.5)
+        let gradient = LinearGradient(
+            gradient: Gradient(colors: [color, color]),
+            startPoint: .topTrailing,
+            endPoint: .bottomLeading
+        )
+
+        return ZStack {
+            Circle()
+                .stroke(Color.gray, lineWidth: 10)
+                .frame(width: 60, height: 60)
+            Circle()
+                .trim(from: 0, to: CGFloat(progress))
+                .stroke(gradient, lineWidth: 10)
+                .rotationEffect(Angle(degrees: -90))
+                .frame(width: 60, height: 60)
+            Circle()
+                .trim(from: 0, to: CGFloat(1.0))
+                .stroke(Color.orange.opacity(0.6), lineWidth: 10)
+                .rotationEffect(Angle(degrees: -90))
+                .frame(width: 60, height: 60)
+        }
+    }
+}
+func convertToShortHand(_ numberString: String) -> String {
+    guard let number = Double(numberString) else {
+        return numberString // return the original string if it can't be converted to a number
+    }
+    
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.maximumFractionDigits = 1
+    
+    if number >= 1000000 {
+        let millionNumber = Int(number / 1000000)
+        return formatter.string(from: NSNumber(value: millionNumber))! + "M"
+    } else {
+        return formatter.string(from: NSNumber(value: number))!
+    }
+}
 
 struct CarouselItemView: View {
+    @State private var popular = 0.5
     let artist: spotifyArtist
     var body: some View {
-        HStack(spacing: 10) {
-            AsyncImage(url: URL(string: artist.asICON),
-                   content: { image in
-                       image
-                           .resizable()
-                           .aspectRatio(contentMode: .fit)
-                           .clipShape(RoundedRectangle(cornerRadius: 10))
-                   },
-                   placeholder: {
-                       ProgressView()
-                   })
-            .frame(width: 80, height: 80)
-            VStack {
-                Text(artist.name).foregroundColor(.white)
-                HStack {
-                    Text(String(artist.astotal)).foregroundColor(.white)
-                    Text("Followers").foregroundColor(.white)
-                }
-                HStack {
-                    Button(action: {
-                        guard let url = URL(string: artist.asurl) else { return }
-                        UIApplication.shared.open(url)
-                    }){
-                        Image("spotify-icon")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .padding(.bottom, 20)
+        VStack(alignment: .leading) {
+            HStack(spacing: 10) {
+                AsyncImage(url: URL(string: artist.asICON),
+                           content: { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                },
+                           placeholder: {
+                    ProgressView()
+                })
+                .frame(width: 90, height: 90)
+                Spacer()
+                VStack(alignment: .leading) {
+                    Text(artist.name).bold().foregroundColor(.white).lineLimit(1)
+                    HStack {
+                        Text(convertToShortHand(String(artist.astotal))).bold().foregroundColor(.white).lineLimit(1)
+                        Text("Followers").foregroundColor(.white).font(.system(size: 12))
                     }
-                    Text("Spotify")
+                    HStack {
+                        Button(action: {
+                            guard let url = URL(string: artist.asurl) else { return }
+                            UIApplication.shared.open(url)
+                        }){
+                            Image("spotify-icon")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+//                                .padding(.bottom, 20)
+                        }
+                        Text("Spotify").font(.system(size: 14)).foregroundColor(.green)
+                    }
+                }
+                Spacer()
+                VStack {
+                    Text("Popularity").bold().foregroundColor(.white)
+//                    Text(String(artist.aspop)).foregroundColor(.white)
+                    ZStack {
+                        Text(String(artist.aspop))
+                            .foregroundColor(.white)
+                        CircularProgressView(progress: Double(artist.aspop)/100, color: .orange)
+                    }
                 }
             }
-            VStack {
-                Text("Popularity")
-                Text(String(artist.aspop)) //to do
-            }
-        }
-        HStack {
-            Text("Album featuring Grouplove").foregroundColor(.white)
+            Text("Popular Albums").bold().foregroundColor(.white)
             HStack {
-                if !artist.album0.isEmpty {
-                    AsyncImage(url: URL(string: artist.album0),
-                               content: {
-                        image in image.resizable().aspectRatio(contentMode: .fit)
-                    }, placeholder: {
-                        ProgressView()
-                    })
-                }
-                if !artist.album1.isEmpty {
-                    AsyncImage(url: URL(string: artist.album1),
-                               content: {
-                        image in image.resizable().aspectRatio(contentMode: .fit)
-                    }, placeholder: {
-                        ProgressView()
-                    })
-                }
-                if !artist.album2.isEmpty {
-                    AsyncImage(url: URL(string: artist.album2),
-                               content: {
-                        image in image.resizable().aspectRatio(contentMode: .fit)
-                    }, placeholder: {
-                        ProgressView()
-                    })
+                
+                HStack {
+                    if !artist.album0.isEmpty {
+                        AsyncImage(url: URL(string: artist.album0),
+                                   content: {
+                            image in image.resizable().aspectRatio(contentMode: .fit)
+                        }, placeholder: {
+                            ProgressView()
+                        })
+                    }
+                    if !artist.album1.isEmpty {
+                        AsyncImage(url: URL(string: artist.album1),
+                                   content: {
+                            image in image.resizable().aspectRatio(contentMode: .fit)
+                        }, placeholder: {
+                            ProgressView()
+                        })
+                    }
+                    if !artist.album2.isEmpty {
+                        AsyncImage(url: URL(string: artist.album2),
+                                   content: {
+                            image in image.resizable().aspectRatio(contentMode: .fit)
+                        }, placeholder: {
+                            ProgressView()
+                        })
+                    }
                 }
             }
-        }
+        }.padding(10)
+        .background(Color.gray)
+        .border(Color.gray, width: 1)
+        .cornerRadius(10)
+        .frame(width: 380)
+        .padding(.top, 20)
     }
 }
 struct moreInfo: View {
@@ -282,21 +343,15 @@ struct moreInfo: View {
                 }
             
             //spotify artists
-            VStack {
+//            VStack {
                 ScrollView {
                     if spotifyArtists?.count ?? -1 > 0 {
-                        HStack {
-                            ForEach(spotifyArtists!.indices, id: \.self) { index in
-                                CarouselItemView(artist: spotifyArtists![index])
-                                
-                                
-                                
-                                
-                            }
+                        ForEach(spotifyArtists!.indices, id: \.self) { index in
+                            CarouselItemView(artist: spotifyArtists![index])
                         }
                     }
                 }
-            }
+//            }
             .tabItem {
                 Image(systemName: "guitars.fill")
                     .resizable()
@@ -354,7 +409,7 @@ struct moreInfo: View {
                     }
                 }
                 Spacer().frame(height: 10)
-                Button("Show venue on Google Maps") {
+                Button("Show venue on maps") {
                     showModal = true
                 }.foregroundColor(.white)
                     .padding(.vertical, 10)
