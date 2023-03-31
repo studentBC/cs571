@@ -148,31 +148,51 @@ struct moreInfo: View {
     @State private var isVdgrExpanded = false
     @State private var isVdcrExpanded = false
     @State private var selection = 0
+    @State private var showToast = false
     var body: some View {
         // 1
         TabView(selection: $selectedTab) { // 2
             ZStack {
                 Color.white // Set the background color of the screen
                 VStack(spacing: 10) {
-                    Text((event.venue ?? "lol").replacingOccurrences(of: "|", with: ""))
+                    Text(event.name)
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding(.top, 50) // Adjust the top padding to your liking
                     
+                    HStack {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Date").bold().aspectRatio(contentMode: .fit)
+                            Text(event.date ?? "?"+" " + (event.time ?? "")).foregroundColor(Color.gray).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
+                        }
+                        Spacer()
+                        VStack(alignment: .trailing, spacing: 10) {
+                            Text("Artist/Team").bold().padding(.top, 5)
+                            Text(event.artistName).foregroundColor(Color.gray)
+                        }
+                    }
+                    HStack {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Venue").bold().aspectRatio(contentMode: .fit)
+                            Text((event.venue ?? "lol").replacingOccurrences(of: "|", with: "")).foregroundColor(Color.gray)
+                        }
+                        Spacer()
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Genres").bold().padding(.top, 5)
+                            Text(event.genre).foregroundColor(Color.gray).multilineTextAlignment(.trailing)
+                        }
+                    }
+                    
                     
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Date").aspectRatio(contentMode: .fit)
-                            Text(event.date ?? "?"+" " + (event.time ?? "")).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
-                            Text("Artist/Team").padding(.top, 5)
-                            //we need to change venue json obj to get the link ...
-                            //Text("[\(event.embedded.attractions[0]?.name)](\())")
-                            Text("Genres").padding(.top, 5)
-                            Text(event.genre).aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
-                            Text("Price Ranges").padding(.top, 5)
-                            Text("\(event.pMin)-\(event.pMax) \(event.currency)").aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
+                            Text("Price Ranges").bold().padding(.top, 5)
+                            Text("\(event.pMin)-\(event.pMax) \(event.currency)").foregroundColor(Color.gray).multilineTextAlignment(.leading)
+                        }
+                        Spacer()
+                        VStack(alignment: .center, spacing: 10) {
                             Group {
-                                Text("Ticket Status")
+                                Text("Ticket Status").bold()
                                 if (event.ticketStatus == "onsale") {
                                     Text("On Sale").padding(3).background(.green).cornerRadius(8).foregroundColor(.black)
                                 } else if (event.ticketStatus == "offsale") {
@@ -181,26 +201,39 @@ struct moreInfo: View {
                                     Text("Rescheduled").padding(3).background(.yellow).cornerRadius(8).foregroundColor(.black)
                                 }
                             }.padding(.top, 8)
-                            Text("Buy TicketAt:").aspectRatio(contentMode: .fit).multilineTextAlignment(.leading).padding(.top, 5)
-                            //Link("Ticketmaster", destination: URL(string: event.url)!)
-                            Text(.init("[Ticketmaster](\(event.buyTicketURL))")).aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
-                            
-                            
-                            //                    Text("Ticketmaster").onTapGesture {
-                            //                        UIApplication.shared.open(URL(string: event.url)!)
-                            //                    }
                         }
-                        //                    AsyncImage(url: URL(string: event.seatmap ?? ""),
-                        //                               content: {
-                        //                        image in image.resizable().aspectRatio(contentMode: .fit)
-                        //                    },
-                        //                               placeholder: {
-                        //                        ProgressView()
-                        //                    }).frame(width: 200)
                     }
+                    //shared on button
+                    Button(action: {
+                        isFilled = getFavorite.addFavorite(event: event)
+                        showToast = true;
+                    }) {
+                        Text(isFilled ? "Remove Favorites" : "Save Event")
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(isFilled ? Color.red : Color.blue)
+                    }.frame(width: 150, height: 50)
+                    //show img
+                    
+                    AsyncImage(url: URL(string: event.seatmap)) { image in
+                        image.resizable().frame(width: 250, height: 200)
+                    } placeholder: {
+                        ProgressView()
+                    }
+                    
+                    
+                    HStack {
+                        Text("Buy TicketAt:").bold().aspectRatio(contentMode: .fit).multilineTextAlignment(.leading).padding(.top, 5)
+                        //Link("Ticketmaster", destination: URL(string: event.url)!)
+                        Text(.init("[Ticketmaster](\(event.buyTicketURL))")).foregroundColor(Color.gray).aspectRatio(contentMode: .fit).multilineTextAlignment(.trailing)
+                    }
+                    
+                    
+                    
                     //favorites heart button
                     HStack {
-                        Text("Share on:")
+                        Text("Share on:").bold()
                         Button(action: {
                             // Open Twitter app or website to share the message
                             let fbUrl = "https://www.facebook.com/sharer/sharer.php?u=\(event.buyTicketURL)"
@@ -227,21 +260,14 @@ struct moreInfo: View {
                                 .padding(.bottom, 20)
                         }
                     }
-                    //shared on button
-                    let key = event.name+event.date
-                    Button(action: {
-                        isFilled = getFavorite.addFavorite(event: event)
-                    }) {
-                        Image(systemName: isFilled ? "heart.fill" : "heart")
-                            .foregroundColor(isFilled ? .red : .gray).font(.system(size: 50))
-                    }
+                    
                     //colliquium
                 }.scaledToFit().task(lol)
             }.tag(0)
             // 3
                 .tabItem {
-                    //            Image("descending-airplane")
-                    //              .resizable()
+                    Image(systemName: "text.bubble.fill")
+                        .resizable()
                     Text("Events")
                 }
             
@@ -265,122 +291,90 @@ struct moreInfo: View {
                         }
                     }
                 }
-//                    .tabViewStyle(PageTabViewStyle())
-//                    .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-                    
-//                    HStack {
-//                        Button(action: {
-//                            if selection > 0 {
-//                                selection -= 1
-//                            }
-//                        }, label: {
-//                            Image(systemName: "chevron.left")
-//                                .font(.title)
-//                                .foregroundColor(.black)
-//                        })
-                        
-                        //Spacer()
-                        
-                        Button(action: {
-                            if selection < spotifyArtists!.count - 1 {
-                                selection += 1
-                            }
-                        }, label: {
-                            Image(systemName: "chevron.right")
-                                .font(.title)
-                                .foregroundColor(.black)
-                        }).padding(.trailing, 10)
-//                    }
-//                    .padding(.horizontal, 20)
-//                    .padding(.top, 10)
-                    
-                    
-                    
+                //                    .tabViewStyle(PageTabViewStyle())
+                //                    .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+                
+                //                    HStack {
+                //                        Button(action: {
+                //                            if selection > 0 {
+                //                                selection -= 1
+                //                            }
+                //                        }, label: {
+                //                            Image(systemName: "chevron.left")
+                //                                .font(.title)
+                //                                .foregroundColor(.black)
+                //                        })
+                
+                //Spacer()
+                
+                Button(action: {
+                    if selection < spotifyArtists!.count - 1 {
+                        selection += 1
+                    }
+                }, label: {
+                    Image(systemName: "chevron.right")
+                        .font(.title)
+                        .foregroundColor(.black)
+                }).padding(.trailing, 10)
+                //                    }
+                //                    .padding(.horizontal, 20)
+                //                    .padding(.top, 10)
+                
+                
+                
                 
             }
             .tabItem {
-                //            Image(systemName: "airplane")
-                //              .resizable()
+                Image(systemName: "guitars.fill")
+                    .resizable()
                 Text("Artists/Team")
             }.tag(1)
             
             
             VStack {
+                Text(event.name).bold()
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.top, 50) // Adjust the top padding to your liking
                 VStack {
                     VStack(spacing: 10) {
-                        Text("Name").aspectRatio(contentMode: .fit)
-                        Text(venueDetail?.vname ?? "lol").multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
-                        Text("Address").padding(.top, 5)
-                        Text(venueDetail?.vdaddr ?? "lol").multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
+                        Text("Name").bold().aspectRatio(contentMode: .fit)
+                        Text(venueDetail?.vname ?? "lol").foregroundColor(Color.gray).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
+                        Text("Address").bold().padding(.top, 5)
+                        Text(venueDetail?.vdaddr ?? "lol").foregroundColor(Color.gray).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
                         if ((venueDetail?.vdphone) != nil) {
-                            Text("Phone Number").padding(.top, 5)
-                            Text(venueDetail?.vdphone ?? "lol").aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
+                            Text("Phone Number").bold().padding(.top, 5)
+                            Text(venueDetail?.vdphone ?? "lol").foregroundColor(Color.gray).aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
                         }
                         
                     }
                     VStack {
                         if ((venueDetail?.vdoh) != nil && (venueDetail?.vdoh) != "") {
                             
-                            VStack(alignment: .leading) {
-                                Text("Open Hours").padding(.top, 5)
-                                if isVdohExpanded {
-                                    Text(venueDetail!.vdoh).padding(.top, 5).font(.subheadline)
-                                } else {
-                                    Text(venueDetail!.vdoh).padding(.top, 5)
-                                        .font(.subheadline)
-                                        .lineLimit(3)
-                                }
-                                Button(action: {
-                                    isVdohExpanded.toggle()
-                                }) {
-                                    if isVdohExpanded {
-                                        Text("Read less")
-                                    } else {
-                                        Text("Read more")
-                                    }
+                            VStack(alignment: .center) {
+                                Text("Open Hours").bold().padding(.top, 5)
+                                ScrollView {
+                                    Text(venueDetail!.vdoh).foregroundColor(Color.gray)
+                                    .lineLimit(3)
                                 }
                             }
                             .padding()
                         }
                         if ((venueDetail?.vdgr) != nil && (venueDetail?.vdgr) != ""){
                             VStack {
-                                Text("General Rule").padding(.top, 5)
-                                if isVdgrExpanded {
-                                    Text(venueDetail!.vdgr).padding(.top, 5).font(.subheadline)
-                                } else {
-                                    Text(venueDetail!.vdgr).padding(.top, 5)
-                                        .font(.subheadline)
-                                        .lineLimit(3)
-                                }
-                                Button(action: {
-                                    isVdgrExpanded.toggle()
-                                }) {
-                                    if isVdgrExpanded {
-                                        Text("Read less")
-                                    } else {
-                                        Text("Read more")
-                                    }
+                                Text("General Rule").bold().padding(.top, 5)
+                                ScrollView {
+                                    Text(venueDetail!.vdgr).foregroundColor(Color.gray)
+                                    .lineLimit(3)
                                 }
                             }
                         }
                         if ((venueDetail?.vdcr) != nil && (venueDetail?.vdcr) != "") {
                             VStack {
-                                Text("Child Rule").padding(.top, 5)
-                                if isVdcrExpanded {
-                                    Text(venueDetail!.vdcr).font(.subheadline).padding(.top, 5)
-                                } else {
-                                    Text(venueDetail!.vdcr).padding(.top, 5)
-                                        .font(.subheadline)
-                                        .lineLimit(3)
-                                }
-                                Button(action: {
-                                    isVdcrExpanded.toggle()
-                                }) {
-                                    if isVdcrExpanded {
-                                        Text("Read less")
-                                    } else {
-                                        Text("Read more")
-                                    }
+                                Text("Child Rule").bold().padding(.top, 5)
+                                ScrollView {
+                                    Text(venueDetail!.vdcr).foregroundColor(Color.gray)
+                                    .lineLimit(3)
                                 }
                             }
                         }
@@ -390,7 +384,7 @@ struct moreInfo: View {
                 Button("Show venue on Google Maps") {
                     showModal = true
                 }.foregroundColor(.white)
-                 .padding(.vertical, 10)
+                    .padding(.vertical, 10)
                     .padding(.horizontal, 20)
                     .background(Color.red)
                     .cornerRadius(10)
@@ -399,10 +393,36 @@ struct moreInfo: View {
                 ModalView()
             }
             .tabItem {
+                Image(systemName: "location.fill")
+                    .resizable()
                 //            Image("ascending-airplane")
                 Text("Venue")
             }.tag(2)
-        }
+        }.overlay(
+            Group {
+                if showToast {
+                    ZStack(alignment: .bottom) {
+                        Color.black.opacity(0)
+        //                    .ignoresSafeArea()
+        //                VStack {
+                            Text(isFilled ? "Added to favorites": "Remove from favorites")
+                                .foregroundColor(.black)
+                                .padding()
+                                .background(Color.gray)
+                                .cornerRadius(10)
+                                .alignmentGuide(.bottom) { d in d[.bottom] + 50 }
+        //                }
+        //                .padding()
+                    }
+                    .animation(.easeOut)
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            showToast = false
+                        }
+                    }
+                }
+            }, alignment: .top)
+        
     }
     
     func lol() async {
