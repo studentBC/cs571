@@ -16,6 +16,13 @@ struct submitContent {
     
 }
 
+extension Binding where Value == Bool {
+
+    static func &&(_ lhs: Binding<Bool>, _ rhs: Binding<Bool>) -> Binding<Bool> {
+        return Binding<Bool>( get: { lhs.wrappedValue && rhs.wrappedValue },
+                              set: {_ in })
+    }
+}
 
 struct ContentView: View {
     @State private var kw: String = ""
@@ -28,7 +35,9 @@ struct ContentView: View {
     @State private var suggestions: [String] = []
     @State private var showSuggestions = false
     @State private var selectedSuggestion = ""
-    
+    @State private var showAgain=true;
+    @State private var typingTimer: Timer?
+
     @ObservedObject private var searchAPI = apiSearchModel()
     
     let categories = ["Default", "Music", "Sports", "Arts & Theatre", "Film","Miscellaneous"]
@@ -55,30 +64,41 @@ struct ContentView: View {
                     
                     Form {
                         HStack {
-                            Text("Keyword: ")
+                            Text("Keyword: ").foregroundColor(Color.gray)
                             TextField("Required", text: $kw)
-                                .onChange(of: kw) { _ in
-                                getSuggestions()
-                                showSuggestions = true
-                            }
-                            .sheet(isPresented: $showSuggestions) {
-                                ForEach(Array(suggestions.prefix(5)), id: \.self) { suggestion in
-                                    Button(action: {
-                                        selectedSuggestion = suggestion
-                                        kw = suggestion
-                                        showSuggestions = false
-                                        suggestions=[]
-                                    }) {
-                                        Text(suggestion)
-                                            .foregroundColor(.primary)
-                                            .padding(.vertical, 8)
-                                            .padding(.horizontal)
+                                .onChange(of: kw) { value in
+                                    // Invalidate the previous timer when user is typing
+                                    typingTimer?.invalidate()
+                                    showAgain = true
+                                    // Start a new timer when user starts typing
+                                    typingTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                                        // Show suggestions when the timer completes
+                                        showSuggestions = true
+                                        getSuggestions()
                                     }
                                 }
-                            }
+                                .sheet(isPresented: $showSuggestions && $showAgain, onDismiss: {
+                                    showAgain = false
+                                    showSuggestions = false
+                                } ) {
+                                    ForEach(Array(suggestions.prefix(5)), id: \.self) { suggestion in
+                                        Button(action: {
+                                            selectedSuggestion = suggestion
+                                            kw = suggestion
+                                            showSuggestions = false
+                                            suggestions = []
+                                        }) {
+                                            Text(suggestion)
+                                                .foregroundColor(.primary)
+                                                .padding(.vertical, 8)
+                                                .padding(.horizontal)
+                                        }
+                                    }
+                                }
                         }
+
                         HStack {
-                            Text("Distance: ")
+                            Text("Distance: ") .foregroundColor(Color.gray)
                             TextField("10", text: $dist)
                         }
                         
@@ -86,16 +106,16 @@ struct ContentView: View {
                             ForEach(categories, id: \.self) {
                                 Text($0)
                             }
-                        }
+                        }.foregroundColor(Color.gray)
                         .pickerStyle(.menu)
                         if (!selfLocate) {
                             HStack {
-                                Text("Location: ")
+                                Text("Location: ").foregroundColor(Color.gray)
                                 TextField("Required", text: $loc)
                             }
                             //TextField("Location", text: $loc)
                         }
-                        Toggle("Auto-detect my location", isOn: $selfLocate)
+                        Toggle("Auto-detect my location", isOn: $selfLocate) .foregroundColor(Color.gray)
                         HStack {
                             Button(action: {
                                 Task {
@@ -117,6 +137,8 @@ struct ContentView: View {
                                 selfLocate = false;
                                 searchAPI.searchResultTable.removeAll();
                                 showSR = false
+                                showAgain=false;
+                                showSuggestions = false;
                             }) {
                                 Text("Clear").foregroundColor(.white)
                             }.background(Color.blue).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
