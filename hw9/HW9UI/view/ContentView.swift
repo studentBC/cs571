@@ -53,7 +53,7 @@ struct ContentView: View {
                         Button(action: reserve) {
                             NavigationLink(destination: ReservationView()) {
                                 Label("", systemImage: "heart.circle").font(.system(size: 25))
-                            }
+                            }//.navigationTitle("Events Search")
                         }
                     }
                     Text("Events Search")

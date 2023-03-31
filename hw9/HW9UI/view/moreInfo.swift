@@ -45,18 +45,16 @@ struct GoogleMapView: UIViewRepresentable {
 ////for Google map modal view
 struct ModalView: View {
     @State var loc: googleLoc?
+    @State var coordinate = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 56.948889, longitude: 24.106389),
+        span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     var body: some View {
         VStack {
-            Text("This is a modal view")
-                .font(.title)
-                .padding()
-            if let loc = loc {
-                GoogleMapView(loc: loc)
-                    .frame(height: 300)
-            } else {
-                ProgressView()
+            Map(coordinateRegion: $coordinate, annotationItems: [loc].compactMap{$0}) { item in
+                //MapMarker(coordinate: place.coordinate, tint: .green)
+                MapMarker(coordinate: CLLocationCoordinate2D(latitude: item.lat, longitude: item.lng), tint: .red)
             }
-        }
+        }.padding(10)
         .onAppear {
             getGL()
         }
@@ -67,12 +65,16 @@ struct ModalView: View {
                 let getVenue = apiSearchVenue()
                 let loc = try await getVenue.getGoogleLoc(eve: addFavorites.chooseEvent!)
                 self.loc = loc
+                coordinate = MKCoordinateRegion(
+                    center: CLLocationCoordinate2D(latitude: loc.lat, longitude: loc.lng),
+                    span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
             } catch {
                 print("Error searching venue: \(error)")
             }
         }
     }
 }
+
 struct CircularProgressView: View {
     var progress: Double
     var color: Color

@@ -9,10 +9,16 @@ import SwiftUI
 
 struct ReservationView: View {
     var body: some View {
+        Text("Favorites")
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            .padding(.leading, 16)
+            .padding(.bottom, 0)
+//        Text("Favorites").font(.system(size: 24, weight: .bold))
+//            .frame(alignment: .leading)
+//            .padding()
         VStack {
-            Label("List of your favorite events", systemImage: "").foregroundColor(.blue)
-                .frame(alignment: .top)
-                .padding()
+            
             List{
                 ForEach(addFavorites.favoriteTable, id: \.name) { eve in
                     HStack {

@@ -6,6 +6,8 @@
 //
 
 import Foundation
-struct googleLoc: Codable {
+struct googleLoc: Codable, Identifiable {
+    let id = UUID()
     let lat, lng: Double
 }
+
