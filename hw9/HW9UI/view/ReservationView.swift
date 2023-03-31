@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ReservationView: View {
     var body: some View {
-        Text("Favorites")
-            .font(.largeTitle)
-            .fontWeight(.bold)
-            .padding(.leading, 16)
-            .padding(.bottom, 0)
+//        Text("Favorites")
+//            .font(.largeTitle)
+//            .fontWeight(.bold)
+//            .padding(.leading, 16)
+//            .padding(.bottom, 0)
 //        Text("Favorites").font(.system(size: 24, weight: .bold))
 //            .frame(alignment: .leading)
 //            .padding()
@@ -38,7 +38,7 @@ struct ReservationView: View {
                     }
                 }.onDelete(perform: deleteFavorites)
             }
-        }
+        }.navigationTitle("Favorites")
     }
     func deleteFavorites(at offsets: IndexSet) {
         offsets.forEach { (i) in

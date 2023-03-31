@@ -200,7 +200,7 @@ struct CarouselItemView: View {
                 }
             }
         }.padding(10)
-        .background(Color.gray)
+            .background(Color(red: 0.2, green: 0.2, blue: 0.2))
         .border(Color.gray, width: 1)
         .cornerRadius(10)
         .frame(width: 380)
@@ -229,7 +229,7 @@ struct moreInfo: View {
                 Color.white // Set the background color of the screen
                 VStack(spacing: 10) {
                     Text(event.name)
-                        .font(.largeTitle)
+                        .font(.system(size: 20))
                         .fontWeight(.bold)
                         .padding(.top, 50) // Adjust the top padding to your liking
                     
@@ -267,11 +267,11 @@ struct moreInfo: View {
                             Group {
                                 Text("Ticket Status").bold()
                                 if (event.ticketStatus == "onsale") {
-                                    Text("On Sale").padding(3).background(.green).cornerRadius(8).foregroundColor(.black)
+                                    Text("On Sale").foregroundColor(.white).padding(3).background(.green).cornerRadius(8).foregroundColor(.black)
                                 } else if (event.ticketStatus == "offsale") {
-                                    Text("Off Sale").padding(3).background(.red).cornerRadius(8).foregroundColor(.white)
+                                    Text("Off Sale").foregroundColor(.white).padding(3).background(.red).cornerRadius(8).foregroundColor(.white)
                                 } else {
-                                    Text("Rescheduled").padding(3).background(.yellow).cornerRadius(8).foregroundColor(.black)
+                                    Text("Rescheduled").foregroundColor(.white).padding(3).background(.yellow).cornerRadius(8).foregroundColor(.black)
                                 }
                             }.padding(.top, 8)
                         }
@@ -286,7 +286,8 @@ struct moreInfo: View {
                             .padding()
                             .frame(maxWidth: .infinity)
                             .background(isFilled ? Color.red : Color.blue)
-                    }.frame(width: 150, height: 50)
+                            .cornerRadius(10)
+                    }.frame(width: 150, height: 50).cornerRadius(10)
                     //show img
                     
                     AsyncImage(url: URL(string: event.seatmap)) { image in
@@ -316,7 +317,7 @@ struct moreInfo: View {
                         }){
                             Image("fb-icon")
                                 .resizable()
-                                .frame(width: 50, height: 50)
+                                .frame(width: 35, height: 35)
                                 .padding(.bottom, 20)
                         }
                         Button(action: {
@@ -329,7 +330,7 @@ struct moreInfo: View {
                         }) {
                             Image("twitter-icon")
                                 .resizable()
-                                .frame(width: 50, height: 50)
+                                .frame(width: 35, height: 35)
                                 .padding(.bottom, 20)
                         }
                     }
@@ -363,9 +364,9 @@ struct moreInfo: View {
             
             VStack {
                 Text(event.name).bold()
-                    .font(.largeTitle)
+                    .font(.system(size: 20))
                     .fontWeight(.bold)
-                    .padding(.top, 50) // Adjust the top padding to your liking
+                    .padding(.bottom, 50) // Adjust the top padding to your liking
                 VStack {
                     VStack(spacing: 10) {
                         Text("Name").bold().aspectRatio(contentMode: .fit)
