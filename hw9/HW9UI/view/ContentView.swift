@@ -60,7 +60,9 @@ struct ContentView: View {
                                 // Start a new timer when user starts typing
                                 typingTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
                                     // Show suggestions when the timer completes
-                                    showSuggestions = true
+                                    if (kw.count > 0) {
+                                        showSuggestions = true
+                                    }
                                     getSuggestions()
                                 }
                                 if kw.count > 0 && (selfLocate || loc.count > 0) {
