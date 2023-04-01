@@ -346,11 +346,19 @@ struct moreInfo: View {
                 }
             
             //spotify artists
-//            VStack {
-                ScrollView {
+            VStack {
+//                ScrollView {
                     if spotifyArtists?.count ?? -1 > 0 {
-                        ForEach(spotifyArtists!.indices, id: \.self) { index in
-                            CarouselItemView(artist: spotifyArtists![index])
+                        ScrollView {
+                            ForEach(spotifyArtists!.indices, id: \.self) { index in
+                                CarouselItemView(artist: spotifyArtists![index])
+                            }
+                        }
+                    } else {
+                        VStack {
+                            Spacer()
+                            Text("No music related artist details to show").font(.system(size: 30)).bold()
+                            Spacer()
                         }
                     }
                 }
@@ -439,7 +447,7 @@ struct moreInfo: View {
                             Text(isFilled ? "Added to favorites": "Remove from favorites")
                                 .foregroundColor(.black)
                                 .padding()
-                                .background(Color.gray)
+                                .background(Color.gray).opacity(0.8)
                                 .cornerRadius(10)
                                 .alignmentGuide(.bottom) { d in d[.bottom] + 50 }
         //                }

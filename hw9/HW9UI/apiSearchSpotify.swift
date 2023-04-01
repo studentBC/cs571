@@ -15,6 +15,10 @@ class apiSearchSpotify: ObservableObject {
     func goSearch(eve: Event) async throws -> [spotifyArtist]  {
         var spotifyArtists: [spotifyArtist] = []
         let artists: [String] = eve.artistName.components(separatedBy: ",")
+        if !eve.genre.contains("Music") {
+            // Do something if the string contains "Music"
+            return spotifyArtists
+        }
         for name in artists {
             
             if (name.isEmpty) {
