@@ -67,25 +67,25 @@ struct ContentView: View {
                                 } else {
                                     okay = false
                                 }
-                                print("kw.count : ", kw.count)
-                                print("selfLocate", selfLocate)
-                                print("loc.count", loc.count)
                             }
                             .sheet(isPresented: $showSuggestions && $showAgain, onDismiss: {
                                 showAgain = false
                                 showSuggestions = false
                             } ) {
-                                ForEach(Array(suggestions.prefix(5)), id: \.self) { suggestion in
-                                    Button(action: {
-                                        selectedSuggestion = suggestion
-                                        kw = suggestion
-                                        showSuggestions = false
-                                        suggestions = []
-                                    }) {
-                                        Text(suggestion)
-                                            .foregroundColor(.primary)
-                                            .padding(.vertical, 8)
-                                            .padding(.horizontal)
+                                Text("Suggestions").bold().font(.system(size: 30)).padding(.top, 20)
+                                Form {
+                                    ForEach(Array(suggestions.prefix(5)), id: \.self) { suggestion in
+                                        Button(action: {
+                                            selectedSuggestion = suggestion
+                                            kw = suggestion
+                                            showSuggestions = false
+                                            suggestions = []
+                                        }) {
+                                            Text(suggestion)
+                                                .foregroundColor(.primary)
+                                                .padding(.vertical, 8)
+                                                .padding(.horizontal)
+                                        }
                                     }
                                 }
                             }
@@ -111,9 +111,6 @@ struct ContentView: View {
                                 } else {
                                     okay = false
                                 }
-                                print("kw.count : ", kw.count)
-                                print("selfLocate", selfLocate)
-                                print("loc.count", loc.count)
                             }
                         }
                         //TextField("Location", text: $loc)
@@ -122,9 +119,6 @@ struct ContentView: View {
                         if kw.count > 0 && (selfLocate || loc.count > 0) {
                             okay = true
                         } else {
-                            print("kw.count : ", kw.count)
-                            print("selfLocate", selfLocate)
-                            print("loc.count", loc.count)
                             okay = false
                         }
                     }

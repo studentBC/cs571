@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ReservationView: View {
+    @State private var noFavoritesFound = addFavorites.favoriteTable.count
     var body: some View {
 //        Text("Favorites")
 //            .font(.largeTitle)
@@ -18,27 +19,32 @@ struct ReservationView: View {
 //            .frame(alignment: .leading)
 //            .padding()
         VStack {
-            
-            List{
-                ForEach(addFavorites.favoriteTable, id: \.name) { eve in
-                    HStack {
-                        Text((eve.date )).aspectRatio(contentMode: .fit)
-                        Text(eve.name).aspectRatio(contentMode: .fit)
-                        Text(eve.genre).aspectRatio(contentMode: .fit)
-                        //that is weird here we should debug for it ... maybe json obj error
-                        Text((eve.venue) ).aspectRatio(contentMode: .fit)
-//                        Spacer()
-//                        Button(action: {
-//                            if let index = addFavorites.favoriteTable.firstIndex(of: eve) {
-//                                addFavorites.favoriteTable.remove(at: index)
-//                            }
-//                        }) {
-////                            Image(systemName: "trash")
-//                        }
-                    }
-                }.onDelete(perform: deleteFavorites)
+            if noFavoritesFound == 0 {
+                Text("No favorites found").foregroundColor(Color.red)
+            } else {
+                List{
+                    ForEach(addFavorites.favoriteTable, id: \.name) { eve in
+                        HStack {
+                            Text((eve.date )).aspectRatio(contentMode: .fit)
+                            Text(eve.name).aspectRatio(contentMode: .fit)
+                            Text(eve.genre).aspectRatio(contentMode: .fit)
+                            //that is weird here we should debug for it ... maybe json obj error
+                            Text((eve.venue) ).aspectRatio(contentMode: .fit)
+                            //                        Spacer()
+                            //                        Button(action: {
+                            //                            if let index = addFavorites.favoriteTable.firstIndex(of: eve) {
+                            //                                addFavorites.favoriteTable.remove(at: index)
+                            //                            }
+                            //                        }) {
+                            ////                            Image(systemName: "trash")
+                            //                        }
+                        }
+                    }.onDelete(perform: deleteFavorites)
+                }
             }
-        }.navigationTitle("Favorites")
+        }.navigationTitle("Favorites").onAppear{
+            noFavoritesFound = addFavorites.favoriteTable.count
+        }
     }
     func deleteFavorites(at offsets: IndexSet) {
         offsets.forEach { (i) in
@@ -46,7 +52,7 @@ struct ReservationView: View {
             addFavorites.isAdded[key] = false
         }
         addFavorites.favoriteTable.remove(atOffsets: offsets)
-        
+        noFavoritesFound = addFavorites.favoriteTable.count
 //        print("-------- after delete we have ------")
 //        for event in addFavorites.favoriteTable {
 //            // Do something with each event

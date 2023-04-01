@@ -260,7 +260,7 @@ struct moreInfo: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Price Ranges").bold().padding(.top, 5)
-                            Text("\(event.pMin)-\(event.pMax) \(event.currency)").foregroundColor(Color.gray).multilineTextAlignment(.leading)
+                            Text("\(event.pMin)-\(event.pMax)").foregroundColor(Color.gray).multilineTextAlignment(.leading)
                         }
                         Spacer()
                         VStack(alignment: .center, spacing: 10) {
@@ -311,7 +311,6 @@ struct moreInfo: View {
                         Button(action: {
                             // Open Twitter app or website to share the message
                             let fbUrl = "https://www.facebook.com/sharer/sharer.php?u=\(event.buyTicketURL)"
-                            //let twitterUrl = "https://twitter.com/intent/tweet?text=\(tweetText)&url=\(tweetUrl)"
                             guard let url = URL(string: fbUrl) else { return }
                             UIApplication.shared.open(url)
                         }){
@@ -322,9 +321,13 @@ struct moreInfo: View {
                         }
                         Button(action: {
                             // Open Twitter app or website to share the message
-                            var twitterUrl = "https://twitter.com/intent/tweet?url=Check%20\(event.name) %20on%20Ticketmaster%20.\(event.buyTicketURL)"
-                            twitterUrl = twitterUrl.replacingOccurrences(of: " ", with: "%20")
-                            //let twitterUrl = "https://twitter.com/intent/tweet?text=\(tweetText)&url=\(tweetUrl)"
+//                            var twitterUrl = "https://twitter.com/intent/tweet?url=Check%20\(event.name) %20on%20Ticketmaster%20.\(event.buyTicketURL)"
+                            let words = event.name.replacingOccurrences(of: " ", with: "%20").replacingOccurrences(of:"÷", with: "%C3%B7")
+                            
+                            var twitterUrl = "https://twitter.com/intent/tweet?url=\(words)%20\(event.buyTicketURL)"
+                            print("we got twitterUrl", twitterUrl)
+//                            twitterUrl = "https://twitter.com/intent/tweet?url=Ed%20Sheeran:%20+-=%C3%B7x%20Tour%20https://www.ticketmaster.com/ed-sheeran-x-tour-inglewood-california-09-23-2023/event/0A005D3EAC76317F"
+                            //twitterUrl = twitterUrl.replacingOccurrences(of: " ", with: "%20")
                             guard let url = URL(string: twitterUrl) else { return }
                             UIApplication.shared.open(url)
                         }) {
@@ -366,7 +369,7 @@ struct moreInfo: View {
             .tabItem {
                 Image(systemName: "guitars.fill")
                     .resizable()
-                Text("Artists/Team")
+                Text("Artists | Team")
             }.tag(1)
             
             
