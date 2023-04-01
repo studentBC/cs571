@@ -192,135 +192,142 @@ struct moreInfo: View {
     @State private var isVdcrExpanded = false
     @State private var selection = 0
     @State private var showToast = false
+    @State private var isSearching = false
     var body: some View {
-        // 1
-        TabView(selection: $selectedTab) { // 2
-            ZStack {
-                Color.white // Set the background color of the screen
-                VStack(spacing: 10) {
-                    Text(event.name)
-                        .font(.system(size: 20))
-                        .fontWeight(.bold)
-                        .padding(.top, 50) // Adjust the top padding to your liking
-                    
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Date").bold().aspectRatio(contentMode: .fit)
-                            Text(event.date ?? "?"+" " + (event.time ?? "")).foregroundColor(Color.gray).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
+        if isSearching {
+            ProgressView("Please wait...")
+        } else {
+            // 1
+            TabView(selection: $selectedTab) { // 2
+                ZStack {
+                    Color.white // Set the background color of the screen
+                    VStack(spacing: 10) {
+                        Text(event.name)
+                            .font(.system(size: 20))
+                            .fontWeight(.bold)
+                            .padding(.top, 50) // Adjust the top padding to your liking
+                        
+                        HStack {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Date").bold().aspectRatio(contentMode: .fit)
+                                Text(event.date ?? "?"+" " + (event.time ?? "")).foregroundColor(Color.gray).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
+                            }
+                            Spacer()
+                            VStack(alignment: .trailing, spacing: 10) {
+                                Text("Artist/Team").bold().padding(.top, 5)
+                                Text(event.artistName).foregroundColor(Color.gray)
+                            }
                         }
-                        Spacer()
-                        VStack(alignment: .trailing, spacing: 10) {
-                            Text("Artist/Team").bold().padding(.top, 5)
-                            Text(event.artistName).foregroundColor(Color.gray)
+                        HStack {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Venue").bold().aspectRatio(contentMode: .fit)
+                                Text((event.venue ?? "lol").replacingOccurrences(of: "|", with: "")).foregroundColor(Color.gray)
+                            }
+                            Spacer()
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Genres").bold().padding(.top, 5)
+                                Text(event.genre).foregroundColor(Color.gray).multilineTextAlignment(.trailing)
+                            }
                         }
-                    }
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Venue").bold().aspectRatio(contentMode: .fit)
-                            Text((event.venue ?? "lol").replacingOccurrences(of: "|", with: "")).foregroundColor(Color.gray)
+                        
+                        
+                        HStack {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Price Ranges").bold().padding(.top, 5)
+                                Text("\(event.pMin)-\(event.pMax)").foregroundColor(Color.gray).multilineTextAlignment(.leading)
+                            }
+                            Spacer()
+                            VStack(alignment: .center, spacing: 10) {
+                                Group {
+                                    Text("Ticket Status").bold()
+                                    if (event.ticketStatus == "onsale") {
+                                        Text("On Sale").foregroundColor(.white).padding(3).background(.green).cornerRadius(8).foregroundColor(.black)
+                                    } else if (event.ticketStatus == "offsale") {
+                                        Text("Off Sale").foregroundColor(.white).padding(3).background(.red).cornerRadius(8).foregroundColor(.white)
+                                    } else {
+                                        Text("Rescheduled").foregroundColor(.white).padding(3).background(.yellow).cornerRadius(8).foregroundColor(.black)
+                                    }
+                                }.padding(.top, 8)
+                            }
                         }
-                        Spacer()
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Genres").bold().padding(.top, 5)
-                            Text(event.genre).foregroundColor(Color.gray).multilineTextAlignment(.trailing)
-                        }
-                    }
-                    
-                    
-                    HStack {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Price Ranges").bold().padding(.top, 5)
-                            Text("\(event.pMin)-\(event.pMax)").foregroundColor(Color.gray).multilineTextAlignment(.leading)
-                        }
-                        Spacer()
-                        VStack(alignment: .center, spacing: 10) {
-                            Group {
-                                Text("Ticket Status").bold()
-                                if (event.ticketStatus == "onsale") {
-                                    Text("On Sale").foregroundColor(.white).padding(3).background(.green).cornerRadius(8).foregroundColor(.black)
-                                } else if (event.ticketStatus == "offsale") {
-                                    Text("Off Sale").foregroundColor(.white).padding(3).background(.red).cornerRadius(8).foregroundColor(.white)
-                                } else {
-                                    Text("Rescheduled").foregroundColor(.white).padding(3).background(.yellow).cornerRadius(8).foregroundColor(.black)
-                                }
-                            }.padding(.top, 8)
-                        }
-                    }
-                    //shared on button
-                    Button(action: {
-                        isFilled = getFavorite.addFavorite(event: event)
-                        showToast = true;
-                    }) {
-                        Text(isFilled ? "Remove Favorites" : "Save Event")
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(isFilled ? Color.red : Color.blue)
-                            .cornerRadius(10)
-                    }.frame(width: 150, height: 50).cornerRadius(10)
-                    //show img
-                    
-                    AsyncImage(url: URL(string: event.seatmap)) { image in
-                        image.resizable().frame(width: 250, height: 200)
-                    } placeholder: {
-                        ProgressView()
-                    }
-                    
-                    
-                    HStack {
-                        Text("Buy TicketAt:").bold().aspectRatio(contentMode: .fit).multilineTextAlignment(.leading).padding(.top, 5)
-                        //Link("Ticketmaster", destination: URL(string: event.url)!)
-                        Text(.init("[Ticketmaster](\(event.buyTicketURL))")).foregroundColor(Color.gray).aspectRatio(contentMode: .fit).multilineTextAlignment(.trailing)
-                    }
-                    
-                    
-                    
-                    //favorites heart button
-                    HStack {
-                        Text("Share on:").bold()
+                        //shared on button
                         Button(action: {
-                            // Open Twitter app or website to share the message
-                            let fbUrl = "https://www.facebook.com/sharer/sharer.php?u=\(event.buyTicketURL)"
-                            guard let url = URL(string: fbUrl) else { return }
-                            UIApplication.shared.open(url)
-                        }){
-                            Image("fb-icon")
-                                .resizable()
-                                .frame(width: 35, height: 35)
-                                .padding(.bottom, 20)
-                        }
-                        Button(action: {
-                            // Open Twitter app or website to share the message
-//                            var twitterUrl = "https://twitter.com/intent/tweet?url=Check%20\(event.name) %20on%20Ticketmaster%20.\(event.buyTicketURL)"
-                            let words = event.name.replacingOccurrences(of: " ", with: "%20").replacingOccurrences(of:"÷", with: "%C3%B7")
-                            
-                            var twitterUrl = "https://twitter.com/intent/tweet?url=\(words)%20\(event.buyTicketURL)"
-                            print("we got twitterUrl", twitterUrl)
-//                            twitterUrl = "https://twitter.com/intent/tweet?url=Ed%20Sheeran:%20+-=%C3%B7x%20Tour%20https://www.ticketmaster.com/ed-sheeran-x-tour-inglewood-california-09-23-2023/event/0A005D3EAC76317F"
-                            //twitterUrl = twitterUrl.replacingOccurrences(of: " ", with: "%20")
-                            guard let url = URL(string: twitterUrl) else { return }
-                            UIApplication.shared.open(url)
+                            isFilled = getFavorite.addFavorite(event: event)
+                            showToast = true;
                         }) {
-                            Image("twitter-icon")
-                                .resizable()
-                                .frame(width: 35, height: 35)
-                                .padding(.bottom, 20)
+                            Text(isFilled ? "Remove Favorites" : "Save Event")
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(isFilled ? Color.red : Color.blue)
+                                .cornerRadius(10)
+                        }.frame(width: 150, height: 50).cornerRadius(10)
+                        //show img
+                        
+                        AsyncImage(url: URL(string: event.seatmap)) { image in
+                            image.resizable().frame(width: 250, height: 200)
+                        } placeholder: {
+                            ProgressView()
                         }
+                        
+                        
+                        HStack {
+                            Text("Buy TicketAt:").bold().aspectRatio(contentMode: .fit).multilineTextAlignment(.leading).padding(.top, 5)
+                            //Link("Ticketmaster", destination: URL(string: event.url)!)
+                            Text(.init("[Ticketmaster](\(event.buyTicketURL))")).foregroundColor(Color.gray).aspectRatio(contentMode: .fit).multilineTextAlignment(.trailing)
+                        }
+                        
+                        
+                        
+                        //favorites heart button
+                        HStack {
+                            Text("Share on:").bold()
+                            Button(action: {
+                                // Open Twitter app or website to share the message
+                                let fbUrl = "https://www.facebook.com/sharer/sharer.php?u=\(event.buyTicketURL)"
+                                guard let url = URL(string: fbUrl) else { return }
+                                UIApplication.shared.open(url)
+                            }){
+                                Image("fb-icon")
+                                    .resizable()
+                                    .frame(width: 35, height: 35)
+                                    .padding(.bottom, 20)
+                            }
+                            Button(action: {
+                                // Open Twitter app or website to share the message
+                                //                            var twitterUrl = "https://twitter.com/intent/tweet?url=Check%20\(event.name) %20on%20Ticketmaster%20.\(event.buyTicketURL)"
+                                let words = event.name.replacingOccurrences(of: " ", with: "%20").replacingOccurrences(of:"÷", with: "%C3%B7")
+                                
+                                var twitterUrl = "https://twitter.com/intent/tweet?url=\(words)%20\(event.buyTicketURL)"
+                                print("we got twitterUrl", twitterUrl)
+                                //                            twitterUrl = "https://twitter.com/intent/tweet?url=Ed%20Sheeran:%20+-=%C3%B7x%20Tour%20https://www.ticketmaster.com/ed-sheeran-x-tour-inglewood-california-09-23-2023/event/0A005D3EAC76317F"
+                                //twitterUrl = twitterUrl.replacingOccurrences(of: " ", with: "%20")
+                                guard let url = URL(string: twitterUrl) else { return }
+                                UIApplication.shared.open(url)
+                            }) {
+                                Image("twitter-icon")
+                                    .resizable()
+                                    .frame(width: 35, height: 35)
+                                    .padding(.bottom, 20)
+                            }
+                        }
+                        
+                        //colliquium
+                    }.scaledToFit().task{
+                        isSearching = true
+                        await lol()
                     }
-                    
-                    //colliquium
-                }.scaledToFit().task(lol)
-            }.tag(0)
-            // 3
-                .tabItem {
-                    Image(systemName: "text.bubble.fill")
-                        .resizable()
-                    Text("Events")
-                }
-            
-            //spotify artists
-            VStack {
-//                ScrollView {
+                }.tag(0)
+                // 3
+                    .tabItem {
+                        Image(systemName: "text.bubble.fill")
+                            .resizable()
+                        Text("Events")
+                    }
+                
+                //spotify artists
+                VStack {
+                    //                ScrollView {
                     if spotifyArtists?.count ?? -1 > 0 {
                         ScrollView {
                             ForEach(spotifyArtists!.indices, id: \.self) { index in
@@ -335,106 +342,106 @@ struct moreInfo: View {
                         }
                     }
                 }
-//            }
-            .tabItem {
-                Image(systemName: "guitars.fill")
-                    .resizable()
-                Text("Artists | Team")
-            }.tag(1)
-            
-            
-            VStack {
-                Text(event.name).bold()
-                    .font(.system(size: 20))
-                    .fontWeight(.bold)
-                    .padding(.bottom, 50) // Adjust the top padding to your liking
-                VStack {
-                    VStack(spacing: 10) {
-                        Text("Name").bold().aspectRatio(contentMode: .fit)
-                        Text(venueDetail?.vname ?? "lol").foregroundColor(Color.gray).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
-                        Text("Address").bold().padding(.top, 5)
-                        Text(venueDetail?.vdaddr ?? "lol").foregroundColor(Color.gray).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
-                        if ((venueDetail?.vdphone) != nil) {
-                            Text("Phone Number").bold().padding(.top, 5)
-                            Text(venueDetail?.vdphone ?? "lol").foregroundColor(Color.gray).aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
-                        }
-                        
-                    }
-                    VStack {
-                        if ((venueDetail?.vdoh) != nil && (venueDetail?.vdoh) != "") {
-                            
-                            VStack(alignment: .center) {
-                                Text("Open Hours").bold().padding(.top, 5)
-                                ScrollView {
-                                    Text(venueDetail!.vdoh).foregroundColor(Color.gray)
-                                    .lineLimit(3)
-                                }
-                            }
-                            .padding()
-                        }
-                        if ((venueDetail?.vdgr) != nil && (venueDetail?.vdgr) != ""){
-                            VStack {
-                                Text("General Rule").bold().padding(.top, 5)
-                                ScrollView {
-                                    Text(venueDetail!.vdgr).foregroundColor(Color.gray)
-                                    .lineLimit(3)
-                                }
-                            }
-                        }
-                        if ((venueDetail?.vdcr) != nil && (venueDetail?.vdcr) != "") {
-                            VStack {
-                                Text("Child Rule").bold().padding(.top, 5)
-                                ScrollView {
-                                    Text(venueDetail!.vdcr).foregroundColor(Color.gray)
-                                    .lineLimit(3)
-                                }
-                            }
-                        }
-                    }
-                }
-                Spacer().frame(height: 10)
-                Button("Show venue on maps") {
-                    showModal = true
-                }.foregroundColor(.white)
-                    .padding(.vertical, 10)
-                    .padding(.horizontal, 20)
-                    .background(Color.red)
-                    .cornerRadius(10)
+                //            }
+                .tabItem {
+                    Image(systemName: "guitars.fill")
+                        .resizable()
+                    Text("Artists | Team")
+                }.tag(1)
                 
-            }.sheet(isPresented: $showModal) {
-                ModalView()
-            }
-            .tabItem {
-                Image(systemName: "location.fill")
-                    .resizable()
-                //            Image("ascending-airplane")
-                Text("Venue")
-            }.tag(2)
-        }.overlay(
-            Group {
-                if showToast {
-                    ZStack(alignment: .bottom) {
-                        Color.black.opacity(0)
-        //                    .ignoresSafeArea()
-        //                VStack {
+                
+                VStack {
+                    Text(event.name).bold()
+                        .font(.system(size: 20))
+                        .fontWeight(.bold)
+                        .padding(.bottom, 50) // Adjust the top padding to your liking
+                    VStack {
+                        VStack(spacing: 10) {
+                            Text("Name").bold().aspectRatio(contentMode: .fit)
+                            Text(venueDetail?.vname ?? "lol").foregroundColor(Color.gray).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
+                            Text("Address").bold().padding(.top, 5)
+                            Text(venueDetail?.vdaddr ?? "lol").foregroundColor(Color.gray).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
+                            if ((venueDetail?.vdphone) != nil) {
+                                Text("Phone Number").bold().padding(.top, 5)
+                                Text(venueDetail?.vdphone ?? "lol").foregroundColor(Color.gray).aspectRatio(contentMode: .fit).multilineTextAlignment(.leading)
+                            }
+                            
+                        }
+                        VStack {
+                            if ((venueDetail?.vdoh) != nil && (venueDetail?.vdoh) != "") {
+                                
+                                VStack(alignment: .center) {
+                                    Text("Open Hours").bold().padding(.top, 5)
+                                    ScrollView {
+                                        Text(venueDetail!.vdoh).foregroundColor(Color.gray)
+                                            .lineLimit(3)
+                                    }
+                                }
+                                .padding()
+                            }
+                            if ((venueDetail?.vdgr) != nil && (venueDetail?.vdgr) != ""){
+                                VStack {
+                                    Text("General Rule").bold().padding(.top, 5)
+                                    ScrollView {
+                                        Text(venueDetail!.vdgr).foregroundColor(Color.gray)
+                                            .lineLimit(3)
+                                    }
+                                }
+                            }
+                            if ((venueDetail?.vdcr) != nil && (venueDetail?.vdcr) != "") {
+                                VStack {
+                                    Text("Child Rule").bold().padding(.top, 5)
+                                    ScrollView {
+                                        Text(venueDetail!.vdcr).foregroundColor(Color.gray)
+                                            .lineLimit(3)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    Spacer().frame(height: 10)
+                    Button("Show venue on maps") {
+                        showModal = true
+                    }.foregroundColor(.white)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 20)
+                        .background(Color.red)
+                        .cornerRadius(10)
+                    
+                }.sheet(isPresented: $showModal) {
+                    ModalView()
+                }
+                .tabItem {
+                    Image(systemName: "location.fill")
+                        .resizable()
+                    //            Image("ascending-airplane")
+                    Text("Venue")
+                }.tag(2)
+            }.overlay(
+                Group {
+                    if showToast {
+                        ZStack(alignment: .bottom) {
+                            Color.black.opacity(0)
+                            //                    .ignoresSafeArea()
+                            //                VStack {
                             Text(isFilled ? "Added to favorites": "Remove from favorites")
                                 .foregroundColor(.black)
                                 .padding()
                                 .background(Color.gray).opacity(0.8)
                                 .cornerRadius(10)
                                 .alignmentGuide(.bottom) { d in d[.bottom] + 50 }
-        //                }
-        //                .padding()
-                    }
-                    .animation(.easeOut)
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            showToast = false
+                            //                }
+                            //                .padding()
+                        }
+                        .animation(.easeOut)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                showToast = false
+                            }
                         }
                     }
-                }
-            }, alignment: .top)
-        
+                }, alignment: .top)
+        }
     }
     
     func lol() async {
@@ -446,6 +453,7 @@ struct moreInfo: View {
         } else {
             isFilled = false
         }
+        isSearching = false
         do {
             venueDetail = try await getVenue.goSearch(eve: event)
         } catch {

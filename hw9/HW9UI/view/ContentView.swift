@@ -38,6 +38,7 @@ struct ContentView: View {
     @State private var showAgain=true;
     @State private var typingTimer: Timer?
     @State private var okay = false
+    @State private var showProgressView = false
     @ObservedObject private var searchAPI = apiSearchModel()
     
     let categories = ["Default", "Music", "Sports", "Arts & Theatre", "Film","Miscellaneous"]
@@ -126,8 +127,11 @@ struct ContentView: View {
                         Button(action: {
                             Task {
                                 let sbc = submitContent(kw: kw, dist: dist, loc: loc, selfLocate: selfLocate, Category: selection)
-                                await searchAPI.goSearch(suc: sbc)
+                                showProgressView = true
                                 showSR = true
+                                await searchAPI.goSearch(suc: sbc)
+                                
+                                showProgressView = false
                             }
                         }) {
                             Text("Submit").foregroundColor(.white)
@@ -160,17 +164,20 @@ struct ContentView: View {
                 if (showSR) {
                     Form {
                         Text("Results").bold().font(.title)
-                        if (searchAPI.searchResultTable.count == 0) {
-                            Text("No result available").foregroundColor(.red)
+                        if showProgressView {
+                            ProgressView("Searching...")
                         } else {
-                            List(searchAPI.searchResultTable, id: \.name) { eve in
-                                NavigationLink(destination: moreInfo(event: eve)) {
-                                    searchTableCell(es: eve)
+                            if (searchAPI.searchResultTable.count == 0) {
+                                Text("No result available").foregroundColor(.red)
+                            } else {
+                                List(searchAPI.searchResultTable, id: \.name) { eve in
+                                    NavigationLink(destination: moreInfo(event: eve)) {
+                                        searchTableCell(es: eve)
+                                    }
                                 }
                             }
                         }
                     }
-                    
                 }
             }.toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
