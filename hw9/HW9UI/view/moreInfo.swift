@@ -8,40 +8,9 @@
 import SwiftUI
 import UIKit
 import MapKit
-import GoogleMaps
 public var glat: Double = -33.86
 public var glng: Double = 151.20
 
-struct GoogleMapView: UIViewRepresentable {
-    var loc: googleLoc
-    //    init(glat: Double, glng: Double) {
-    //        lat = glat
-    //        lng = glng
-    //        print("2. we got lat lng", lat, lng)
-    //    }
-    
-    func makeUIView(context: Context) -> GMSMapView {
-        GMSServices.provideAPIKey("AIzaSyC90QZRvrLzZiCA6-t8jwRrexVM1zdgmJo")
-        // Create a GMSCameraPosition that tells the map to display the
-        // coordinate -33.86,151.20 at zoom level 6.
-        let camera = GMSCameraPosition.camera(withLatitude: loc.lat, longitude: loc.lng, zoom: 13.0)
-        let mapView = GMSMapView.map(withFrame: .zero, camera: camera)
-        
-        // Creates a marker in the center of the map.
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: loc.lat, longitude: loc.lng)
-        //        marker.title = "Sydney"
-        //        marker.snippet = "Australia"
-        marker.map = mapView
-        
-        return mapView
-    }
-    func updateUIView(_ mapView: GMSMapView, context: Context) {
-        // Update the view if needed
-        GMSCameraPosition.camera(withLatitude: loc.lat, longitude: loc.lng, zoom: 13)
-        //mapView.animate(to: camera)
-    }
-}
 ////for Google map modal view
 struct ModalView: View {
     @State var loc: googleLoc?
