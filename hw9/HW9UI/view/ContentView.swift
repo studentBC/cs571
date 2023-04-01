@@ -62,6 +62,14 @@ struct ContentView: View {
                                     showSuggestions = true
                                     getSuggestions()
                                 }
+                                if kw.count > 0 && (selfLocate || loc.count > 0) {
+                                    okay = true
+                                } else {
+                                    okay = false
+                                }
+                                print("kw.count : ", kw.count)
+                                print("selfLocate", selfLocate)
+                                print("loc.count", loc.count)
                             }
                             .sheet(isPresented: $showSuggestions && $showAgain, onDismiss: {
                                 showAgain = false
@@ -97,11 +105,29 @@ struct ContentView: View {
                     if (!selfLocate) {
                         HStack {
                             Text("Location: ").foregroundColor(Color.gray)
-                            TextField("Required", text: $loc)
+                            TextField("Required", text: $loc).onChange(of: loc) { value in
+                                if kw.count > 0 && (selfLocate || loc.count > 0) {
+                                    okay = true
+                                } else {
+                                    okay = false
+                                }
+                                print("kw.count : ", kw.count)
+                                print("selfLocate", selfLocate)
+                                print("loc.count", loc.count)
+                            }
                         }
                         //TextField("Location", text: $loc)
                     }
-                    Toggle("Auto-detect my location", isOn: $selfLocate) .foregroundColor(Color.gray)
+                    Toggle("Auto-detect my location", isOn: $selfLocate).foregroundColor(Color.gray).onChange(of: selfLocate) { value in
+                        if kw.count > 0 && (selfLocate || loc.count > 0) {
+                            okay = true
+                        } else {
+                            print("kw.count : ", kw.count)
+                            print("selfLocate", selfLocate)
+                            print("loc.count", loc.count)
+                            okay = false
+                        }
+                    }
                     HStack {
                         Button(action: {
                             Task {
@@ -111,7 +137,7 @@ struct ContentView: View {
                             }
                         }) {
                             Text("Submit").foregroundColor(.white)
-                        }.background(okay ? Color.gray : Color.red).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
+                        }.background(okay ? Color.red : Color.gray).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
                             .frame(width: 180, height: 50)
                         //.tint(.gray)
                         Button(action: {
