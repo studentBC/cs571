@@ -37,21 +37,13 @@ struct ContentView: View {
     @State private var selectedSuggestion = ""
     @State private var showAgain=true;
     @State private var typingTimer: Timer?
-    
+    @State private var okay = false
     @ObservedObject private var searchAPI = apiSearchModel()
     
     let categories = ["Default", "Music", "Sports", "Arts & Theatre", "Film","Miscellaneous"]
     var body: some View {
         // A cell that, when selected, adds a new folder.
         // reserve seat logo
-//        HStack {
-//            Spacer().frame(maxWidth:.infinity)
-//            Button(action: reserve) {
-//                NavigationLink(destination: ReservationView()) {
-//                    Label("", systemImage: "heart.circle").font(.system(size: 25))
-//                }
-//            }
-//        }
         NavigationView {
             
             // Set the background color of the screen
@@ -119,7 +111,7 @@ struct ContentView: View {
                             }
                         }) {
                             Text("Submit").foregroundColor(.white)
-                        }.background(Color.gray).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
+                        }.background(okay ? Color.gray : Color.red).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
                             .frame(width: 180, height: 50)
                         //.tint(.gray)
                         Button(action: {
@@ -133,6 +125,7 @@ struct ContentView: View {
                             showSR = false
                             showAgain=false;
                             showSuggestions = false;
+                            okay = false;
                         }) {
                             Text("Clear").foregroundColor(.white)
                         }.background(Color.blue).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
@@ -145,15 +138,19 @@ struct ContentView: View {
                 //let no = 1
                 //https://www.appcoda.com/swiftui-first-look/
                 if (showSR) {
-                    if (searchAPI.searchResultTable.count == 0) {
-                        Text("No Records found").padding().backgroundStyle(.white).foregroundColor(.red)
-                    } else {
-                        List(searchAPI.searchResultTable, id: \.name) { eve in
-                            NavigationLink(destination: moreInfo(event: eve)) {
-                                searchTableCell(es: eve)
+                    Form {
+                        Text("Results").bold().font(.title)
+                        if (searchAPI.searchResultTable.count == 0) {
+                            Text("No result available").foregroundColor(.red)
+                        } else {
+                            List(searchAPI.searchResultTable, id: \.name) { eve in
+                                NavigationLink(destination: moreInfo(event: eve)) {
+                                    searchTableCell(es: eve)
+                                }
                             }
                         }
                     }
+                    
                 }
             }.toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
