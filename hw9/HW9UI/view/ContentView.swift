@@ -131,7 +131,7 @@ struct ContentView: View {
                             }
                         }) {
                             Text("Submit").foregroundColor(.white)
-                        }.background(okay ? Color.red : Color.gray).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
+                        }.disabled(!okay).background(okay ? Color.red : Color.gray).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
                             .frame(width: 180, height: 50)
                         //.tint(.gray)
                         Button(action: {

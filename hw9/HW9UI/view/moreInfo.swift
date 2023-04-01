@@ -117,7 +117,8 @@ func convertToShortHand(_ numberString: String) -> String {
         let millionNumber = Int(number / 1000000)
         return formatter.string(from: NSNumber(value: millionNumber))! + "M"
     } else {
-        return formatter.string(from: NSNumber(value: number))!
+        let kNumber = Int(number / 1000)
+        return formatter.string(from: NSNumber(value: kNumber))! + "K"
     }
 }
 
