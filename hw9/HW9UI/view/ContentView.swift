@@ -75,19 +75,23 @@ struct ContentView: View {
                                 showAgain = false
                                 showSuggestions = false
                             } ) {
-                                Text("Suggestions").bold().font(.system(size: 30)).padding(.top, 20)
-                                Form {
-                                    ForEach(Array(suggestions.prefix(5)), id: \.self) { suggestion in
-                                        Button(action: {
-                                            selectedSuggestion = suggestion
-                                            kw = suggestion
-                                            showSuggestions = false
-                                            suggestions = []
-                                        }) {
-                                            Text(suggestion)
-                                                .foregroundColor(.primary)
-                                                .padding(.vertical, 8)
-                                                .padding(.horizontal)
+                                if suggestions.count == 0 {
+                                    ProgressView("Loading")
+                                } else {
+                                    Text("Suggestions").bold().font(.system(size: 30)).padding(.top, 20)
+                                    Form {
+                                        ForEach(Array(suggestions.prefix(5)), id: \.self) { suggestion in
+                                            Button(action: {
+                                                selectedSuggestion = suggestion
+                                                kw = suggestion
+                                                showSuggestions = false
+                                                suggestions = []
+                                            }) {
+                                                Text(suggestion)
+                                                    .foregroundColor(.primary)
+                                                    .padding(.vertical, 8)
+                                                    .padding(.horizontal)
+                                            }
                                         }
                                     }
                                 }
@@ -167,7 +171,7 @@ struct ContentView: View {
                     Form {
                         Text("Results").bold().font(.title)
                         if showProgressView {
-                            ProgressView("Searching...")
+                            ProgressView("Please wait...")
                         } else {
                             if (searchAPI.searchResultTable.count == 0) {
                                 Text("No result available").foregroundColor(.red)
