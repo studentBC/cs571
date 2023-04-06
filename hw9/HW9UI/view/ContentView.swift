@@ -132,11 +132,12 @@ struct ContentView: View {
                     HStack {
                         Button(action: {
                             Task {
+                                searchAPI.searchResultTable.removeAll()
                                 let sbc = submitContent(kw: kw, dist: dist, loc: loc, selfLocate: selfLocate, Category: selection)
                                 showProgressView = true
                                 showSR = true
                                 await searchAPI.goSearch(suc: sbc)
-                                
+
                                 showProgressView = false
                             }
                         }) {
