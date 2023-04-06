@@ -26,7 +26,7 @@ extension Binding where Value == Bool {
 
 struct ContentView: View {
     @State private var kw: String = ""
-    @State private var dist: String = ""
+    @State private var dist: String = "10"
     @State private var loc: String = ""
     @State private var selection: String = "Default"
     @State private var selfLocate: Bool = false
@@ -100,7 +100,7 @@ struct ContentView: View {
                     
                     HStack {
                         Text("Distance: ") .foregroundColor(Color.gray)
-                        TextField("10", text: $dist)
+                        TextField(dist, text: $dist).foregroundColor(Color.black)
                     }
                     
                     Picker("Category", selection: $selection) {
@@ -161,7 +161,7 @@ struct ContentView: View {
                         }.background(Color.blue).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
                         //.frame(width: 200, height: 50)
                     }
-                }.navigationBarTitle("Events Search")
+                }//.navigationBarTitle("Events Search")
                 
                 //https://www.ralfebert.com/ios-examples/uikit/uitableviewcontroller/
                 //https://developer.apple.com/documentation/swiftui/table
