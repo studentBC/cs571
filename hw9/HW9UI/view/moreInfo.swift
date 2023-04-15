@@ -214,7 +214,7 @@ struct moreInfo: View {
                             }
                             Spacer()
                             VStack(alignment: .trailing, spacing: 10) {
-                                Text("Artist/Team").bold().padding(.top, 5)
+                                Text("Artist | Team").bold().padding(.top, 5)
                                 Text(event.artistName).foregroundColor(Color.gray)
                             }
                         }

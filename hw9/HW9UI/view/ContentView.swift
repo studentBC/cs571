@@ -137,7 +137,7 @@ struct ContentView: View {
                                 showProgressView = true
                                 showSR = true
                                 await searchAPI.goSearch(suc: sbc)
-
+                                
                                 showProgressView = false
                             }
                         }) {
@@ -162,24 +162,26 @@ struct ContentView: View {
                         }.background(Color.blue).buttonStyle(.bordered).clipShape(RoundedRectangle(cornerRadius: 10))
                         //.frame(width: 200, height: 50)
                     }
-                }//.navigationBarTitle("Events Search")
-                
-                //https://www.ralfebert.com/ios-examples/uikit/uitableviewcontroller/
-                //https://developer.apple.com/documentation/swiftui/table
-                //let no = 1
-                //https://www.appcoda.com/swiftui-first-look/
-                if (showSR) {
-                    Form {
-                        Text("Results").bold().font(.title)
-                        if showProgressView {
-                            ProgressView("Please wait...")
-                        } else {
-                            if (searchAPI.searchResultTable.count == 0) {
-                                Text("No result available").foregroundColor(.red)
+                    //}//.navigationBarTitle("Events Search")
+                    
+                    //https://www.ralfebert.com/ios-examples/uikit/uitableviewcontroller/
+                    //https://developer.apple.com/documentation/swiftui/table
+                    //let no = 1
+                    //https://www.appcoda.com/swiftui-first-look/
+                    
+                    if (showSR) {
+                        Section {
+                            Text("Results").bold().font(.title)
+                            if showProgressView {
+                                ProgressView("Please wait...")
                             } else {
-                                List(searchAPI.searchResultTable, id: \.name) { eve in
-                                    NavigationLink(destination: moreInfo(event: eve)) {
-                                        searchTableCell(es: eve)
+                                if (searchAPI.searchResultTable.count == 0) {
+                                    Text("No result available").foregroundColor(.red)
+                                } else {
+                                    List(searchAPI.searchResultTable, id: \.name) { eve in
+                                        NavigationLink(destination: moreInfo(event: eve)) {
+                                            searchTableCell(es: eve)
+                                        }
                                     }
                                 }
                             }
@@ -196,7 +198,6 @@ struct ContentView: View {
                 }
             }
             .navigationBarTitle("Events Search")
-            
         }
     }
     func getSuggestions() {
@@ -237,7 +238,7 @@ struct searchTableCell: View {
     let es: Event
     var body: some View{
         HStack {
-            Text((es.date ?? "") + "\n" + (es.time ?? "")).aspectRatio(contentMode: .fit)
+            Text((es.date ?? "") + "\n" + (es.time ?? ""))//.aspectRatio(contentMode: .fit)
             AsyncImage(url: URL(string: es.imgUrl),
                        content: {
                 image in image.resizable().aspectRatio(contentMode: .fit)
@@ -245,10 +246,11 @@ struct searchTableCell: View {
                        placeholder: {
                 ProgressView()
             })
-            Text(es.name).aspectRatio(contentMode: .fit)
-            Text(es.genre).aspectRatio(contentMode: .fit)
+            Text(es.name).bold()//.aspectRatio(contentMode: .fill)
+            //Text(es.genre).aspectRatio(contentMode: .fit)
             //that is weird here we should debug for it ... maybe json obj error
-            Text((es.venue) ?? "none").aspectRatio(contentMode: .fit)
+            Text((es.venue ?? "none").replacingOccurrences(of: "|", with: ""))
+            //.aspectRatio(contentMode: .fit)
         }
     }
 }
