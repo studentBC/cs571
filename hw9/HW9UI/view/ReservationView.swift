@@ -26,10 +26,10 @@ struct ReservationView: View {
                     ForEach(addFavorites.favoriteTable, id: \.name) { eve in
                         HStack {
                             Text((eve.date ))//.aspectRatio(contentMode: .fit).minimumScaleFactor(0.5)
-                            Text(eve.name)//.aspectRatio(contentMode: .fit).minimumScaleFactor(0.5)
-                            Text(eve.genre)//.aspectRatio(contentMode: .fit).minimumScaleFactor(0.5)
+                            Text(eve.name).lineLimit(3)//.aspectRatio(contentMode: .fit).minimumScaleFactor(0.5)
+                            Text(eve.genre).lineLimit(3)//.aspectRatio(contentMode: .fit).minimumScaleFactor(0.5)
                             //that is weird here we should debug for it ... maybe json obj error
-                            Text(eve.venue.replacingOccurrences(of: "|", with: ""))
+                            Text(eve.venue.replacingOccurrences(of: "|", with: "")).lineLimit(3)
 //.aspectRatio(contentMode: .fit).minimumScaleFactor(0.5)
                         }
                     }.onDelete(perform: deleteFavorites)

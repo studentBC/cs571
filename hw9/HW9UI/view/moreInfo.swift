@@ -209,8 +209,8 @@ struct moreInfo: View {
                         
                         HStack {
                             VStack(alignment: .leading, spacing: 10) {
-                                Text("Date").bold().aspectRatio(contentMode: .fit)
-                                Text(event.date ?? "?"+" " + (event.time ?? "")).foregroundColor(Color.gray).multilineTextAlignment(.leading).aspectRatio(contentMode: .fit)
+                                Text("Date").bold()//.aspectRatio(contentMode: .fit)
+                                Text(event.date ?? "?"+" " + (event.time ?? "")).foregroundColor(Color.gray).multilineTextAlignment(.leading)//.aspectRatio(contentMode: .fit)
                             }
                             Spacer()
                             VStack(alignment: .trailing, spacing: 10) {
@@ -220,12 +220,12 @@ struct moreInfo: View {
                         }
                         HStack {
                             VStack(alignment: .leading, spacing: 10) {
-                                Text("Venue").bold().aspectRatio(contentMode: .fit)
+                                Text("Venue").bold()//.aspectRatio(contentMode: .fit)
                                 Text((event.venue ?? "lol").replacingOccurrences(of: "|", with: "")).foregroundColor(Color.gray)
                             }
                             Spacer()
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text("Genres").bold().padding(.top, 5)
+                            VStack(alignment: .trailing, spacing: 10) {
+                                Text("Genres").bold().padding(.top, 5).multilineTextAlignment(.trailing)
                                 Text(event.genre).foregroundColor(Color.gray).multilineTextAlignment(.trailing)
                             }
                         }

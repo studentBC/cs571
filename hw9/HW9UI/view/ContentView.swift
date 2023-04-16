@@ -185,7 +185,11 @@ struct ContentView: View {
                         Section {
                             Text("Results").bold().font(.title)
                             if showProgressView {
-                                ProgressView("Please wait...")
+                                HStack {
+                                        Spacer()
+                                        ProgressView("Please wait...")
+                                        Spacer()
+                                    }
                             } else {
                                 if (searchAPI.searchResultTable.count == 0) {
                                     Text("No result available").foregroundColor(.red)
