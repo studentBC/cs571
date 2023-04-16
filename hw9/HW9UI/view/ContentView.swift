@@ -149,7 +149,7 @@ struct ContentView: View {
                             // Closure will be called once user taps your button
                             kw = "";
                             selection = "Default";
-                            dist = "";
+                            dist = "10";
                             loc = "";
                             selfLocate = false;
                             searchAPI.searchResultTable.removeAll();
@@ -238,7 +238,7 @@ struct searchTableCell: View {
     let es: Event
     var body: some View{
         HStack {
-            Text((es.date ?? "") + "\n" + (es.time ?? ""))//.aspectRatio(contentMode: .fit)
+            Text((es.date ?? "") + "|" + (es.time ?? "")).foregroundColor(.gray)//.aspectRatio(contentMode: .fit)
             AsyncImage(url: URL(string: es.imgUrl),
                        content: {
                 image in image.resizable().aspectRatio(contentMode: .fit)
@@ -246,10 +246,10 @@ struct searchTableCell: View {
                        placeholder: {
                 ProgressView()
             })
-            Text(es.name).bold()//.aspectRatio(contentMode: .fill)
+            Text(es.name).bold().lineLimit(3)//.aspectRatio(contentMode: .fill)
             //Text(es.genre).aspectRatio(contentMode: .fit)
             //that is weird here we should debug for it ... maybe json obj error
-            Text((es.venue ?? "none").replacingOccurrences(of: "|", with: ""))
+            Text((es.venue ?? "none").replacingOccurrences(of: "|", with: "")).foregroundColor(.gray)
             //.aspectRatio(contentMode: .fit)
         }
     }
