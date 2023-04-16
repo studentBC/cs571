@@ -26,6 +26,7 @@ extension Binding where Value == Bool {
 
 struct ContentView: View {
     @State private var kw: String = ""
+    @State private var prev: String = ""
     @State private var dist: String = "10"
     @State private var loc: String = ""
     @State private var selection: String = "Default"
@@ -39,6 +40,7 @@ struct ContentView: View {
     @State private var typingTimer: Timer?
     @State private var okay = false
     @State private var showProgressView = false
+    @State private var determined = false
     @ObservedObject private var searchAPI = apiSearchModel()
     
     let categories = ["Default", "Music", "Sports", "Arts & Theatre", "Film","Miscellaneous"]
@@ -56,11 +58,18 @@ struct ContentView: View {
                             .onChange(of: kw) { value in
                                 // Invalidate the previous timer when user is typing
                                 typingTimer?.invalidate()
+                                //print("enter on change: ", value)
                                 showAgain = true
+                                if (prev != value) {
+                                    determined = false
+                                    prev = value
+                                } else {
+                                    determined = true
+                                }
                                 // Start a new timer when user starts typing
                                 typingTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
                                     // Show suggestions when the timer completes
-                                    if (kw.count > 0) {
+                                    if (kw.count > 0 && !determined) {
                                         showSuggestions = true
                                     }
                                     getSuggestions()
@@ -84,7 +93,10 @@ struct ContentView: View {
                                             Button(action: {
                                                 selectedSuggestion = suggestion
                                                 kw = suggestion
+                                                prev = kw
+                                                determined = true
                                                 showSuggestions = false
+                                                showAgain = false
                                                 suggestions = []
                                             }) {
                                                 Text(suggestion)

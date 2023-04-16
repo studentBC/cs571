@@ -337,7 +337,7 @@ struct moreInfo: View {
                     } else {
                         VStack {
                             Spacer()
-                            Text("No music related artist details to show").font(.system(size: 30)).bold()
+                            Text("No music related artist details to show").font(.system(size: 30)).bold().multilineTextAlignment(.center)
                             Spacer()
                         }
                     }
@@ -424,7 +424,7 @@ struct moreInfo: View {
                             Color.black.opacity(0)
                             //                    .ignoresSafeArea()
                             //                VStack {
-                            Text(isFilled ? "Added to Favorites": "Remove Favorites")
+                            Text(isFilled ? "Added to favorites": "Remove Favorites")
                                 .foregroundColor(.black)
                                 .padding()
                                 .background(Color.gray).opacity(0.8)
