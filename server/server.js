@@ -106,7 +106,35 @@ app.get('/getEvents', async function (request, response) {
     tmp.push(jbody._embedded.events[i] ?.name);
     //Genre
     if (jbody._embedded.events[i] ?.classifications) {
-      tmp.push(jbody._embedded.events[i] ?.classifications[0].segment.name);
+      let tc = ""
+      let jobj = jbody._embedded.events[i]
+        if (jobj.classifications !== null) {
+            if (jobj.classifications[0].segment?.name && jobj.classifications[0]?.segment?.name != 'Undefined') {
+                tc+=jobj.classifications[0].segment?.name
+                // console.log('segment: ' , jobj.classifications[0].segment?.name)
+            }
+            if (jobj.classifications[0]?.genre?.name && jobj.classifications[0]?.genre?.name != 'Undefined') {
+                if (tc!="") tc+=" | "
+                tc+=jobj.classifications[0]?.genre?.name
+                // console.log('genre: ' , jobj.classifications[0].genre?.name)
+            }
+            if (jobj.classifications[0]?.subGenre?.name && jobj.classifications[0]?.subGenre?.name != 'Undefined') {
+                if (tc!="") tc+=" | "
+                tc+=jobj.classifications[0]?.subGenre?.name
+                // console.log('subGenre: ' , jobj.classifications[0].subGenre?.name)
+            } 
+            if (jobj.classifications[0].type?.name && jobj.classifications[0]?.type?.name != 'Undefined') {
+                if (tc!="") tc+=" | "
+                tc+=jobj.classifications[0].type?.name
+                // console.log('type: ' , jobj.classifications[0].type?.name)
+            }
+            if (jobj.classifications[0].subType?.name && jobj.classifications[0]?.subType?.name != 'Undefined') {
+                if (tc!="") tc+=" | "
+                tc+=jobj.classifications[0].subType?.name
+                // console.log('subType: ' , jobj.classifications[0].subType?.name)
+            }
+        }
+        tmp.push(tc);
     } else tmp.push("lol")
     //Venue
     let venue = '';
