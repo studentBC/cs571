@@ -448,6 +448,9 @@ struct moreInfo: View {
         //        print("=== enter  \(event.name) ===")
         let key = event.name+event.date
         addFavorites.chooseEvent = event
+        if let isAddedData = UserDefaults.standard.object(forKey: "isAdded") as? Data {
+            addFavorites.isAdded = try! JSONDecoder().decode([String: Bool].self, from: isAddedData)
+        }
         if addFavorites.isAdded.contains(where: { $0.key == key }) {
             isFilled = addFavorites.isAdded[key]!
         } else {

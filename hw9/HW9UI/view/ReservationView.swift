@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct ReservationView: View {
-    @State private var noFavoritesFound = addFavorites.favoriteTable.count
+    @State private var noFavoritesFound = 0
+    init() {
+        // Call the go() function before view initialization
+    }
     var body: some View {
 //        Text("Favorites")
 //            .font(.largeTitle)
@@ -36,7 +39,12 @@ struct ReservationView: View {
                 }
             }
         }.navigationTitle("Favorites").onAppear{
+//            print("hola hola")
+            if let data = UserDefaults.standard.data(forKey: "favoriteTable") {
+                addFavorites.favoriteTable = try! JSONDecoder().decode([Event].self, from: data)
+            }
             noFavoritesFound = addFavorites.favoriteTable.count
+            //noFavoritesFound = 1
         }
     }
     func deleteFavorites(at offsets: IndexSet) {
@@ -46,14 +54,12 @@ struct ReservationView: View {
         }
         addFavorites.favoriteTable.remove(atOffsets: offsets)
         noFavoritesFound = addFavorites.favoriteTable.count
-//        print("-------- after delete we have ------")
-//        for event in addFavorites.favoriteTable {
-//            // Do something with each event
-//            print(event.name)
-//        }
+        let encodedData = try? JSONEncoder().encode(addFavorites.favoriteTable)
+        UserDefaults.standard.set(encodedData, forKey: "favoriteTable")
+        let isAddedData = try? JSONEncoder().encode(addFavorites.isAdded)
+        UserDefaults.standard.set(isAddedData, forKey: "isAdded")
     }
 }
-    
 struct ReservationView_Previews: PreviewProvider {
     static var previews: some View {
         ReservationView()
